@@ -1,0 +1,451 @@
+import React, { useEffect, useRef, useState } from "react";
+import TypeProduct from "../../components/TypeProduct/TypeProduct";
+import { AnimatedImage, WrapperButtonComponent, WrapperProductTrending, WrapperTextProductTrending } from "./style";
+import SliderComponent from "../../components/SliderComponent/SliderComponent";
+import headerTet from "../../assets/images/factory_bg_1.png"
+import backgroundTet from "../../assets/images/culture_bg_1.png"
+import backgroundTitleTet from "../../assets/images/culture_heading.png"
+import backgroundgiangsinh from "../../assets/images/giangsinh.webp"
+import backgroundValentine from "../../assets/images/valentine.png"
+import backgroundTitleValentine from "../../assets/images/factory_heading.png"
+import backgroundHalloween from "../../assets/images/background-1298031_1280.webp"
+import ImageContact from "../../assets/images/contact.png"
+import CardComponent from "../../components/CardComponent/CardComponent";
+import * as ProductService from "../../services/ProductService"
+import * as SliderService from "../../services/SliderService"
+import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import Loading from "../../components/Loading/Loading";
+import { useDebounce } from "../../hooks/useDebounce";
+import { ArrowRightOutlined, EyeOutlined } from "@ant-design/icons";
+import { useLocation, useNavigate } from "react-router";
+import { Button, Input, message } from "antd";
+import SliderCartComponent from "../../components/SliderCartComponent/SliderCartComponent";
+import moment from 'moment';
+import 'moment/locale/vi'; // Đặt ngôn ngữ hiển thị, ví dụ tiếng Việt
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import TextArea from "antd/es/input/TextArea";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import * as ContactService from '../../services/ContactService'
+const HomePage =()=> {
+    const searchProduct = useSelector((state)=> state?.product?.search)
+    const searchDebounce = useDebounce(searchProduct, 1000) //delay thời gian tìm kiếm 1s sau khi nhập kí tự
+    const refSearch = useRef()
+    const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const [limit, setLimit] = useState(5)
+    const [stateProduct, setStateProduct]= useState([])
+    const [typeProduct, setTypeProduct] = useState([])
+    const [productTypeTet, setProductTypeTet] = useState([])
+    const [productTypeNoel, setProductTypeNoel] = useState([])
+    const [productTypeTrungThu, setProductTypeTrungThu] = useState([])
+    const [productTypeHalloween, setProductTypeHalloween] = useState([])
+    const [productTypeValentine, setProductTypeValentine] = useState([])
+    const [dataSlider, setDataSlider] = useState([])
+    const [continuous, setContinous] = useState(false)
+    const [productsOutstanding, setProductsOutstanding] = useState([])
+    const [name, setName]= useState("")
+	const [phone, setPhone]= useState("")
+	const [email, setEmail]= useState("")
+	const [messageInput, setMessageInput]= useState("")
+   const user = useSelector((state)=>state.user)
+	const location = useLocation()
+    // const fetchAllProduct = async (context)=>{
+    //     console.log("context",context);
+    //     const limit = context?.queryKey && context?.queryKey[1]
+    //     const search=context?.queryKey && context?.queryKey[2]
+    //     const res = await ProductService.getAllProduct(search,limit)
+    //     // if(search?.length > 0 || refSearch.current){
+    //     //      setStateProduct(res?.data)
+    //     //      return []
+    //     // }
+    //     // else{
+    //     // return res
+    //     // }
+    //     return res
+        
+    // }
+
+        const today = moment();
+    const formattedToday = today.format('DD/MM');
+    const startDateTimeTrungthu = moment('01/3', 'DD/MM').startOf('day');
+    const endDateTimeTrungthu = moment('30/9', 'DD/MM').endOf('day');
+
+    const startDateTimeHalloween = moment('01/10', 'DD/MM').startOf('day');
+    const endDateTimeHalloween = moment('31/10', 'DD/MM').endOf('day');
+
+    const startDateTimeNoel = moment('01/11', 'DD/MM').startOf('day');
+    const endDateTimeNoel = moment('31/12', 'DD/MM').endOf('day');
+   
+    const startDateTimeTet = moment('01/01', 'DD/MM').startOf('day');
+    const endDateTimeTet = moment('31/01', 'DD/MM').endOf('day');
+
+    const startDateTimeTinhnhan = moment('01/02', 'DD/MM').startOf('day');
+    const endDateTimeTinhnhan = moment('28/02', 'DD/MM').endOf('day');
+
+    const customToday = moment('04/02', 'DD/MM');
+
+      const getAllSlider = async()=>{
+     const res = await SliderService.getAllSlider()
+    return res
+  }
+  const querySlider = useQuery({ queryKey: ['sliders'], queryFn: getAllSlider })
+  const { data: sliders } = querySlider
+
+  const getDataSlider = ()=>{
+    const arrdata = []
+    if(sliders?.data){
+        sliders?.data.map((slider)=>{
+            arrdata.push(slider?.image)
+        })
+    }
+    setDataSlider(arrdata)
+  }
+  useEffect(()=>{
+    getDataSlider()
+  },[sliders])
+
+
+    const fetchAllProductSliderCart = async ()=>{
+      const res = await ProductService.getAllProduct("",100)
+    return res.data
+    }
+
+    console.log("dataSlider",dataSlider)
+
+    const queryProductSliderCart = useQuery({ queryKey: ['productCart'], queryFn: fetchAllProductSliderCart })
+
+  const { isLoading: isLoadingProducts, data: productCart } = queryProductSliderCart
+
+    
+
+
+    const fetchAllTypeProduct = async ()=>{
+        const res = await ProductService.getAllTypeProduct()
+        setTypeProduct(res.data)
+    }
+    
+    useEffect(()=>{
+        fetchAllTypeProduct()
+    },[])
+
+    console.log("typeProduct",typeProduct)
+  
+    console.log("refSearch",refSearch.current)
+   
+    const fetchAllProductType = async(type,page,limit)=>{
+        setLoading(true);
+         const res = await ProductService.getProductType(type,page,limit)
+        if(res?.status === 'OK'){
+            setLoading(false);
+            if(type ==="tết"){
+                setProductTypeTet(res?.data)
+            }
+            else{
+                if(type ==="giáng sinh"){
+                    setProductTypeNoel(res?.data)
+                }
+                else{
+                    if(type ==="trung thu"){
+                setProductTypeTrungThu(res?.data)
+                }
+                else{
+                    if(type ==="halloween"){
+                setProductTypeHalloween(res?.data)
+                     }
+                     else{
+                        if(type ==="tình nhân"){
+                setProductTypeValentine(res?.data)
+            }
+                     }
+                }
+                }
+            }
+        }
+        else{
+            setLoading(false)
+        }
+    }
+
+    
+
+
+    useEffect(()=>{
+    fetchAllProductType("tết",0,100)
+    fetchAllProductType("giáng sinh",0,100)
+    fetchAllProductType("trung thu",0,100)
+    fetchAllProductType("halloween",0,100)
+    fetchAllProductType("tình nhân",0,100)
+    },[])
+
+    const getProductsOutstanding = (dataproduct)=>{
+        console.log("dataproduct",dataproduct)
+       if (dataproduct) {
+   const sortedProducts = [...dataproduct].sort((a, b) => b.selled - a.selled);
+    const topFourProducts = sortedProducts.slice(0, 4);
+    setProductsOutstanding(topFourProducts);
+  }
+    }
+  
+
+    useEffect(()=>{
+         if (today.isBetween(startDateTimeTrungthu, endDateTimeTrungthu, null, '[]')) {
+            
+            getProductsOutstanding(productTypeTrungThu)
+        }
+        if (today.isBetween(startDateTimeHalloween, endDateTimeHalloween, null, '[]')) {
+    getProductsOutstanding(productTypeHalloween)
+        }
+         if (today.isBetween(startDateTimeNoel, endDateTimeNoel, null, '[]')) {
+        getProductsOutstanding(productTypeNoel)
+    }
+        if (today.isBetween(startDateTimeTet, endDateTimeTet, null, '[]')) {
+                getProductsOutstanding(productTypeTet)       
+        }
+        if (today.isBetween(startDateTimeTinhnhan, endDateTimeTinhnhan, null, '[]')) {
+    getProductsOutstanding(productTypeValentine)
+        }
+    },[today.toDate().getDate(),productTypeTrungThu,productTypeHalloween,productTypeNoel,productTypeTet,productTypeValentine])
+
+    
+    console.log("outstanding",productsOutstanding)
+
+    const onChangeName= (e)=>{
+		setName(e.target.value);
+	}
+	const onChangeEmail= (e)=>{
+		setEmail(e.target.value);
+	}
+	const onChangePhone= (e)=>{
+		setPhone(e.target.value);
+	}
+	const onChangeMessage= (e)=>{
+		setMessageInput(e.target.value);
+	}
+ const mutationAddContact = useMutationHook(
+    (data) => {
+      const { 
+		token,
+        ...rests } = data
+      const res = ContactService.createContact(
+          { ...rests }, token)
+      return res
+    },
+  )
+
+  const { data, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddContact
+
+    const handleAddContact = () => {
+        // eslint-disable-next-line no-unused-expressions
+		if(!user?.id){
+      navigate('/sign-in',{state: location?.pathname})
+    }
+	else{
+
+        mutationAddContact.mutate(
+          { token: user?.access_token, 
+            name:name,
+            phone:phone,        
+            email:email,
+            message: messageInput,
+			user: user?.id
+          }
+        )   
+	}
+  }
+  console.log("dataS",data)
+
+  useEffect(() => {
+    if (isSuccsess && data?.status === 'OK') {
+      message.success("Gửi thông tin liên hệ thành công")
+      setName("")
+	  setEmail("")
+	  setPhone("")
+	  setMessageInput("")
+    } else if (isSuccsess && data?.status === 'ERR') {
+      message.error(data?.message)
+    }
+  }, [isSuccsess,isError])
+
+  
+    return ( 
+        <Loading isLoading={ loading}>
+        <div className="body" style={{width:"100%", background:"#fff"}}>
+
+        <div id="container" style={{width: "100%", margin:"0 auto", height:"100%"}}>
+            <SliderComponent arrImg ={dataSlider}/>
+
+            <div style={{backgroundColor:"#821a20", width:"100%"}}>
+             <img src={headerTet} style={{width:"100%"}}/>
+
+             <div>
+                 <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexWrap: "wrap", backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                    backgroundPosition: "center", margin:"50px 0",textAlign:"center"}}>
+                <h2>SẢN PHẨM NỔI BẬT</h2>
+            </div>
+             <div style={{display:"flex",justifyContent:"center",gap:"100px",padding:'50px', flexWrap:"wrap"}}>
+                {productsOutstanding?.map((pro)=>{
+                    return(
+                        <WrapperProductTrending style={{position:"relative"}}>
+                            <img src={pro?.image} style={{width:"200px",height:"200px",borderRadius:"50px"}}/>
+                            <WrapperTextProductTrending className="nameProductTrending" onClick={()=>navigate(`/product-detail/${pro?._id}`)}>
+                                <span style={{height:"100%",display: "flex",alignItems: "center",justifyContent: "center", fontSize:"15px",fontWeight: "700",color: "#821a20"}}>{pro?.name} </span>
+                            </WrapperTextProductTrending>
+                        </WrapperProductTrending>
+                    )
+                })}
+            </div>
+            <div style={{textAlign:"center"}}>
+                <WrapperButtonComponent className="learn-more" onClick={()=> navigate("/productsTrending")}>
+                <span className="circle" aria-hidden="true">
+                <span className="icon arrow"></span>
+                </span>
+                <span className="button-text">Xem tất cả</span>
+                </WrapperButtonComponent>
+            </div>
+            </div>
+
+
+
+            <div style={{backgroundColor:"#821a20", width:"100%",backgroundImage:`url(${backgroundTet})`,backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+             backgroundPosition: "center",backgroundSize:"100%", padding:"0 0 40px 0"}}>
+
+            <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap", backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                backgroundPosition: "center", margin:"50px 0",textAlign:"center"}}>
+                <h2>VẬT PHẨM TRANG TRÍ TẾT</h2>
+            </div>
+            <div style={{width:"1207px", margin:"0 auto" }}>
+            <SliderCartComponent products={productTypeTet}/> 
+            </div>
+            </div>
+            <div style={{backgroundColor:"#821a20", width:"100%",backgroundImage:`url(${backgroundgiangsinh})`,backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+             backgroundPosition: "center",backgroundSize:"100%",padding:"20px 0 40px 0"}}>
+            <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap", backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                backgroundPosition: "center", margin:"0 0 40px 0",textAlign:"center"}}>
+                <h2>VẬT PHẨM TRANG TRÍ
+                    <br></br>
+                     GIÁNG SINH</h2>
+            </div>
+            <div style={{width:"1207px", margin:"0 auto"}}>
+            <SliderCartComponent products={productTypeNoel}/> 
+            </div>
+            </div>
+
+             <div style={{backgroundColor:"#821a20",backgroundImage:`url(${backgroundValentine})`, width:"100%",backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+             backgroundPosition: "center",backgroundSize:"cover",padding:"20px 0 40px 0"}}>
+            <div style={{backgroundImage:`url(${backgroundTitleValentine})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap", backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                backgroundPosition: "center", margin:"0 0 40px 0",textAlign:"center"}}>
+                <h2>VẬT PHẨM TRANG TRÍ
+                    <br></br> LỄ TÌNH NHÂN</h2>
+            </div>
+            <div style={{width:"1207px", margin:"0 auto"}}>
+            <SliderCartComponent products={productTypeValentine}/> 
+            </div>
+            </div>
+
+
+            <div style={{backgroundColor:"#821a20", width:"100%",backgroundImage:`url(${backgroundTet})`,backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+             backgroundPosition: "center",backgroundSize:"100%", padding:"0 0 40px 0"}}>
+            <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap", backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                backgroundPosition: "center", margin:"0 0 40px 0",textAlign:"center"}}>
+                <h2>VẬT PHẨM TRANG TRÍ <br></br> TRUNG THU</h2>
+            </div>
+            <div style={{width:"1207px", margin:"0 auto"}}>
+            <SliderCartComponent products={productTypeTrungThu}/> 
+            </div>
+            </div>
+
+             <div style={{backgroundColor:"#821a20", width:"100%",backgroundImage:`url(${backgroundHalloween})`,backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+             backgroundPosition: "center",backgroundSize:"100%", padding:"0 0 40px 0"}}>
+            <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexWrap: "wrap", backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
+                backgroundPosition: "center", margin:"0 0 40px 0",textAlign:"center"}}>
+                <h2>VẬT PHẨM TRANG TRÍ <br></br> HALLOWEEN</h2>
+            </div>
+            <div style={{width:"1207px", margin:"0 auto"}}>
+            <SliderCartComponent products={productTypeHalloween}/> 
+            </div>
+
+            </div>
+
+            {/* liên hệ */}
+            <div style={{display:"flex", width:"100%", padding:"50px 0",flexWrap:"wrap"}}>
+                <AnimatedImage>
+                    <img src={ImageContact} style={{height:"450px"}}/>
+                </AnimatedImage>
+                <div style={{padding:"50px", border:"0.6rem solid #d0a862", color:"#fff", margin:"0 auto",borderRadius:"50px",background:"#590606"}}>
+                    <h3 style={{color:"#d0a862"}}>NHẬN TƯ VẤN TRANG TRÍ LỄ HỘI</h3>
+                    <div style={{ width:"100%", padding:"20px 0 0 0"}}>
+                        <div style={{width:"100%"}}>
+                            <label htmlFor="" style={{fontWeight:"500", fontSize:"16px", width:"100%"}}>Name
+                            </label>
+                            <input placeholder="Nhập họ tên" style={{background:"none",border:"none", width:"100%",outline:"none", borderBottom:"0.2rem solid #d0a862", color:"#d0a862"}} value={name} onChange={onChangeName}/>
+                        </div>
+                    </div>
+                    <div style={{display:"flex", gap:"50px", width:"100%", padding:"20px 0"}}>
+                        <div>
+                            <label htmlFor="" style={{fontWeight:"500", fontSize:"16px"}}>Email</label>
+                            <input placeholder="Nhập địa chỉ email" style={{background:"none",border:"none", width:"100%",outline:"none",  borderBottom:"0.2rem solid #d0a862", color:"#d0a862"}} value={email} onChange={onChangeEmail}/>
+                        </div>
+                        <div>
+                            <label htmlFor="" style={{fontWeight:"500", fontSize:"16px"}}>Phone</label>
+                            <input placeholder="Nhập số điện thoại" style={{background:"none",border:"none", width:"100%",outline:"none",  borderBottom:"0.2rem solid #d0a862", color:"#d0a862"}} value={phone} onChange={onChangePhone}/>
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label htmlFor="" style={{fontWeight:"500", fontSize:"16px"}}>Nhập nội dung yêu cầu</label>
+                            <textarea placeholder="Nhập nội dung yêu cầu" style={{background:"none",border:"none", width:"100%",outline:"none",  borderBottom:"0.2rem solid #d0a862", color:"#d0a862", minHeight:"90px"}} value={messageInput} onChange={onChangeMessage}/>
+                        </div>
+                    </div>
+                    <div style={{textAlign:"center", paddingTop:"30px"}} onClick={()=>handleAddContact()}>
+                <WrapperButtonComponent className="learn-more" >
+                <span className="circle" aria-hidden="true">
+                <span className="icon arrow"></span>
+                </span>
+                <span className="button-text">Gửi yêu cầu</span>
+                </WrapperButtonComponent>
+            </div>
+                </div>
+            </div>
+                
+
+            </div>
+            </div>
+        </div>
+
+       
+        </Loading>
+     );
+}
+
+export default HomePage;
