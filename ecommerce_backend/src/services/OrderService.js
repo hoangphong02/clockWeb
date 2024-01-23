@@ -18,6 +18,7 @@ const createOrder = (newOrder) => {
       isPaid,
       isConfirm,
       isReceived,
+      isEvaluate,
       paidAt,
       email,
     } = newOrder;
@@ -79,6 +80,7 @@ const createOrder = (newOrder) => {
           isPaid,
           isConfirm,
           isReceived,
+          isEvaluate,
           paidAt,
           email,
         });

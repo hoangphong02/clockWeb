@@ -8,8 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading/Loading";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useMutationHook } from "../../hooks/useMutationHook";
-import { useEffect } from "react";
-import { message } from "antd";
+import { useEffect, useState } from "react";
+import { Modal, Rate, message } from "antd";
+import * as CommentService from '../../services/CommentService'
 
 const MyOrderPage =()=> {
    
@@ -22,6 +23,13 @@ const MyOrderPage =()=> {
     console.log("state",state)
      console.log("user",user)
     const navigate = useNavigate()
+    const [modal2Open, setModal2Open] = useState(false);
+    const [valueRating,setValueRating] = useState(0)
+     const [description, setDescription] = useState('')
+     const [idDetailsOrder, setIdDetailsOrder] = useState('')
+     const [idProduct, setIdProduct] = useState('')
+     const [idOrder, setIdOrder] = useState('')
+      const [isEvaluate, setIsEvaluate] = useState(false)
 
     const fetchMyOrder = async()=>{
       const res = await OrderService.getOrderByUserId(state?.id, state?.token)
@@ -30,6 +38,14 @@ const MyOrderPage =()=> {
 
     const queryOrder =useQuery({queryKey:['orders'], queryFn: fetchMyOrder})
     const { isLoading, data } = queryOrder
+
+    const fetchMyDetailsOrder = async(id,token)=>{
+      const res = await OrderService.getDetailOrder(id,token)
+      setIdProduct(res?.data?.orderItems[0].product)
+      setIdOrder(res?.data?._id)
+    }
+
+    console.log("idPro",idProduct)
 
     console.log("dataOrder",data)
     const handleSeeDetailsOrder =(id)=>{
@@ -62,6 +78,70 @@ const MyOrderPage =()=> {
         }
       }
     }
+
+    const mutationUpdate = useMutationHook(
+    (data) => {
+      console.log("dataUser",data)
+      const { id,
+        token,
+        ...rests } = data
+      const res = OrderService.updateOrder(
+        id,
+          token,{ ...rests },)
+      return res
+    },
+  )
+const onUpdateOrder = (id) => {
+    mutationUpdate.mutate({ id: id, token: user?.access_token, isEvaluate: true }, {
+      onSettled: () => {
+        queryOrder.refetch()
+      }
+    })
+  }
+
+
+     const onChange =(e)=>{
+  setDescription(e.target.value)
+  }
+
+  const mutationAddComment = useMutationHook(
+    (data) => {
+      console.log("dataUser",data)
+      const { 
+        token,
+        ...rests } = data
+      const res = CommentService.createComment(
+          { ...rests }, token)
+      return res
+    },
+  )
+ 
+const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddComment
+      const handleAddComment = () => {
+    if(user?.access_token  ) {
+        // eslint-disable-next-line no-unused-expressions
+        mutationAddComment.mutate(
+          { token: user?.access_token, 
+            name:user?.name,
+            avatar:user?.avatar,        
+            description:description,
+            rating:valueRating,
+            user: user?.id,
+            product: idProduct
+          }
+        )
+      }
+      setModal2Open(false)
+      onUpdateOrder(idOrder)
+  }
+
+  const handleEvaluate =(id)=>{
+    setModal2Open(true)
+    setIdDetailsOrder(id)
+    fetchMyDetailsOrder(id,user?.access_token)
+  }
+
+
 
     const {isLoading: isLoadingCancel, isSuccess: isSuccessCancel, isError: isErrorCancel, data: dataCancel} = mutation
     console.log("dataCa",dataCancel)
@@ -119,10 +199,40 @@ const MyOrderPage =()=> {
           Tổng tiền :<span style={{ fontWeight: "bold", color: "red" }}> {(order?.totalPrice)?.toLocaleString()} VND</span>
         </div>
         <div style={{ display: "flex", justifyContent: "end", gap: "10px", borderTop: "1px solid #ccc", padding: "15px" }}>
+          <ButtonComponent textButton={"Đánh giá"}  onClick={() => handleEvaluate(order?._id)}  style={{display: order?.isReceived ===true && order?.isEvaluate===false ? "block" :"none"}}/>
           <ButtonComponent textButton={"Hủy đơn hàng"} onClick={() => handleCancelOrder(order)} style={{display: order?.isReceived ===true ? "none" :"block"}}/>
           <ButtonComponent textButton={"Xem chi tiết"} onClick={() => handleSeeDetailsOrder(order?._id)} />
         </div>
+
+          <Modal
+        title="Đánh giá sản phẩm"
+        centered
+        open={modal2Open}
+        onOk={()=>handleAddComment()}
+        onCancel={() => setModal2Open(false)}
+      >
+        <div class="card" style={{background:"none",border:"none"}}>             
+              <div class="row">         
+                  <div class="col-2">              
+                      <img src={user?.avatar} width="70" class="rounded-circle mt-2"/>   
+                  </div>               
+                  <div class="col-10">                   
+                      <div class="comment-box ml-2">
+                          
+                          <div class="rating" style={{padding:"10px 0"}}> 
+                           <Rate onChange={setValueRating} value={valueRating} />
+                          </div>                         
+                          <div class="comment-area">                            
+                              <textarea class="form-control" placeholder="Your comment" rows="4" value={description} onChange={onChange}/>                     
+                          </div>                    
+                      </div> 
+                  </div>
+              </div>
+          </div>
+      </Modal>
+
       </div>
+      
     );
   })
 ) : (

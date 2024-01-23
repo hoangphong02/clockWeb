@@ -96,3 +96,16 @@ export const deleteManyProduct = async (data, access_token) => {
   );
   return res.data;
 };
+
+export const addFollower = async (id, access_token, data) => {
+  const res = await axiosJWT.put(
+    `${process.env.REACT_APP_API_URL}/product/addFollower/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};

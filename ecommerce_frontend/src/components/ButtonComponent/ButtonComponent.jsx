@@ -8,6 +8,7 @@ const ButtonComponent = ({size,bordered,style,textButton,disabled,styleTextButto
     size={size} 
     // icon={<SearchOutlined color={colorButton} />}  
     bordered={bordered}
+    disabled={disabled}
     //  style={{
     //   ...style,
     //   background: disabled ? '#ccc': style.background

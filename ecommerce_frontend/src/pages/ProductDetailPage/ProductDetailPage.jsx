@@ -11,7 +11,9 @@ import { useQuery } from '@tanstack/react-query'
 const ProductDetailPage = () => {
   const navigate =useNavigate()
   const user = useSelector((state)=> state.user)
+  const product =useSelector((state)=> state?.product)
     const [addCart,setAddCart] = useState(false)
+    const [buyNow,setBuynow] = useState(false)
     const [valueRating,setValueRating] = useState(0)
   const {id} = useParams()
   // const {state}= useLocation()
@@ -19,6 +21,9 @@ const ProductDetailPage = () => {
   
   const [description, setDescription] = useState('')
   const addCartHeader = location.state?.addCartHeader || false;
+  const buyNowHeader = location.state?.buyNowHeader || false;
+
+  console.log("product",product)
     console.log("params",id)
  
     console.log("addCartHeader",addCartHeader)
@@ -33,6 +38,7 @@ const ProductDetailPage = () => {
       return res
     },
   )
+ 
 const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddComment
       const handleAddComment = () => {
     if(user?.access_token  ) {
@@ -127,29 +133,30 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
 
 
 
-
     
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(()=>{
     setAddCart(addCartHeader)
   },[addCartHeader])
-
+  useEffect(()=>{
+    setBuynow(buyNowHeader)
+  },[buyNowHeader])
   console.log("valuerATIN", valueRating)
 
   return (
     <div style={{padding: "0 120px", background:"#efefef "}}>
       <h3 style={{margin:"0", fontSize:"15px", padding:"15px 0"}}><span style={{cursor:"pointer"}} onClick={()=> navigate("/")}>Trang chủ</span> - Chi tiết sản phẩm</h3>
-      <ProductDetailComponent idProduct = {id} addCart={addCart}/>
+      <ProductDetailComponent idProduct = {id} addCart={addCart} buyNow={buyNow}/>
        <div style={{padding:"30px 0 0 0", fontSize:"25px", fontWeight:"bold"}}>Bình luận và đánh giá</div>
-      <div style={{margin:"30px 0", display:"flex",gap:"10px",alignItems:"center"}}>
+      {/* <div style={{margin:"30px 0", display:"flex",gap:"10px",alignItems:"center"}}>
       <img src={user?.avatar} style={{width:"40px", height:"40px", borderRadius:"50%", objectFit:"cover"}}/>
       <div style={{width:"100%",lineHeight:"2"}}>
       <Rate onChange={setValueRating} value={valueRating} />
       <Input placeholder="Add comment" value={description} onChange={onChange} />
       </div>
       <ButtonComponent textButton={"Comment"} onClick={()=>handleAddComment()}/>
-      </div>
+      </div> */}
       <div>
         {
           data?.map((comment)=>{

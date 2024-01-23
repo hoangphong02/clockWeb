@@ -15,6 +15,7 @@ const initialState = {
   isConfirm: false,
   isReceived: false,
   isDelivered: false,
+  isEvaluate: false,
   deliveredAt: "",
 };
 

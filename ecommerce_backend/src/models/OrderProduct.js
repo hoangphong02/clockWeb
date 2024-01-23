@@ -31,6 +31,7 @@ const orderSchema = new mongoose.Schema(
     isDelivered: { type: Boolean, default: false },
     isConfirm: { type: Boolean, default: false },
     isReceived: { type: Boolean, default: false },
+    isEvaluate: { type: Boolean, default: false },
     deliveredAt: { type: Date },
   },
   {

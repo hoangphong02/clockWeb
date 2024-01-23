@@ -20,13 +20,6 @@ export const getDetailUser = async (id, access_token) => {
   const res = await axiosJWT.get(
     `${process.env.REACT_APP_API_URL}/user/get-detail/${id}`,
     {
-      // method: "GET",
-      // mode: "cors",
-      // credentials: "include",
-      // headers: {
-      //   "Content-Type": "application/json",
-      //   token: `Bearer ${access_token}`,
-      // },
       headers: {
         token: `Bearer ${access_token}`,
       },

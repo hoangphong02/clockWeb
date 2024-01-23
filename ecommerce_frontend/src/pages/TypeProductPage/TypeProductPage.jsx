@@ -136,14 +136,14 @@ const TypeProductPage =()=> {
             </WrapperTypeProduct>
            
             <div style={{padding:"20px", background:"#ccc", borderRadius:"10px", margin:"10px"}}>
-                <p>Filter By Price</p>
+                <p>Lọc theo giá</p>
               <div className="range-slider">
                 <span className="rangeValues" style={{padding:"10px 0"}}>{value1.toLocaleString()} - {value2.toLocaleString()} VND</span>
                 <input className="range1" name="range1" value={value1}  min="0" max="3500000" step="100000" type="range" onChange={handleOnChange}/>
                 <input className="range2" name="range2" value={value2} min="0" max="3500000" step="100000" type="range" onChange={handleOnChange}/>
               </div>
               <div style={{margin:"20px 0"}}>
-                <ButtonComponent textButton={"Filter"} onClick={handleFilter}/>
+                <ButtonComponent textButton={"Lọc sản phẩm"} onClick={handleFilter}/>
               </div>
               
             </div>

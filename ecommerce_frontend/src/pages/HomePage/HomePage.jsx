@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { AnimatedImage, WrapperButtonComponent, WrapperProductTrending, WrapperTextProductTrending } from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import headerTet from "../../assets/images/factory_bg_1.png"
@@ -10,39 +9,32 @@ import backgroundValentine from "../../assets/images/valentine.png"
 import backgroundTitleValentine from "../../assets/images/factory_heading.png"
 import backgroundHalloween from "../../assets/images/background-1298031_1280.webp"
 import ImageContact from "../../assets/images/contact.png"
-import CardComponent from "../../components/CardComponent/CardComponent";
 import * as ProductService from "../../services/ProductService"
 import * as SliderService from "../../services/SliderService"
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Loading/Loading";
 import { useDebounce } from "../../hooks/useDebounce";
-import { ArrowRightOutlined, EyeOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router";
-import { Button, Input, message } from "antd";
+import { message } from "antd";
 import SliderCartComponent from "../../components/SliderCartComponent/SliderCartComponent";
 import moment from 'moment';
 import 'moment/locale/vi'; // Đặt ngôn ngữ hiển thị, ví dụ tiếng Việt
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import TextArea from "antd/es/input/TextArea";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import * as ContactService from '../../services/ContactService'
 const HomePage =()=> {
     const searchProduct = useSelector((state)=> state?.product?.search)
-    const searchDebounce = useDebounce(searchProduct, 1000) //delay thời gian tìm kiếm 1s sau khi nhập kí tự
+    const searchDebounce = useDebounce(searchProduct, 100) //delay thời gian tìm kiếm 1s sau khi nhập kí tự
     const refSearch = useRef()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
-    const [limit, setLimit] = useState(5)
-    const [stateProduct, setStateProduct]= useState([])
-    const [typeProduct, setTypeProduct] = useState([])
+  
     const [productTypeTet, setProductTypeTet] = useState([])
     const [productTypeNoel, setProductTypeNoel] = useState([])
     const [productTypeTrungThu, setProductTypeTrungThu] = useState([])
     const [productTypeHalloween, setProductTypeHalloween] = useState([])
     const [productTypeValentine, setProductTypeValentine] = useState([])
     const [dataSlider, setDataSlider] = useState([])
-    const [continuous, setContinous] = useState(false)
     const [productsOutstanding, setProductsOutstanding] = useState([])
     const [name, setName]= useState("")
 	const [phone, setPhone]= useState("")
@@ -50,22 +42,6 @@ const HomePage =()=> {
 	const [messageInput, setMessageInput]= useState("")
    const user = useSelector((state)=>state.user)
 	const location = useLocation()
-    // const fetchAllProduct = async (context)=>{
-    //     console.log("context",context);
-    //     const limit = context?.queryKey && context?.queryKey[1]
-    //     const search=context?.queryKey && context?.queryKey[2]
-    //     const res = await ProductService.getAllProduct(search,limit)
-    //     // if(search?.length > 0 || refSearch.current){
-    //     //      setStateProduct(res?.data)
-    //     //      return []
-    //     // }
-    //     // else{
-    //     // return res
-    //     // }
-    //     return res
-        
-    // }
-
         const today = moment();
     const formattedToday = today.format('DD/MM');
     const startDateTimeTrungthu = moment('01/3', 'DD/MM').startOf('day');
@@ -116,70 +92,94 @@ const HomePage =()=> {
     const queryProductSliderCart = useQuery({ queryKey: ['productCart'], queryFn: fetchAllProductSliderCart })
 
   const { isLoading: isLoadingProducts, data: productCart } = queryProductSliderCart
-
-    
-
-
-    const fetchAllTypeProduct = async ()=>{
-        const res = await ProductService.getAllTypeProduct()
-        setTypeProduct(res.data)
-    }
-    
-    useEffect(()=>{
-        fetchAllTypeProduct()
-    },[])
-
-    console.log("typeProduct",typeProduct)
   
     console.log("refSearch",refSearch.current)
    
-    const fetchAllProductType = async(type,page,limit)=>{
-        setLoading(true);
-         const res = await ProductService.getProductType(type,page,limit)
-        if(res?.status === 'OK'){
-            setLoading(false);
-            if(type ==="tết"){
-                setProductTypeTet(res?.data)
-            }
-            else{
-                if(type ==="giáng sinh"){
-                    setProductTypeNoel(res?.data)
-                }
-                else{
-                    if(type ==="trung thu"){
-                setProductTypeTrungThu(res?.data)
-                }
-                else{
-                    if(type ==="halloween"){
-                setProductTypeHalloween(res?.data)
-                     }
-                     else{
-                        if(type ==="tình nhân"){
-                setProductTypeValentine(res?.data)
-            }
-                     }
-                }
-                }
-            }
-        }
-        else{
-            setLoading(false)
-        }
-    }
+    // const fetchAllProductType = async(type,page,limit)=>{
+    //     setLoading(true);
+    //      const res = await ProductService.getProductType(type,page,limit)
+    //     if(res?.status === 'OK'){
+    //         setLoading(false);
+    //         if(type ==="tết"){
+    //             setProductTypeTet(res?.data)
+    //         }
+    //         else{
+    //             if(type ==="giáng sinh"){
+    //                 setProductTypeNoel(res?.data)
+    //             }
+    //             else{
+    //                 if(type ==="trung thu"){
+    //             setProductTypeTrungThu(res?.data)
+    //             }
+    //             else{
+    //                 if(type ==="halloween"){
+    //             setProductTypeHalloween(res?.data)
+    //                  }
+    //                  else{
+    //                     if(type ==="tình nhân"){
+    //             setProductTypeValentine(res?.data)
+    //         }
+    //                  }
+    //             }
+    //             }
+    //         }
+    //     }
+    //     else{
+    //         setLoading(false)
+    //     }
+    // }
 
+    // useEffect(()=>{
+    // fetchAllProductType("tết",0,100)
+    // },[])
+    // useEffect(()=>{
+    // fetchAllProductType("giáng sinh",0,100)
+    // },[])
+    // useEffect(()=>{
+    // fetchAllProductType("trung thu",0,100)
+    // },[])
+    // useEffect(()=>{
+    // fetchAllProductType("halloween",0,100)
+    // },[])
+    // useEffect(()=>{
+    //  fetchAllProductType("tình nhân",0,100)
+    // },[])
     
+    const fetchAllProductTypes = async () => {
+    setLoading(true);
+    const tetPromise = ProductService.getProductType("tết", 0, 100);
+    const noelPromise = ProductService.getProductType("giáng sinh", 0, 100);
+    const trungThuPromise = ProductService.getProductType("trung thu", 0, 100);
+    const halloweenPromise = ProductService.getProductType("halloween", 0, 100);
+    const valentinePromise = ProductService.getProductType("tình nhân", 0, 100);
+
+    try {
+        const [tetRes, noelRes, trungThuRes, halloweenRes, valentineRes] = await Promise.all([
+            tetPromise,
+            noelPromise,
+            trungThuPromise,
+            halloweenPromise,
+            valentinePromise
+        ]);
+
+        setProductTypeTet(tetRes?.data);
+        setProductTypeNoel(noelRes?.data);
+        setProductTypeTrungThu(trungThuRes?.data);
+        setProductTypeHalloween(halloweenRes?.data);
+        setProductTypeValentine(valentineRes?.data);
+        setLoading(false);
+    } catch (error) {
+        console.error("Error fetching product types:", error);
+        setLoading(false);
+    }
+};
+
+useEffect(() => {
+    fetchAllProductTypes();
+}, []);
 
 
-    useEffect(()=>{
-    fetchAllProductType("tết",0,100)
-    fetchAllProductType("giáng sinh",0,100)
-    fetchAllProductType("trung thu",0,100)
-    fetchAllProductType("halloween",0,100)
-    fetchAllProductType("tình nhân",0,100)
-    },[])
-
-    const getProductsOutstanding = (dataproduct)=>{
-        console.log("dataproduct",dataproduct)
+    const getProductsOutstanding =  (dataproduct)=>{
        if (dataproduct) {
    const sortedProducts = [...dataproduct].sort((a, b) => b.selled - a.selled);
     const topFourProducts = sortedProducts.slice(0, 4);
@@ -190,7 +190,6 @@ const HomePage =()=> {
 
     useEffect(()=>{
          if (today.isBetween(startDateTimeTrungthu, endDateTimeTrungthu, null, '[]')) {
-            
             getProductsOutstanding(productTypeTrungThu)
         }
         if (today.isBetween(startDateTimeHalloween, endDateTimeHalloween, null, '[]')) {
@@ -207,11 +206,8 @@ const HomePage =()=> {
         }
     },[today.toDate().getDate(),productTypeTrungThu,productTypeHalloween,productTypeNoel,productTypeTet,productTypeValentine])
 
-    
-    console.log("outstanding",productsOutstanding)
-
-    const onChangeName= (e)=>{
-		setName(e.target.value);
+    const onChangeName= async (e)=>{
+	    await setName(e.target.value);
 	}
 	const onChangeEmail= (e)=>{
 		setEmail(e.target.value);
@@ -414,7 +410,7 @@ const HomePage =()=> {
                     <div style={{display:"flex", gap:"50px", width:"100%", padding:"20px 0"}}>
                         <div>
                             <label htmlFor="" style={{fontWeight:"500", fontSize:"16px"}}>Email</label>
-                            <input placeholder="Nhập địa chỉ email" style={{background:"none",border:"none", width:"100%",outline:"none",  borderBottom:"0.2rem solid #d0a862", color:"#d0a862"}} value={email} onChange={onChangeEmail}/>
+                            <input placeholder="Nhập địa chỉ email" style={{background:"none",border:"none", width:"100%",outline:"none",  borderBottom:"0.2rem solid #d0a862", color:"#d0a862"}} value={email} onChange={onChangeEmail} />
                         </div>
                         <div>
                             <label htmlFor="" style={{fontWeight:"500", fontSize:"16px"}}>Phone</label>

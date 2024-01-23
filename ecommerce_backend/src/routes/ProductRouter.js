@@ -22,4 +22,9 @@ router.delete("/delete/:id", productController.deleteProduct);
 router.get("/getAll", productController.getAllProduct);
 router.get("/get-all-type", productController.getAllType);
 router.post("/delete-many", authMiddleWare, productController.deleteMany);
+router.put(
+  "/addFollower/:id",
+  authUserMiddleWare,
+  productController.addFollower
+);
 module.exports = router;

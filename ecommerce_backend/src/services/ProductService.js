@@ -11,6 +11,7 @@ const createProduct = (newProduct) => {
       rating,
       description,
       discount,
+      followers,
     } = newProduct;
     try {
       const checkProduct = await Product.findOne({
@@ -32,6 +33,7 @@ const createProduct = (newProduct) => {
         rating,
         description,
         discount,
+        followers,
       });
       if (createProduct) {
         resolve({
@@ -219,6 +221,53 @@ const getAllType = () => {
   });
 };
 
+const addFollower = (id, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { followers } = data;
+
+      // Kiểm tra xem người theo dõi đã tồn tại chưa
+      const index = followers.findIndex(
+        (follower) => follower.user === followers.user
+      );
+
+      if (index === -1) {
+        // Nếu người theo dõi chưa tồn tại, thêm vào mảng
+        const updateProduct = await Product.findByIdAndUpdate(
+          id,
+          {
+            $addToSet: { followers: followers },
+          },
+          { new: true }
+        );
+
+        resolve({
+          status: "OK",
+          message: "Thành công",
+          data: updateProduct,
+        });
+      } else {
+        // Nếu người theo dõi đã tồn tại, xóa chỉ phần tử cụ thể khỏi mảng
+        const updateProduct = await Product.findByIdAndUpdate(
+          id,
+          { $pull: { followers: { user: followers.user } } },
+          {
+            new: true,
+          }
+        );
+
+        resolve({
+          status: "OK",
+          message: "Người theo dõi đã tồn tại, xóa chỉ phần tử cụ thể.",
+          data: updateProduct,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -227,4 +276,5 @@ module.exports = {
   getAllProduct,
   getAllType,
   deleteManyProduct,
+  addFollower,
 };

@@ -7,22 +7,41 @@ import { CloudFilled, MinusOutlined, PlusOutlined, StarFilled } from '@ant-desig
 import ButtonComponent from '../ButtonComponent/ButtonComponent'
 import * as ProductService from '../../services/ProductService'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { addOrderProduct } from '../../redux/slides/oderSlide'
 import QRCodeComponent from '../QRCode/QRCode'
+import { useMutationHook } from '../../hooks/useMutationHook'
 
-const ProductDetailComponent = ({idProduct,addCart}) => {
+
+const ProductDetailComponent = ({idProduct,addCart,buyNow}) => {
     const [numberProduct, setNumberProduct]= useState(1)
     const user = useSelector((state) => state?.user)
     const navigate =useNavigate()
     const location = useLocation()
     const dispatch= useDispatch()
+     const order = useSelector((state)=>state.order )
     console.log("user",user?.address)
+    console.log("order",order?.orderItems)
     const onChange= (value)=>{
-        setNumberProduct(value)
-        console.log("calue",value)
+        console.log("onChange is called with value:", value);
+        if(value> stateProductDetails?.countInStock){
+          setNumberProduct(stateProductDetails?.countInStock)
+        }
+        else{
+          setNumberProduct(value)
+        }
+      
+        
     }
     console.log("addCart",addCart)
+
+
+   const folower = 
+    {
+      name: user?.name,
+      user: user?.id,
+      product: idProduct
+    }
    
 
     const handleIncrease = ()=>{
@@ -76,6 +95,7 @@ const ProductDetailComponent = ({idProduct,addCart}) => {
     }
     
   }
+  
 
     useEffect(() => {
     if (idProduct) {
@@ -85,7 +105,7 @@ const ProductDetailComponent = ({idProduct,addCart}) => {
   }, [idProduct])
 
 
-  console.log("stateProduct", stateProductDetails)
+  console.log("stateProduct", stateProductDetails?.countInStock)
   console.log("location",location)
 
   const handleAddOderProduct =()=>{
@@ -105,15 +125,81 @@ const ProductDetailComponent = ({idProduct,addCart}) => {
         
         }
       }))
+      message.success("Thêm vào giỏ hàng thành công")
     }
+  }
+   const handleBuyNow =()=>{
+    if(!user?.id){
+      navigate('/sign-in',{state: location?.pathname})
+    }
+    else{
+      dispatch(addOrderProduct({
+        orderItem:{
+          name: stateProductDetails?.name,
+          amount: numberProduct,
+        image: stateProductDetails?.image,
+        price: stateProductDetails?.price ,
+        product: stateProductDetails?._id ,
+        discount: stateProductDetails?.discount,
+        countInStock: stateProductDetails?.countInStock,
+        
+        }
+      }))
+      navigate("/order")
+      message.success("Thêm vào giỏ hàng thành công")
+    }
+  }
+
+     const mutationAddFollower = useMutationHook(
+    (data) => {
+      const { id,
+        token,
+        ...rests } = data
+      const res = ProductService.addFollower(
+        id,
+        token,
+        { ...rests })
+      return res
+    },
+  )
+    const { data: dataAddFollower, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationAddFollower
+const onAddFollower = () => {
+    mutationAddFollower.mutate({ id: idProduct, token: user?.access_token,followers: [{
+      name: user?.name,
+      user: user?.id,
+      product: idProduct
+    }] })
   }
 
   useEffect(()=>{
     if(addCart=== true){
      handleAddOderProduct()
-     message.success("Thêm vào giỏ hàng thành công")
     }
   },[addCart])
+  useEffect(()=>{
+    if(buyNow=== true){
+     handleBuyNow() 
+    }
+  },[buyNow])
+  
+
+  const getAmountProductInCart= async (num)=>{
+      const foundProduct = await order?.orderItems?.find((pro)=> pro?.product === idProduct)
+      console.log("foundProduct",foundProduct)
+      if(foundProduct){
+        if(num +foundProduct?.amount > foundProduct?.countInStock ){
+          message.error("Số lượng sản phẩm trong kho không đủ")
+          setNumberProduct(foundProduct?.countInStock - foundProduct?.amount)
+        }
+      }
+  }
+
+  useEffect(()=>{
+    getAmountProductInCart(numberProduct)
+    
+  },[numberProduct])
+
+
 
   return (
     <Row style={{background: "#fff", padding: "16px"}} >
@@ -163,7 +249,7 @@ const ProductDetailComponent = ({idProduct,addCart}) => {
             <WrapperTextQuality>Số lượng</WrapperTextQuality>
             <WrapperQualityProduct>
             <ButtonComponent icon={<MinusOutlined style={{color:"#000"}}/>} onClick={handleDecrease}/>
-            <WrapperInputNumber min={1} max={stateProductDetails?.countInStock}  defaultValue={numberProduct} value={numberProduct} onChange={onChange} />
+            <WrapperInputNumber min={1} max={stateProductDetails?.countInStock }  value={numberProduct} onChange={onChange} />
             <ButtonComponent icon={<PlusOutlined style={{color:"#000", textAlign:"center"}}/> } onClick ={handleIncrease}/>
             </WrapperQualityProduct>
         </div>
@@ -171,14 +257,21 @@ const ProductDetailComponent = ({idProduct,addCart}) => {
             <ButtonComponent
              size={20} 
              style={{background: "rgb(255, 66, 78)", borderRadius: "4px", border: "none", height:"48px", width:"220px", fontSize:"15px"}}
-             textButton={"Mua ngay"}
+             textButton={"Thêm vào giỏ hàng"}
               styleTextButton={{color: "#fff"}}
               onClick={handleAddOderProduct}></ButtonComponent>
+              <ButtonComponent
+             size={20} 
+             style={{background: "rgb(255, 66, 78)", borderRadius: "4px", border: "none", height:"48px", width:"220px", fontSize:"15px"}}
+             textButton={"Mua ngay"}
+              styleTextButton={{color: "#fff"}}
+              onClick={handleBuyNow}></ButtonComponent>
              <ButtonComponent
              size={20} 
              style={{background: "#fff", borderRadius: "4px", border: "1px solid rgb(10, 104, 255)", height:"48px", width:"220px", fontSize:"15px"}}
              textButton={"Theo dõi"}
               styleTextButton={{color: "rgb(10, 104, 255)"}}
+               onClick={onAddFollower}
               ></ButtonComponent> 
         </WrapperBtnBuyCart>
         {/* <QRCodeComponent productId={idProduct}/> */}

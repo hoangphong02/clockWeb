@@ -14,18 +14,16 @@ function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const { storageData, decoded } = handleDecoded();
-  //   if (decoded?.id) {
-  //     handleGetDetailsUser(decoded?.id, storageData);
-  //   }
-  //   setIsLoading(false);
-  // }, []);
+  useEffect(() => {
+    setIsLoading(true);
+    const { storageData, decoded } = handleDecoded();
+    if (decoded?.id) {
+      handleGetDetailsUser(decoded?.id, storageData);
+    }
+    setIsLoading(false);
+  }, []);
 
   const handleDecoded = () => {
-    // let storageData = localStorage.getItem("access_token");
-    // let decoded = {};
     let storageData =
       user?.access_token || localStorage.getItem("access_token");
     let decoded = {};
@@ -44,10 +42,6 @@ function App() {
       let storageRefreshToken = localStorage.getItem("refresh_token");
       const refreshToken = JSON.parse(storageRefreshToken);
       const decodedRefreshToken = jwt_decode(refreshToken);
-      // if (decoded?.exp < currentTime.getTime() / 1000) {
-      //   const data = await UserService.refreshToken();
-      //   config.headers["token"] = `Bearer ${data?.access_token}`;
-      // }
       if (decoded?.exp < currentTime.getTime() / 1000) {
         if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
           const data = await UserService.refreshToken(refreshToken);
@@ -58,16 +52,11 @@ function App() {
       }
       return config;
     },
-    (error) => {
+    (err) => {
       // Do something with request error
-      return Promise.reject(error);
+      return Promise.reject(err);
     }
   );
-
-  // const handleGetDetailsUser = async (id, token) => {
-  //   const res = await UserService.getDetailUser(id, token);
-  //   dispatch(updateUser({ ...res?.data, access_token: token }));
-  // };
 
   const handleGetDetailsUser = async (id, token) => {
     let storageRefreshToken = localStorage.getItem("refresh_token");
@@ -77,19 +66,19 @@ function App() {
       updateUser({
         ...res?.data,
         access_token: token,
-        refresh_token: refreshToken,
+        refreshToken: refreshToken,
       })
     );
   };
 
-  useEffect(() => {
-    setIsLoading(true);
-    const { storageData, decoded } = handleDecoded();
-    if (decoded?.id) {
-      handleGetDetailsUser(decoded?.id, storageData);
-    }
-    setIsLoading(false);
-  }, []);
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const { storageData, decoded } = handleDecoded();
+  //   if (decoded?.id) {
+  //     handleGetDetailsUser(decoded?.id, storageData);
+  //   }
+  //   setIsLoading(false);
+  // }, []);
 
   return (
     <div>

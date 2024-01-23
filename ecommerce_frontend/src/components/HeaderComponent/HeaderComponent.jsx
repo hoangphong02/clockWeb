@@ -15,7 +15,7 @@ import * as ProductService from "../../services/ProductService"
 import { useQuery } from '@tanstack/react-query'
 import { typeProductContant } from "../../contant";
 import TypeProduct from '../TypeProduct/TypeProduct';
-
+import logo from "../../assets/images/logo-decoration.png"
 
 const HeaderComPonent = ({isHiddenSearch = false, isHiddenCart = false})=> {
   const navigate = useNavigate()
@@ -272,7 +272,7 @@ if (hasVatPham) {
           }
           else{
              if (text.includes("mua ngay")) {
-           navigate("",{state: {addCartHeader: true}}) 
+           navigate("",{state: {buyNowHeader: true}}) 
       resetTranscript();
         }
         else{
@@ -358,7 +358,7 @@ if (hasVatPham) {
       <div style={{width:"100%", background:isScrolled? "rgb(255,255,255,0.6)":"rgb(32, 33, 38)", display:"flex", justifyContent:"center", flexDirection:"column",padding:isScrolled? "10px 30px":"20px 30px", position: isScrolled? "fixed":"", zIndex:"10",transition: "all 0.5s"}}>
         <WrapperHeader gutter={16} style={{justifyContent: isHiddenSearch && isHiddenCart ? "space-between" : "unset",marginRight:"0",marginLeft:"0"}}>
         <Col span={5} style={{display:"flex", justifyContent:"space-around", alignItems:"center"}}>
-          <WrapperTextHeader style={{cursor:"pointer",color:isScrolled? "black":"#fff",}} onClick={()=> navigate("/")}>Decoration Shop</WrapperTextHeader>  
+          <WrapperTextHeader style={{cursor:"pointer",color:isScrolled? "black":"#fff",}} onClick={()=> navigate("/")}><img style={{height:"50px"}} src={logo}/></WrapperTextHeader>  
           <span style={{cursor:"pointer", fontSize:"20px", color:isScrolled? "black":"#fff", display:"flex"}} onClick={listening === false ? startListening: stopListening}>{listening=== false ?<AudioMutedOutlined />:<AudioOutlined />}</span>
           {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
         </Col>

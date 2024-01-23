@@ -65,7 +65,6 @@ const OrderPage =()=> {
 
     const handleDecrease = (idProduct,amount)=>{
         if(amount >=2){
-
             dispatch(decreaseAmount({idProduct}))
         }
         else{

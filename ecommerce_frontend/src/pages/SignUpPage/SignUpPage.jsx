@@ -23,16 +23,18 @@ const SignUpPage = () => {
   )
   const {data, isLoading, isSuccess, isError} = mutation
   useEffect(()=>{
-    if(isSuccess){
+    if(data?.status === "OK"){
       message.success();
       handleNavigateSignIn()
     }
-    else
-    if(isError){
-
-      message.error()
+    else{
+      
+     if(data?.status === "ERR"){
+       message.error(data?.message)
+     }
     }
-  },[isSuccess,isError])
+   
+  },[data])
 
   const handleNavigateSignIn =()=>{
     navigate("/sign-in")
@@ -69,7 +71,7 @@ const SignUpPage = () => {
         {data?.status==="ERR" && <span style={{color:"red", fontSize:"13px", padding:"10px 0"}}>{data?.message}</span>}
        <Loading isLoading={isLoading}>
         <ButtonComponent
-          disabled={email.trim() === "" || password.trim() === "" ||confirmPassword.trim()===""}
+          disabled={!email.length || !password.length || !confirmPassword.length}
         onClick={handleSignUp}
              size={20} 
              style={{background: "rgb(255, 66, 78)", borderRadius: "4px", border: "none", height:"48px", width:"100%", fontSize:"15px",margin: "30px 0px 10px"}}

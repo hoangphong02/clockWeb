@@ -15,5 +15,9 @@ router.get(
 );
 router.delete("/cancel-order/:id", orderController.cancelOrder);
 router.get("/get-all-order", authMiddleWare, orderController.getAllOrder);
-router.put("/update-order/:id", authMiddleWare, orderController.updateOrder);
+router.put(
+  "/update-order/:id",
+  authUserMiddleWare,
+  orderController.updateOrder
+);
 module.exports = router;
