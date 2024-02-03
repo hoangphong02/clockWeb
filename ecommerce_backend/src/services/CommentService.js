@@ -3,7 +3,8 @@ const Comment = require("../models/CommentProduct");
 const EmailService = require("./EmailService");
 const createComment = (newComment) => {
   return new Promise(async (resolve, reject) => {
-    const { name, avatar, rating, description, user, product } = newComment;
+    const { name, avatar, rating, description, user, productItems } =
+      newComment;
     try {
       const createComment = await Comment.create({
         name,
@@ -11,7 +12,7 @@ const createComment = (newComment) => {
         description,
         rating,
         user,
-        product,
+        productItems,
       });
       if (createComment) {
         resolve({
@@ -29,7 +30,7 @@ const getAllCommentDetails = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const comment = await Comment.find({
-        product: id,
+        "productItems.product": id,
       }).sort({ createdAt: -1, updatedAt: -1 });
       if (comment === null) {
         resolve({

@@ -38,7 +38,6 @@ console.log("locationlogin",location)
         navigate(location?.state)
       }
       else{
-
         navigate("/") 
       }
       // if(location?.state) {

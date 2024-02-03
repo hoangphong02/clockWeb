@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
 
-const TypeProduct = ({name,param}) => {
+const TypeProduct = ({name,param, style}) => {
   console.log("param",param)
   console.log("name",name)
   const navigate =useNavigate()
@@ -16,9 +16,16 @@ const TypeProduct = ({name,param}) => {
     const name = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')
     return name
   }
-  return (
-    <div style={{padding: "4px 10px", cursor:"pointer", color: param === customName(name)? "#fff":"", borderRadius:param === customName(name)?"4px":"" }   } onClick={()=> handleNavigateType(name) }>{capitalizeFirstLetter(name)}</div>
-  )
+  if(style){
+    return(
+  <div style={{padding: "4px 10px", cursor:"pointer", color: style? style.color :"", borderRadius:param === customName(name)?"4px":"" }   } onClick={()=> handleNavigateType(name) }>{capitalizeFirstLetter(name)}</div>
+    )
+  }
+  else{
+    return (
+      <div style={{padding: "4px 10px", cursor:"pointer", color: param === customName(name)? "#fff":"#fff", borderRadius:param === customName(name)?"4px":"" }   } onClick={()=> handleNavigateType(name) }>{capitalizeFirstLetter(name)}</div>
+    )
+  }
 }
 
 export default TypeProduct

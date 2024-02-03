@@ -182,6 +182,18 @@ const getChecked= ( num)=>{
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
+      const handleDoc =(text)=>{
+    var msg = new SpeechSynthesisUtterance();
+    msg.lang = "vi-VI"; 
+    msg.text = text;
+    msg.volume = 1;
+                  msg.rate = 0.6;
+                  msg.pitch = 1;
+    window.speechSynthesis.speak(msg); 
+    console.log("msg",msg.text)
+    }
+
+
   const helpNavigateByVoice = async (voidValue) =>{
     const text = voidValue.toLowerCase();
     let hasVatPham = false;
@@ -217,8 +229,13 @@ const getChecked= ( num)=>{
 if (hasVatPham) {
     if (text.includes("vật phẩm trang trí")) {
       const newType = text.split('trí')[1].trim();
+      handleDoc(`vật phẩm trang trí ${newType}`)
       console.log("newType", newType);
-      navigate(`/product/${newType.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')}`, { state: newType });
+      const setTimeNavi = setTimeout(()=>{navigate(`/product/${newType.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')}`, { state: newType })
+      resetTranscript()
+    },1500)
+      return ()=>clearTimeout(setTimeNavi);
+      // navigate(`/product/${newType.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')}`, { state: newType });
       resetTranscript();
     }
   }
@@ -230,8 +247,13 @@ if (hasVatPham) {
         let idProduct = await getIdProduct(newType)
         console.log("IdProHead",idProduct)
         if(idProduct){
-          navigate(`/product-detail/${idProduct}`,{state : idProduct})
-          resetTranscript();
+          handleDoc(`tôi muốn mua ${newType}`)
+           const setTimeNavi = setTimeout(()=>{ navigate(`/product-detail/${idProduct}`,{state : idProduct})
+          resetTranscript()
+          },1500)
+      return ()=>clearTimeout(setTimeNavi);
+          // navigate(`/product-detail/${idProduct}`,{state : idProduct})
+          // resetTranscript();
           foundIdProduct= true
         }
         // else{
@@ -244,80 +266,157 @@ if (hasVatPham) {
       if(addCart){
         if (text.includes("thêm vào giỏ hàng")) {
           // setAddCartHeader(true)
-          navigate("",{state: {addCartHeader: true}}) 
+          handleDoc(`thêm vào giỏ hàng`)
+           const setTimeNavi = setTimeout(()=>{navigate("",{state: {addCartHeader: true}})
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);
+
+          // navigate("",{state: {addCartHeader: true}}) 
       resetTranscript();
     }
       }
       else{
         if(seeCart){
            if (text.includes("xem giỏ hàng")) {
-          navigate(`/order`)
-          resetTranscript();
+            handleDoc(`xem giỏ hàng`)
+           const setTimeNavi = setTimeout(()=>{navigate(`/order`)
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);           
+          // navigate(`/order`)
+          // resetTranscript();
         }
         }
         else{
           if(suggest){
-          navigate(`/productsTrending`)
-          resetTranscript();
+              handleDoc(`gợi ý sản phẩm`)
+           const setTimeNavi = setTimeout(()=>{navigate(`/productsTrending`)
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);  
+          // navigate(`/productsTrending`)
+          // resetTranscript();
           }
           else{
             if(contact){
-          navigate(`/contact`)
-          resetTranscript();
+              handleDoc(`liên hệ`)
+           const setTimeNavi = setTimeout(()=>{navigate(`/contact`)
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi); 
+          // navigate(`/contact`)
+          // resetTranscript();
           }
           else{
             if(home){
-          navigate(`/`)
-          resetTranscript();
+                handleDoc(`Quay lại trang chủ`)
+           const setTimeNavi = setTimeout(()=>{navigate(`/`)
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);   
+          // navigate(`/`)
+          // resetTranscript();
           }
           else{
              if (text.includes("mua ngay")) {
-           navigate("",{state: {buyNowHeader: true}}) 
-      resetTranscript();
+               handleDoc(`chọn mua ngay`)
+           const setTimeNavi = setTimeout(()=>{navigate("",{state: {buyNowHeader: true}})
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);   
+
+      //      navigate("",{state: {buyNowHeader: true}}) 
+      // resetTranscript();
         }
         else{
             if(text.includes("chọn sản phẩm số") ){
         const number = text.split('số')[1].trim();
         console.log("number",number)
         const id = getChecked(number)
-        navigate("",{state: {numcheck: id}}) 
-        resetTranscript()
+         handleDoc(`chọn sản phẩm số ${number}`)
+           const setTimeNavi = setTimeout(()=>{navigate("",{state: {numcheck: id}}) 
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);  
+        // navigate("",{state: {numcheck: id}}) 
+        // resetTranscript()
       }
       else{
          if (text.includes("mua hàng")) {
-           navigate("",{state: {buy: true}}) 
-      resetTranscript();
+          handleDoc(`chọn mua hàng`)
+           const setTimeNavi = setTimeout(()=>{navigate("",{state: {buy: true}})  
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);
+
+      //      navigate("",{state: {buy: true}}) 
+      // resetTranscript();
         }
         else{
            if (text.includes("ví")) {
             const namePay = text.split('ví')[1].trim();
             console.log("namePay",namePay)
             if(namePay==="momo"){
-              navigate("",{state: {value: "Thanh toán bằng ví MoMo"}}) 
+              handleDoc(`Thanh toán bằng ví mô mô`)
+           const setTimeNavi = setTimeout(()=>{ navigate("",{state: {value: "Thanh toán bằng ví MoMo"}})   
+          resetTranscript() },1000)
+      return ()=>clearTimeout(setTimeNavi);
+              // navigate("",{state: {value: "Thanh toán bằng ví MoMo"}}) 
             }
             else{            
-              navigate("",{state: {value: "Thanh toán bằng ví Paypal"}}) 
+              handleDoc(`Thanh toán bằng ví bây bồ`)
+           const setTimeNavi = setTimeout(()=>{  navigate("",{state: {value: "Thanh toán bằng ví Paypal"}})   
+          resetTranscript() },1000)
+      return ()=>clearTimeout(setTimeNavi);
+              // navigate("",{state: {value: "Thanh toán bằng ví Paypal"}}) 
             }
-      resetTranscript();
+      // resetTranscript();
         }
         else{
-          if (text.includes("khi nhận hàng")) {         
-              navigate("",{state: {value: "Thanh toán khi nhận hàng"}}) 
-      resetTranscript();
+          if (text.includes("khi nhận hàng")) { 
+             handleDoc(`Thanh toán khi nhận hàng`)
+           const setTimeNavi = setTimeout(()=>{ navigate("",{state: {value: "Thanh toán khi nhận hàng"}})   
+          resetTranscript() },1000)
+      return ()=>clearTimeout(setTimeNavi);        
+      //         navigate("",{state: {value: "Thanh toán khi nhận hàng"}}) 
+      // resetTranscript();
         }
         else{
            if (text.includes("đặt hàng")) {
-           navigate("",{state: {buy: true}}) 
-      resetTranscript();
+            handleDoc(`chọn đặt hàng`)
+           const setTimeNavi = setTimeout(()=>{navigate("",{state: {buy: true}})   
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);
+
+      //      navigate("",{state: {buy: true}}) 
+      // resetTranscript();
         }
         else{
           if (text.includes("đơn hàng")) {
-           navigate("/my-order",{ state : {
+             handleDoc(`Xem đơn hàng`)
+           const setTimeNavi = setTimeout(()=>{ navigate("/my-order",{ state : {
           id: user?.id,
           token : user?.access_token
         }
-      }) 
+      })   
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);
+      //      navigate("/my-order",{ state : {
+      //     id: user?.id,
+      //     token : user?.access_token
+      //   }
+      // }) 
+      // resetTranscript();
+        }
+        else{
+          if (text.includes("tăng số lượng lên")) { 
+            let number = text.split('lên')[1].trim();   
+            if(number === "một"){
+              number =1
+            }
+            if(number === "ba"){
+              number =3
+            }
+             handleDoc(`tăng số lượng lên ${number}`)
+           const setTimeNavi = setTimeout(()=>{ navigate("",{state: {numberIncrease: Number(number)}})
+          resetTranscript() },1500)
+      return ()=>clearTimeout(setTimeNavi);     
+              // navigate("",{state: {numberIncrease: Number(number)}}) 
       resetTranscript();
+        }
         }
         }
         }
@@ -348,9 +447,12 @@ if (hasVatPham) {
 //  eslint-disable-next-line react-hooks/rules-of-hooks
  useEffect(()=>{
   console.log("trans",transcript)
-      setTimeout(()=>{
+  const timeoutId = setTimeout(()=>{
  helpNavigateByVoice(transcript)
+   resetTranscript()
       },1500)
+        return () => clearTimeout(timeoutId);
+        resetTranscript()
  },[transcript,addCartHeader])
  
   console.log("listening",listening)
@@ -376,9 +478,9 @@ if (hasVatPham) {
       {typeProductContant?.map((type) => (
             typeProduct.includes(type.type) && (
                <li>
-                <div style={{display:"flex", alignItems:"center", padding:"0 20px"}}>
+                <div style={{display:"flex", alignItems:"center", padding:"0 20px",color:"#000"}}>
                     <img style={{width:"20px", height:"20px"}} src={type.image}/>
-                    <TypeProduct name={type.type} key={type.type}/>
+                    <TypeProduct name={type.type} key={type.type} style={{color:"#000"}}/>
                 </div>
                </li>
             )

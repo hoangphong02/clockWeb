@@ -280,7 +280,7 @@ console.log("state",stateUserDetails)
     
    
     return ( 
-        <div style={{width:"100%",height:"100%",background: "rgb(239, 239, 239)"}}>
+        <div style={{width:"100%",height:"100%",background: "rgb(239, 239, 239)", padding:"0px 0 20px"}}>
             <div style={{height:"100%", width:"1270px", margin:"0 auto"}}> 
             <h3 style={{margin:"0", fontSize:"15px", padding:"15px 0"}}><span style={{cursor:"pointer"}} onClick={()=> navigate("/")}>Trang chủ</span> - Giỏ hàng</h3>
         <div style={{display:"flex"}} >

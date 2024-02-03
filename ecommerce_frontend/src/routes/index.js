@@ -14,6 +14,7 @@ import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import TrendingProductPage from "../pages/TrendingProductPage/TrendingProductPage";
 import ContactPage from "../pages/ContactPage/ContactPage";
+import TestPage from "../pages/TestPage/TestPage";
 export const routes = [
   {
     path: "/",
@@ -93,6 +94,11 @@ export const routes = [
   {
     path: "/profile-user",
     page: ProfilePage,
+    isShowHeader: true,
+  },
+  {
+    path: "/testTrending",
+    page: TestPage,
     isShowHeader: true,
   },
 ];

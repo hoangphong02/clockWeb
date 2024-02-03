@@ -13,7 +13,7 @@ import QRCodeComponent from '../QRCode/QRCode'
 import { useMutationHook } from '../../hooks/useMutationHook'
 
 
-const ProductDetailComponent = ({idProduct,addCart,buyNow}) => {
+const ProductDetailComponent = ({idProduct,addCart,buyNow,numberIncrease}) => {
     const [numberProduct, setNumberProduct]= useState(1)
     const user = useSelector((state) => state?.user)
     const navigate =useNavigate()
@@ -200,6 +200,14 @@ const onAddFollower = () => {
   },[numberProduct])
 
 
+
+
+  useEffect(()=>{
+    console.log("Number",numberIncrease)
+    if(numberIncrease > 0 ){
+      setNumberProduct((prev)=> prev + numberIncrease)
+    }
+  },[numberIncrease])
 
   return (
     <Row style={{background: "#fff", padding: "16px"}} >

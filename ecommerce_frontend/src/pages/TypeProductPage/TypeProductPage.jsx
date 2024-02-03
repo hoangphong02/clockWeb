@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperButtonMore, WrapperMic, WrapperProducts, WrapperTypeProduct } from "./style";
+import { WrapperAll, WrapperButtonMore, WrapperMic, WrapperPanigation, WrapperProducts, WrapperTypeProduct } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import * as ProductService from "../../services/ProductService"
 import { useQuery } from "@tanstack/react-query";
@@ -15,6 +15,20 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CartSliderComponent from "../../components/CartSliderComponent/CartSliderComponent";
 
+import bgTypeGiangSinhHoaTuyet1 from "../../assets/images/bgHoaTuyet1.png";
+import bgTypeGiangSinhHoaTuyet2 from "../../assets/images/bgHoaTuyet2.png";
+import bgTypeGiangSinhHoaTuyet3 from "../../assets/images/bgHoaTuyet3.png";
+
+import bgTypeTetHoaMai2 from "../../assets/images/bgTypeTetHoaMai5.png";
+import bgTypeTetHoaMai3 from "../../assets/images/bgTypeTetHoaMai4.png";
+
+import bgTypeTrungthu1 from "../../assets/images/bgTypeTrungthu7.jpg";
+import bgTypeTrungthu5 from "../../assets/images/bgTypeTrungthu3.jpg";
+import bgTypeTrungthu3 from "../../assets/images/bgTypeTrungthu3.jpg";
+
+import bgTypeHalloween from "../../assets/images/bgTypeHalloween2.png";
+
+import bgTypeValentine from "../../assets/images/bgTypeValentine1.png";
 
 const TypeProductPage =()=> {
     const searchProduct = useSelector((state)=> state?.product?.search)
@@ -28,6 +42,7 @@ const TypeProductPage =()=> {
     const [value1, setValue1]= useState(0)
     const [value2, setValue2]= useState(3500000)
     const navigate = useNavigate()
+    const [arrImageBackgroundAmination, setArrImageBackgroundAmination ] = useState([])
     const [panigate, setPanigate]= useState({
         page:0,
         limit:6,
@@ -109,20 +124,46 @@ const TypeProductPage =()=> {
     setFilter(true)
    }
 
+   const getImageBgAmination = async()=>{
+    if(type === "giang_sinh"){
+        setArrImageBackgroundAmination([bgTypeGiangSinhHoaTuyet1,bgTypeGiangSinhHoaTuyet2,bgTypeGiangSinhHoaTuyet3])
+    }
   
+    if(type === "tet"){
+        setArrImageBackgroundAmination([bgTypeTetHoaMai3,bgTypeTetHoaMai3   ])
+    }
+   
+    if(type === "trung_thu"){
+        setArrImageBackgroundAmination([bgTypeTrungthu1])
+    }
+    if(type === "halloween"){
+        setArrImageBackgroundAmination([bgTypeHalloween,bgTypeHalloween])
+    }
+     if(type === "tinh_nhan"){
+        setArrImageBackgroundAmination([bgTypeValentine,bgTypeValentine])
+    }
+
+   }
   
+  useEffect(()=>{
+    console.log("Type changed:", type);
+    getImageBgAmination()
+  },[type])
+
+  console.log("arrImage",arrImageBackgroundAmination)
 
     return ( 
         <Loading isLoading={ loading}>
+            <WrapperAll arrImageBackgoundAmination ={ arrImageBackgroundAmination}>
         <div className="all" style={{display:"flex",width:"100%" }}>
 
-        <div style={{width: "20%", margin:"0 auto",display:"flex",flexDirection:"column", marginTop:"20px"}}>
+        <div style={{width: "20%", margin:"0 auto",display:"flex",flexDirection:"column", marginTop:"20px", zIndex:"10"}}>
             <div>
 
             <WrapperTypeProduct style={{flexDirection:"column", padding:"0 20px"}}>
                 {typeProductContant?.map((type) => (
             typeProduct.includes(type.type) && (
-                <div style={{display:"flex", justifyContent:"left", alignItems:"center", background: state === type.type ? "rgb(32 33 38)":"", width:"100%",padding:"0 20px",color: state === type.type ? "#fff":""}}>
+                <div style={{display:"flex", justifyContent:"left", alignItems:"center", background: state === type.type ? "rgb(94 19 42)":"", width:"100%",padding:"0 20px",color: state === type.type ? "#fff":""}}>
                     <img style={{width:"20px", height:"20px"}} src={type.image}/>
                     <TypeProduct name={type.type} key={type.type} />
                 </div>
@@ -185,11 +226,12 @@ const TypeProductPage =()=> {
                
             </WrapperProducts>
             <div style={{display: "flex", justifyContent:"center"}}>
-           <Pagination defaultCurrent={panigate.page +1} total={panigate.total * 10 } style={{margin: "20px 0"}} onChange={onChange}/>
+           <WrapperPanigation defaultCurrent={panigate.page +1} total={panigate.total * 10 } style={{margin: "20px 0", color:"#fff"}} onChange={onChange}/>
             </div>
             </div>
         </div>
         </div>
+            </WrapperAll>
         </Loading>
      );
 }

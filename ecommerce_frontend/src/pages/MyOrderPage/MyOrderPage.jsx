@@ -27,7 +27,7 @@ const MyOrderPage =()=> {
     const [valueRating,setValueRating] = useState(0)
      const [description, setDescription] = useState('')
      const [idDetailsOrder, setIdDetailsOrder] = useState('')
-     const [idProduct, setIdProduct] = useState('')
+     const [idProduct, setIdProduct] = useState([])
      const [idOrder, setIdOrder] = useState('')
       const [isEvaluate, setIsEvaluate] = useState(false)
 
@@ -40,8 +40,14 @@ const MyOrderPage =()=> {
     const { isLoading, data } = queryOrder
 
     const fetchMyDetailsOrder = async(id,token)=>{
+      const arrIdProduct =[]
       const res = await OrderService.getDetailOrder(id,token)
-      setIdProduct(res?.data?.orderItems[0].product)
+     res?.data?.orderItems?.forEach(item => {
+  if (item.product) {
+    arrIdProduct.push({ product: item.product });
+  }
+});
+      setIdProduct(arrIdProduct)
       setIdOrder(res?.data?._id)
     }
 
@@ -127,7 +133,7 @@ const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: 
             description:description,
             rating:valueRating,
             user: user?.id,
-            product: idProduct
+            productItems: idProduct
           }
         )
       }

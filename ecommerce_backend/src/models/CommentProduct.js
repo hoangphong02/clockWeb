@@ -6,11 +6,20 @@ const commentSchema = new mongoose.Schema(
     description: { type: String, required: true },
     rating: { type: Number, require: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true,
-    },
+    productItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+      },
+    ],
+    // product: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Product",
+    //   required: true,
+    // },
     commentAt: { type: Date },
   },
   {

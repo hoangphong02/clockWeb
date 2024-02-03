@@ -14,6 +14,7 @@ function App() {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);
+  console.log("user", user);
   useEffect(() => {
     setIsLoading(true);
     const { storageData, decoded } = handleDecoded();
@@ -41,7 +42,10 @@ function App() {
       const { decoded } = handleDecoded();
       let storageRefreshToken = localStorage.getItem("refresh_token");
       const refreshToken = JSON.parse(storageRefreshToken);
+      console.log("refreshToken", storageRefreshToken);
       const decodedRefreshToken = jwt_decode(refreshToken);
+      console.log("decodedRefreshToken", decodedRefreshToken);
+
       if (decoded?.exp < currentTime.getTime() / 1000) {
         if (decodedRefreshToken?.exp > currentTime.getTime() / 1000) {
           const data = await UserService.refreshToken(refreshToken);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ProductDetailComponent from '../../components/ProductDetailComponent/ProductDetailComponent'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useMutationHook } from '../../hooks/useMutationHook'
@@ -15,6 +15,8 @@ const ProductDetailPage = () => {
     const [addCart,setAddCart] = useState(false)
     const [buyNow,setBuynow] = useState(false)
     const [valueRating,setValueRating] = useState(0)
+    const [numberIncrease,setNumberIncrease] = useState(0)
+
   const {id} = useParams()
   // const {state}= useLocation()
   const location =useLocation()
@@ -22,6 +24,9 @@ const ProductDetailPage = () => {
   const [description, setDescription] = useState('')
   const addCartHeader = location.state?.addCartHeader || false;
   const buyNowHeader = location.state?.buyNowHeader || false;
+  const numberIncreaseFromState = location.state?.numberIncrease || 0;
+
+  console.log("numberIncrease",numberIncreaseFromState)
 
   console.log("product",product)
     console.log("params",id)
@@ -142,12 +147,24 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
   useEffect(()=>{
     setBuynow(buyNowHeader)
   },[buyNowHeader])
+
+  const previousNumberIncreaseRef = useRef(null);
+  useEffect(() => {
+  if (numberIncreaseFromState !== previousNumberIncreaseRef.current) {
+    setNumberIncrease(numberIncreaseFromState);
+    previousNumberIncreaseRef.current = numberIncreaseFromState;
+  }
+    }, [numberIncreaseFromState]);
+
+  useEffect(()=>{
+    setNumberIncrease(numberIncreaseFromState)
+  },[numberIncreaseFromState])
   console.log("valuerATIN", valueRating)
 
   return (
     <div style={{padding: "0 120px", background:"#efefef "}}>
       <h3 style={{margin:"0", fontSize:"15px", padding:"15px 0"}}><span style={{cursor:"pointer"}} onClick={()=> navigate("/")}>Trang chủ</span> - Chi tiết sản phẩm</h3>
-      <ProductDetailComponent idProduct = {id} addCart={addCart} buyNow={buyNow}/>
+      <ProductDetailComponent idProduct = {id} addCart={addCart} buyNow={buyNow} numberIncrease={numberIncrease}/>
        <div style={{padding:"30px 0 0 0", fontSize:"25px", fontWeight:"bold"}}>Bình luận và đánh giá</div>
       {/* <div style={{margin:"30px 0", display:"flex",gap:"10px",alignItems:"center"}}>
       <img src={user?.avatar} style={{width:"40px", height:"40px", borderRadius:"50%", objectFit:"cover"}}/>

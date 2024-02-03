@@ -1,11 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatedImage, WrapperButtonComponent, WrapperProductTrending, WrapperTextProductTrending } from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import headerTet from "../../assets/images/factory_bg_1.png"
 import backgroundTet from "../../assets/images/culture_bg_1.png"
 import backgroundTitleTet from "../../assets/images/culture_heading.png"
-import backgroundgiangsinh from "../../assets/images/giangsinh.webp"
-import backgroundValentine from "../../assets/images/valentine.png"
+import backgroundgiangsinh from "../../assets/images/bgNoel8.png"
+import backgroundgiangsinhRight from "../../assets/images/bgNoel6.png"
+import backgroundValentine from "../../assets/images/bgValentine3.png"
+import backgroundValentineRight from "../../assets/images/bgValentine5.png"
 import backgroundTitleValentine from "../../assets/images/factory_heading.png"
 import backgroundHalloween from "../../assets/images/background-1298031_1280.webp"
 import ImageContact from "../../assets/images/contact.png"
@@ -179,6 +181,7 @@ useEffect(() => {
 }, []);
 
 
+
     const getProductsOutstanding =  (dataproduct)=>{
        if (dataproduct) {
    const sortedProducts = [...dataproduct].sort((a, b) => b.selled - a.selled);
@@ -206,9 +209,10 @@ useEffect(() => {
         }
     },[today.toDate().getDate(),productTypeTrungThu,productTypeHalloween,productTypeNoel,productTypeTet,productTypeValentine])
 
-    const onChangeName= async (e)=>{
-	    await setName(e.target.value);
+    const onChangeName=  (e)=>{
+	     setName(e.target.value);
 	}
+
 	const onChangeEmail= (e)=>{
 		setEmail(e.target.value);
 	}
@@ -237,7 +241,6 @@ useEffect(() => {
       navigate('/sign-in',{state: location?.pathname})
     }
 	else{
-
         mutationAddContact.mutate(
           { token: user?.access_token, 
             name:name,
@@ -324,8 +327,10 @@ useEffect(() => {
             <SliderCartComponent products={productTypeTet}/> 
             </div>
             </div>
-            <div style={{backgroundColor:"#821a20", width:"100%",backgroundImage:`url(${backgroundgiangsinh})`,backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
-             backgroundPosition: "center",backgroundSize:"100%",padding:"20px 0 40px 0"}}>
+            <div style={{backgroundColor:"#821a20",backgroundImage: `url(${backgroundgiangsinh}), url(${backgroundgiangsinhRight})`, // Lặp lại hình ảnh hai lần
+    backgroundRepeat: "no-repeat, no-repeat", // Không lặp lại hình ảnh
+    backgroundPosition: "left top, right bottom", // Đặt vị trí của từng hình ảnh
+    backgroundSize: "auto",padding:"20px 0 40px 0"}}>
             <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
                 display: "flex",
                 alignItems: "center",
@@ -342,9 +347,11 @@ useEffect(() => {
             </div>
             </div>
 
-             <div style={{backgroundColor:"#821a20",backgroundImage:`url(${backgroundValentine})`, width:"100%",backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
-             backgroundPosition: "center",backgroundSize:"cover",padding:"20px 0 40px 0"}}>
-            <div style={{backgroundImage:`url(${backgroundTitleValentine})`,color:"#821a20",padding: "3.1rem 6.1rem",
+             <div style={{backgroundColor:"#821a20",backgroundImage: `url(${backgroundValentineRight}), url(${backgroundValentine})`, // Lặp lại hình ảnh hai lần
+    backgroundRepeat: "no-repeat, no-repeat", // Không lặp lại hình ảnh
+    backgroundPosition: "left top, right bottom", // Đặt vị trí của từng hình ảnh
+    backgroundSize: "auto",padding:"20px 0 40px 0"}}>
+            <div style={{backgroundImage:`url(${backgroundTitleTet})`,color:"#821a20",padding: "3.1rem 6.1rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
