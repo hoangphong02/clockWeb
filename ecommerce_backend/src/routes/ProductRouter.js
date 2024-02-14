@@ -27,4 +27,9 @@ router.put(
   authUserMiddleWare,
   productController.addFollower
 );
+router.delete(
+  "/deleteFollower/:id",
+  authUserMiddleWare,
+  productController.deleteFollower
+);
 module.exports = router;

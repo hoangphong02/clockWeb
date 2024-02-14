@@ -1,5 +1,6 @@
 const Product = require("../models/ProductModel");
 const bcrypt = require("bcrypt");
+const EmailService = require("./EmailService");
 const createProduct = (newProduct) => {
   return new Promise(async (resolve, reject) => {
     const {
@@ -63,6 +64,9 @@ const updateProduct = (id, data) => {
       const updateProduct = await Product.findByIdAndUpdate(id, data, {
         new: true,
       });
+      if (updateProduct) {
+        await EmailService.sendEmailUpdateProductToFollowers(data);
+      }
 
       resolve({
         status: "OK",
@@ -268,6 +272,34 @@ const addFollower = (id, data) => {
   });
 };
 
+const deleteFollower = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const product = await Product.findOne({
+        "followers.user": id,
+      });
+      if (product === null) {
+        resolve({
+          status: "OK",
+          message: "The product is not defined",
+        });
+        return;
+      }
+      product.followers = product.followers.filter(
+        (follower) => follower.user.toString() !== id
+      );
+      await product.save();
+
+      resolve({
+        status: "OK",
+        message: "Delete follower success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createProduct,
   updateProduct,
@@ -277,4 +309,5 @@ module.exports = {
   getAllType,
   deleteManyProduct,
   addFollower,
+  deleteFollower,
 };

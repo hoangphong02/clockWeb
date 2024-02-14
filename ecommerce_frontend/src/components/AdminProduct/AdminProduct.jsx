@@ -33,7 +33,8 @@ const AdminProduct = () => {
     type: '',
     countInStock: '',
     newType: '',
-    discount:''
+    discount:'',
+    followers:[]
   })
   const [stateProduct, setStateProduct] = useState(inittial())
   const [stateProductDetails, setStateProductDetails] = useState(inittial())
@@ -121,7 +122,8 @@ const AdminProduct = () => {
         image: res?.data?.image,
         type: res?.data?.type,
         countInStock: res?.data?.countInStock,
-        discount: res?.data?.discount
+        discount: res?.data?.discount,
+        followers:res?.data?.followers
       })
     }
     setIsLoadingUpdate(false)

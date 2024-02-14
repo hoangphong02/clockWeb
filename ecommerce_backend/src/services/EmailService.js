@@ -38,6 +38,45 @@ const sendEmailCreateOrder = async (orderItems, email) => {
   });
 };
 
+const sendEmailUpdateProductToFollowers = async (data) => {
+  console.log("product, data", data);
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: process.env.MAIL_ACCOUNT,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
+
+  let productDetail = "";
+  const attachImage = [];
+
+  productDetail += `<div>
+    <div>
+      Tên sản phẩm là <b>${data?.name}</b> với giá: <b>${data?.price}</b> và giảm giá là: <b>${data?.discount}</b></div>
+      <div>Bên dưới là hình ảnh của sản phẩm</div>
+      </div>`;
+  attachImage.push({ path: data.image });
+  // async..await is not allowed in global scope, must use a wrapper
+  // send mail with defined transport object
+  const emails = data.followers.map((follower) => follower.email);
+  const emailString = emails.join(", ");
+  console.log("emailString", emailString);
+
+  let info = await transporter.sendMail({
+    from: "hoangphongvl2021@gmail.com", // sender address
+    to: emailString, // list of receivers
+    subject: "Sản phẩm bạn theo dõi đã được cập nhật", // Subject line
+    text: "Hello world?", // plain text body
+    html: `<div><b>Sản phẩm đã thay đổi </b></div> ${productDetail}`,
+    attachments: attachImage,
+  });
+};
+
 module.exports = {
   sendEmailCreateOrder,
+  sendEmailUpdateProductToFollowers,
 };
