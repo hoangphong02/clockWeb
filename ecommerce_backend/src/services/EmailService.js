@@ -30,7 +30,7 @@ const sendEmailCreateOrder = async (orderItems, email) => {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: "hoangphongvl2021@gmail.com", // sender address
-    to: "hoangphongvl2021@gmail.com", // list of receivers
+    to: email, // list of receivers
     subject: "Bạn đã mua sản phẩm tại Decoration shop", // Subject line
     text: "Hello world?", // plain text body
     html: `<div><b>Bạn đã đặt hàng thành công tại shop </b></div> ${listItem}`,
@@ -68,7 +68,7 @@ const sendEmailUpdateProductToFollowers = async (data) => {
 
   let info = await transporter.sendMail({
     from: "hoangphongvl2021@gmail.com", // sender address
-    to: emailString, // list of receivers
+    to: emailString != "" ? emailString : "abc@gmail.com", // list of receivers
     subject: "Sản phẩm bạn theo dõi đã được cập nhật", // Subject line
     text: "Hello world?", // plain text body
     html: `<div><b>Sản phẩm đã thay đổi </b></div> ${productDetail}`,

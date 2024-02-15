@@ -3,7 +3,7 @@
   // import imageProduct from '../../assets/images/test.webp'
   // import imageSmallProduct from '../../assets/images/imageSmall.webp'
   import { WrapperAddress, WrapperBtnBuyCart, WrapperInputNumber, WrapperPriceProduct, WrapperPriceTextProduct, WrapperQualityProduct, WrapperStyleNameProduct, WrapperStyleTextSell, WrapperStyledColImage, WrapperStyledImageSmall, WrapperTextQuality } from './style'
-  import { CloudFilled, MinusOutlined, PlusOutlined, StarFilled } from '@ant-design/icons'
+  import { CheckOutlined, CloudFilled, MinusOutlined, PlusOutlined, PlusSquareOutlined, ShoppingCartOutlined, ShoppingOutlined, StarFilled } from '@ant-design/icons'
   import ButtonComponent from '../ButtonComponent/ButtonComponent'
   import * as ProductService from '../../services/ProductService'
   import { useDispatch, useSelector } from 'react-redux'
@@ -300,20 +300,20 @@
               <ButtonComponent
               size={20} 
               style={{background: "rgb(255, 66, 78)", borderRadius: "4px", border: "none", height:"48px", width:"220px", fontSize:"15px"}}
-              textButton={"Thêm vào giỏ hàng"}
-                styleTextButton={{color: "#fff"}}
+              textButton={<><ShoppingCartOutlined style={{fontSize:"25px"}}/> Thêm vào giỏ hàng</>}
+                styleTextButton={{color: "#fff" , display:"flex", alignItems:"center", justifyContent:"center", gap:"5px"}}
                 onClick={handleAddOderProduct}></ButtonComponent>
                 <ButtonComponent
               size={20} 
               style={{background: "rgb(255, 66, 78)", borderRadius: "4px", border: "none", height:"48px", width:"220px", fontSize:"15px"}}
-              textButton={"Mua ngay"}
-                styleTextButton={{color: "#fff"}}
+              textButton={<><ShoppingOutlined style={{fontSize:"25px"}} /> Mua ngay</>}
+                styleTextButton={{color: "#fff", display:"flex", alignItems:"center", justifyContent:"center", gap:"5px"}}
                 onClick={handleBuyNow}></ButtonComponent>
               <ButtonComponent
               size={20} 
               style={{background: isFollowerProduct === false? "#fff": "rgb(31 58 201)", borderRadius: "4px", border: "1px solid rgb(10, 104, 255)", height:"48px", width:"220px", fontSize:"15px"}}
-              textButton={ isFollowerProduct === false? "Theo dõi":"Đã theo dõi"}
-                styleTextButton={{color:isFollowerProduct === false? "rgb(10, 104, 255)":"#fff"}}
+              textButton={ isFollowerProduct === false? <>{<PlusSquareOutlined style={{fontSize:"25px"}}/>} Theo dõi</> : <><CheckOutlined /> Đã theo dõi</>}
+                styleTextButton={{color:isFollowerProduct === false? "rgb(10, 104, 255)":"#fff" , display:"flex", alignItems:"center", justifyContent:"center", gap:"5px"}}
                 onClick={onHandleFollower}
                 ></ButtonComponent> 
           </WrapperBtnBuyCart>
