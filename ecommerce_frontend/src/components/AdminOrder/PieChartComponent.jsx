@@ -4,10 +4,11 @@ import { converDataChart } from '../../utils';
 
 const PieChartComponent = (props) => {
   console.log("props",props?.data)
-const data = converDataChart(props?.data,"paymentMethod")
+const data = converDataChart(props?.data,props?.label)
 console.log("data2",data)
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+// const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = props?.color
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;

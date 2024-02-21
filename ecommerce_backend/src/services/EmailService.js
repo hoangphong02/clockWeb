@@ -56,7 +56,7 @@ const sendEmailUpdateProductToFollowers = async (data) => {
 
   productDetail += `<div>
     <div>
-      Tên sản phẩm là <b>${data?.name}</b> với giá: <b>${data?.price}</b> và giảm giá là: <b>${data?.discount}</b></div>
+      Tên sản phẩm là <b>${data?.name}</b> với giá: <b>${data?.price}</b>VND và giảm giá là: <b>${data?.discount}</b>%</div>
       <div>Bên dưới là hình ảnh của sản phẩm</div>
       </div>`;
   attachImage.push({ path: data.image });

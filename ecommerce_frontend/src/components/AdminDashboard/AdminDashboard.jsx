@@ -1,4 +1,4 @@
-import { AppstoreOutlined, ContactsOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ContactsOutlined, DollarOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import React from 'react'
 import { useSelector } from 'react-redux';
@@ -25,6 +25,7 @@ const AdminDashboard = () => {
   const getAllOrder = async () => {
     const res = await OrderService.getAllOrder(user?.access_token)
     return res
+    
   }
   
     const getAllContact = async () => {
@@ -42,8 +43,34 @@ const queryContact = useQuery({ queryKey: ['contacts'], queryFn: getAllContact }
   const {data: orders } = queryOrder
   const { data: products } = queryProduct
 const {data: users } = queryUser
-console.log("products",products)
 
+const totalPriceReceived = orders?.data.reduce((total, order) => {
+  if (order.isReceived) {
+    return total + order.totalPrice;
+  } else {
+    return total;
+  }
+}, 0);
+
+const currentDate = new Date()
+const currentMonth = currentDate.getMonth()+1;
+const currentYear = currentDate.getFullYear()
+console.log("date", currentMonth, currentYear)
+
+const totalPriceReceivedOfMonth = orders?.data.reduce((total, order) => {
+  const updatedAtDate = new Date(order.updatedAt);
+  const orderMonth = updatedAtDate.getMonth() + 1;
+  const orderYear = updatedAtDate.getFullYear();
+  if (order.isReceived && orderMonth === currentMonth && orderYear === currentYear) {
+    return total + order.totalPrice;
+  } else {
+    return total;
+  }
+}, 0);
+
+
+
+console.log("products",products)
     const monthlyOrders={}
   Array.isArray(orders?.data) &&  orders?.data?.forEach(order=>{
         const orderDate = new Date(order?.createdAt)
@@ -117,31 +144,31 @@ console.log("products",products)
         <div className='main-cards'>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>PRODUCTS</h3>
-                    <AppstoreOutlined className='card_icon'/> 
+                    <h3>DOANH THU</h3>
+                    <DollarOutlined  className='card_icon'/> 
                 </div>
-                <h1>{products?.data?.length ? products?.data?.length : 0}</h1>
+                <h2>{totalPriceReceived?.toLocaleString()} </h2>
             </div>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>ORDERS</h3>
+                    <h3>DOANH THU THÁNG</h3>
+                    <DollarOutlined className='card_icon'/>
+                </div>
+                <h2>{totalPriceReceivedOfMonth?.toLocaleString()}</h2>
+            </div>
+            <div className='card'>
+                <div className='card-inner'>
+                    <h3>ĐƠN HÀNG</h3>
                     <ShoppingCartOutlined className='card_icon'/>
                 </div>
-                <h1>{orders?.data?.length ? orders?.data?.length : 0}</h1>
+                <h2>{orders?.data?.length ? orders?.data?.length : 0}</h2>
             </div>
             <div className='card'>
                 <div className='card-inner'>
-                    <h3>CUSTOMERS</h3>
-                    <UserOutlined className='card_icon'/>
-                </div>
-                <h1>{users?.data?.length ? users?.data?.length : 0}</h1>
-            </div>
-            <div className='card'>
-                <div className='card-inner'>
-                    <h3>CONTACTS</h3>
+                    <h3>LIÊN HỆ</h3>
                     <ContactsOutlined  className='card_icon'/>
                 </div>
-                <h1>{contacts?.data?.length ? contacts?.data?.length : 0}</h1>
+                <h2>{contacts?.data?.length ? contacts?.data?.length : 0}</h2>
             </div>
         </div>
 

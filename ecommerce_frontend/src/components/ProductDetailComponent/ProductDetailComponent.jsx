@@ -278,7 +278,7 @@
           <WrapperStyleTextSell> | Đã bán {stateProductDetails?.selled ? stateProductDetails?.selled : 0}+</WrapperStyleTextSell>     
           </div>
           <WrapperPriceProduct>
-          <WrapperPriceTextProduct>{stateProductDetails?.price.toLocaleString()} vnd</WrapperPriceTextProduct>
+          <WrapperPriceTextProduct>{stateProductDetails?.price.toLocaleString()} VND</WrapperPriceTextProduct>
           <div style={{fontSize: "16px",fontFamily: "ui-monospace"}}>
             {stateProductDetails?.description}
           </div>

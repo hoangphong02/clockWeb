@@ -418,8 +418,19 @@ const getItems = (rowSelected) => {
   return (
     <div>
       <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
-      <div style={{width:"200px", height:"200px"}}>
-      <PieChartComponent data={orders?.data}/>
+      <div style={{ display:"flex", marginBottom:"20px",padding:"20px", gap:"30px"}}>
+      <div style={{width:"200px", height:"200px", textAlign:"center"}}>
+      <PieChartComponent data={orders?.data} label ={"paymentMethod"} color={['#0088FE', '#00C49F']}/>
+      <p style={{fontSize:"15px", fontWeight:"bold"}}>Phương thức thanh toán</p>
+        </div>
+      <div style={{width:"200px", height:"200px", textAlign:"center"}}>
+      <PieChartComponent data={orders?.data} label ={"isConfirm"} color={['#FFBB28', '#FF8042']}/>
+      <p style={{fontSize:"15px", fontWeight:"bold"}}>Xác nhận đơn hàng</p>
+      </div>
+      <div style={{width:"200px", height:"200px", textAlign:"center"}}>
+      <PieChartComponent data={orders?.data} label ={"isDelivered"} color={['#258a3f', '#d61a2c']}/>
+      <p style={{fontSize:"15px", fontWeight:"bold"}}>Vận chuyển đơn hàng</p>
+      </div>
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
