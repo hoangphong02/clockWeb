@@ -208,7 +208,7 @@ const getChecked= ( num)=>{
   if (text.includes("vật phẩm")) {
     hasVatPham = true;
   }
-  if(text.includes("muốn mua")){
+  if(text.includes("muốn mua") || text.includes("muốn xem")){
     hasMuonMua = true;
   }
   if(text.includes("thêm vào giỏ hàng")){
@@ -241,13 +241,23 @@ if (hasVatPham) {
   }
   else{
     if(hasMuonMua){
-       if(text.includes("muốn mua")){
-        const newType = text.split('mua')[1].trim() ;
+       if(text.includes("muốn mua") || text.includes("muốn xem")){
+          let newType = "";
+        if (text.includes("muốn mua")) {
+            newType = text.split('mua')[1]?.trim();
+        } else if (text.includes("muốn xem")) {
+            newType = text.split('xem')[1]?.trim();
+        }
         console.log("newType",newType)
         let idProduct = await getIdProduct(newType)
         console.log("IdProHead",idProduct)
         if(idProduct){
-          handleDoc(`tôi muốn mua ${newType}`)
+          if (text.includes("muốn mua")) {
+            handleDoc(`tôi muốn mua ${newType}`)
+        } else if (text.includes("muốn xem")) {
+            handleDoc(`tôi muốn xem ${newType}`)
+        }
+          // handleDoc(`tôi muốn mua ${newType}`)
            const setTimeNavi = setTimeout(()=>{ navigate(`/product-detail/${idProduct}`,{state : idProduct})
           resetTranscript()
           },1500)
@@ -336,8 +346,8 @@ if (hasVatPham) {
         // resetTranscript()
       }
       else{
-         if (text.includes("mua hàng")) {
-          handleDoc(`chọn mua hàng`)
+         if (text.includes("thanh toán")) {
+          handleDoc(`chọn thanh toán`)
            const setTimeNavi = setTimeout(()=>{navigate("",{state: {buy: true}})  
           resetTranscript() },1500)
       return ()=>clearTimeout(setTimeNavi);

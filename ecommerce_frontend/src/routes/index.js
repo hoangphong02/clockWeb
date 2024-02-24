@@ -15,6 +15,8 @@ import DetailsOrderPage from "../pages/DetailsOrderPage/DetailsOrderPage";
 import TrendingProductPage from "../pages/TrendingProductPage/TrendingProductPage";
 import ContactPage from "../pages/ContactPage/ContactPage";
 import TestPage from "../pages/TestPage/TestPage";
+import ForgetPasswordPage from "../pages/ForgetPassword/ForgetPasswordPage";
+import CreateNewPassword from "../pages/CreateNewPassword/CreateNewPassword";
 export const routes = [
   {
     path: "/",
@@ -78,6 +80,16 @@ export const routes = [
   {
     path: "/sign-up",
     page: SignUpPage,
+    isShowHeader: false,
+  },
+  {
+    path: "/forget-password",
+    page: ForgetPasswordPage,
+    isShowHeader: false,
+  },
+  {
+    path: "/create-newPassword",
+    page: CreateNewPassword,
     isShowHeader: false,
   },
   {

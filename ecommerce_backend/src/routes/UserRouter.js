@@ -15,4 +15,5 @@ router.get("/getAll", authMiddleWare, userController.getAllUser);
 router.get("/get-detail/:id", authUserMiddleWare, userController.getDetailUser);
 router.post("/refresh-token", userController.refreshToken);
 router.post("/delete-many", authMiddleWare, userController.deleteMany);
+router.put("/update-password", userController.updatePassword);
 module.exports = router;

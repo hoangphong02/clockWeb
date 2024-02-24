@@ -76,7 +76,29 @@ const sendEmailUpdateProductToFollowers = async (data) => {
   });
 };
 
+const sendEmailOtp = async (email, otp) => {
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+      user: process.env.MAIL_ACCOUNT,
+      pass: process.env.MAIL_PASSWORD,
+    },
+  });
+
+  let info = await transporter.sendMail({
+    from: "hoangphongvl2021@gmail.com", // sender address
+    to: email, // list of receivers
+    subject: "Mã otp của bạn", // Subject line
+    text: "Hello world?", // plain text body
+    html: `<div>Mã OTP của bạn là ${otp}</div> không chia sẻ cho bất kì ai`,
+  });
+};
+
 module.exports = {
   sendEmailCreateOrder,
   sendEmailUpdateProductToFollowers,
+  sendEmailOtp,
 };

@@ -374,7 +374,7 @@ console.log("state",stateUserDetails)
                 </span>
             </WrapperInfo>
             <div style={{textAlign:"center", padding:"20px"}} >
-                <ButtonComponent textButton={"Mua hàng"} style={{background:"red", color:"#fff",height:"50px", width:"200px", fontWeight:"700"}} onClick={()=>addCart()}/>
+                <ButtonComponent textButton={"Thanh toán"} style={{background:"red", color:"#fff",height:"50px", width:"200px", fontWeight:"700"}} onClick={()=>addCart()}/>
             </div>
             </WrapperRight>
         </div>

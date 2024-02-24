@@ -107,3 +107,11 @@ export const deleteManyUser = async (data, access_token) => {
   );
   return res.data;
 };
+
+export const updatePassword = async (data) => {
+  const res = await axios.put(
+    `${process.env.REACT_APP_API_URL}/user/update-password`,
+    data
+  );
+  return res.data;
+};

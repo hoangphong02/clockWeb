@@ -101,7 +101,7 @@ console.log("locationlogin",location)
               styleTextButton={{color: "#fff"}}
         ></ButtonComponent>
         </Loading>
-        <p><WrapperTextLight> Quên mật khẩu</WrapperTextLight></p>
+        <p onClick={()=>navigate(`/forget-password`)}><WrapperTextLight> Quên mật khẩu</WrapperTextLight></p>
         <p>Chưa có tài khoản? <WrapperTextLight onClick={handleNavigateSignUp}>Tạo tài khoản</WrapperTextLight></p>
       </WrapperContainerLeft>
       <WrapperContainerRight >

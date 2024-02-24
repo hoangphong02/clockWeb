@@ -266,7 +266,7 @@ useEffect(() => {
     }
   }, [isSuccsess,isError])
 
-  
+
     return ( 
         <Loading isLoading={ loading}>
         <div className="body" style={{width:"100%", background:"#fff"}}>

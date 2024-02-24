@@ -179,6 +179,24 @@ const refreshToken = async (req, res) => {
     });
   }
 };
+
+const updatePassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(200).json({
+        status: "ERR",
+        message: "The userId is required",
+      });
+    }
+    const response = await UserService.updatePassword(req.body);
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 module.exports = {
   createUser,
   loginUser,
@@ -189,4 +207,5 @@ module.exports = {
   refreshToken,
   logoutUser,
   deleteMany,
+  updatePassword,
 };

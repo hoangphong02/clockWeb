@@ -186,6 +186,36 @@ const getDetailUser = (id) => {
     }
   });
 };
+const updatePassword = (newPass) => {
+  return new Promise(async (resolve, reject) => {
+    const { email, password } = newPass;
+    try {
+      const checkUser = await User.findOne({
+        email: email,
+      });
+      if (!checkUser) {
+        resolve({
+          status: "ERR",
+          message: "The email is not find",
+        });
+        return;
+      }
+      const hashPassword = bcrypt.hashSync(password, 10);
+      checkUser.password = hashPassword;
+      const updateUser = await checkUser.save();
+      if (createUser) {
+        resolve({
+          status: "OK",
+          message: "success",
+          data: updateUser,
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createUser,
   loginUser,
@@ -194,4 +224,5 @@ module.exports = {
   getAllUser,
   getDetailUser,
   deleteManyUser,
+  updatePassword,
 };
