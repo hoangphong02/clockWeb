@@ -7,5 +7,5 @@ const {
 } = require("../MiddleWare/authMiddleWare");
 
 router.post("/create", otpController.createOtp);
-router.delete("/delete-otp/:id", otpController.deleteOtp);
+router.post("/delete-otp", otpController.deleteOtp);
 module.exports = router;

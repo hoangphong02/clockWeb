@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperForm, WrapperTextLight } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperForm, WrapperModal, WrapperTextLight } from './style'
 import { useState } from 'react'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
@@ -64,6 +64,13 @@ const CreateNewPassword = () => {
   const onUpdatePassword = () => {
       mutationUpdatePassword.mutate({email: state, password })
     }
+
+    const mutationDeleteOtp = useMutationHook(
+     (data) => OtpService.deleteOtp(data)
+    )
+  const onDeleteOtp = () => {
+      mutationDeleteOtp.mutate({otp: otpSent })
+    }
 //  useEffect(() => {
 //     if (isSuccessUpdated && dataUpdated?.status === 'OK') {
 //       message.success("Tạo mật khẩu mới thành công")
@@ -91,6 +98,7 @@ const CreateNewPassword = () => {
      if(Number(value) === otpSent){
       onUpdatePassword()
       message.success("Tạo mật khẩu thành công")
+      onDeleteOtp()
     setIsModalOpen(false);
     navigate(`/sign-in`)
     }
@@ -159,7 +167,7 @@ const CreateNewPassword = () => {
         </div>
       </WrapperContainerRight>
 
-        <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <WrapperModal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <WrapperForm className="form">
            <div className="title">OTP</div> 
            <div className="title">Verification Code</div> 
@@ -173,7 +181,7 @@ const CreateNewPassword = () => {
             <input id="input6" type="text" maxlength="1" onChange={onChangeInput6}/>
              </div> 
             </WrapperForm>
-      </Modal>
+      </WrapperModal>
     </div>
     </div>
   )

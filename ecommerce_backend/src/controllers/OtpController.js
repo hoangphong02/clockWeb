@@ -21,14 +21,14 @@ const createOtp = async (req, res) => {
 
 const deleteOtp = async (req, res) => {
   try {
-    const otpId = req.params.id;
-    if (!otpId) {
+    const { otp } = req.body;
+    if (!otp) {
       return res.status(200).json({
         status: "ERR",
         message: "The userId is required",
       });
     }
-    const response = await OtpService.deleteOtp(otpId);
+    const response = await OtpService.deleteOtp(req.body);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({

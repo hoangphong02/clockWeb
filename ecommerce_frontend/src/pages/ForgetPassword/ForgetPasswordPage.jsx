@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { WrapperContainerLeft, WrapperContainerRight, WrapperForm, WrapperTextLight } from './style'
+import { WrapperContainerLeft, WrapperContainerRight, WrapperForm, WrapperModal, WrapperTextLight } from './style'
 import { useState } from 'react'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
@@ -39,14 +39,17 @@ const ForgetPasswordPage = () => {
   )
   const {data, isLoading, isSuccess} = mutation
 
+  const mutationDeleteOtp = useMutationHook(
+     (data) => OtpService.deleteOtp(data)
+    )
+  const onDeleteOtp = () => {
+      mutationDeleteOtp.mutate({otp: otpSent })
+    }
+
   const handleOnchangeEmail = (value)=>{
     setEmail(value)
   }
  
-  const handleOnchangePassword = (e)=>{
-    const value =e.target.value
-    setPassword(value)
-  }
   const handleSendOtp=()=>{
     const otp = Math.floor(100000 + Math.random() * 900000);
     setOtpSent(otp)
@@ -63,6 +66,7 @@ const ForgetPasswordPage = () => {
     let value = data.join("")
      if(Number(value) === otpSent){
       message.success()
+      onDeleteOtp()
     setIsModalOpen(false);
     navigate(`/create-newPassword`,{state : email})
     }
@@ -131,7 +135,7 @@ const ForgetPasswordPage = () => {
         </div>
       </WrapperContainerRight>
 
-        <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <WrapperModal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} >
         <WrapperForm className="form">
            <div className="title">OTP</div> 
            <div className="title">Verification Code</div> 
@@ -145,7 +149,7 @@ const ForgetPasswordPage = () => {
             <input id="input6" type="text" maxlength="1" onChange={onChangeInput6}/>
              </div> 
             </WrapperForm>
-      </Modal>
+      </WrapperModal>
     </div>
     </div>
   )

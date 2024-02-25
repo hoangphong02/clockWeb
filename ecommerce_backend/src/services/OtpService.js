@@ -24,19 +24,22 @@ const createOtp = (newOtp) => {
   });
 };
 
-const deleteOtp = (id) => {
+const deleteOtp = (newOtp) => {
   return new Promise(async (resolve, reject) => {
+    const { otp } = newOtp;
+    console.log("otp", otp);
     try {
       const checkOtp = await Otp.findOne({
-        _id: id,
+        otp: otp,
       });
       if (checkOtp === null) {
         resolve({
           status: "OK",
           message: "The user is not defined",
         });
+        return;
       }
-      await Otp.findByIdAndDelete(id);
+      await Otp.deleteOne({ otp: otp });
 
       resolve({
         status: "OK",

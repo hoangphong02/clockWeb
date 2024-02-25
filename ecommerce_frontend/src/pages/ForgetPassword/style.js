@@ -1,3 +1,4 @@
+import { Modal } from "antd";
 import styled from "styled-components";
 
 export const WrapperContainerLeft = styled.div`
@@ -67,5 +68,14 @@ export const WrapperForm = styled.form`
     color: white;
     cursor: pointer;
     align-self: end;
+  }
+`;
+
+export const WrapperModal = styled(Modal)`
+  & .ant-modal-body {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;

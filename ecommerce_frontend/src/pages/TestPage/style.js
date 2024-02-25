@@ -257,19 +257,6 @@ export const WrapperSectionTitle = styled.h2`
   margin-bottom: 2.5rem;
 `;
 
-export const WrapperHome = styled.section`
-  position: relative;
-  padding-top: 3.5rem;
-`;
-
-export const WrapperClassHome = styled.section`
-  position: relative;
-`;
-
-export const WrapperHomeData = styled.div`
-  text-align: center;
-`;
-
 export const WrapperHomeTitle = styled.h1`
   position: relative;
   font-size: 3.5rem;
@@ -358,102 +345,6 @@ export const WrapperShapeBig = styled.div`
   right: -10rem;
 `;
 
-export const WrapperHomDescription = styled.p`
-  margin-bottom: 2.5rem;
-`;
-
-export const WrapperHomeImg = styled.img`
-  width: 300px;
-  justify-self: center;
-  margin-top: 2rem;
-`;
-
-export const WrapperHomeTree1 = styled.img`
-  width: 120px;
-  position: absolute;
-  top: 18rem;
-  left: -2rem;
-`;
-export const WrapperHomeTree2 = styled.img`
-  width: 120px;
-  position: absolute;
-  top: 18rem;
-  right: -2rem;
-`;
-
-export const WrapperButton = styled.a`
-  display: inline-block;
-  background-color: #fff;
-  padding: 1rem 1.5rem;
-  border-radius: 4rem;
-  color: hsl(22, 72%, 50%);
-  font-weight: 600;
-  transition: background 0.3s, color 0.3s;
-  & :hover {
-    background-color: hsl(22, 72%, 50%);
-    color: #fff;
-  }
-`;
-
-export const WrapperCategory = styled.section`
-  position: relative;
-`;
-
-export const WrapperCategoryContainer = styled.div`
-  padding-top: 4rem;
-  grid-template-columns: 228px;
-  justify-content: center;
-  row-gap: 6rem;
-`;
-
-export const WrapperCategoryCard = styled.div`
-  background-color: hsl(22, 8%, 7%);
-  border-radius: 2rem;
-  padding: 4.5rem 2.25rem 2rem;
-  box-shadow: 0 4px 16px hsla(22, 10%, 2%, 0.3);
-  text-align: center;
-  transition: background 0.3s;
-  & :hover .category__img {
-    transform: translatey(-0.5rem);
-  }
-`;
-
-export const WrapperCategoryImage = styled.img`
-  width: 120px;
-  position: absolute;
-  inset: 0;
-  margin: 0 auto;
-  top: -3.5rem;
-  transition: transform 0.3s;
-`;
-
-export const WrapperCategoryTitle = styled.h3`
-  font-size: 1rem;
-  font-weight: 600;
-  color: hsl(22, 72%, 50%);
-  margin-bottom: 0.5rem;
-`;
-
-export const WrapperCategoryDescription = styled.p`
-  font-size: 0.813rem;
-`;
-
-export const WrapperCategoryStar = styled.img`
-  width: 40px;
-  position: absolute;
-  top: 3.5rem;
-  right: 0.5rem;
-  transform: rotate(15deg);
-`;
-
-export const WrapperAbout = styled.section`
-  position: relative;
-`;
-
-export const WrapperAboutContainer = styled.div`
-  row-gap: 3.5rem;
-`;
-
 export const WrapperItemCart = styled.article`
   position: relative;
   background-color: hsl(22, 8%, 7%);
@@ -465,58 +356,6 @@ export const WrapperItemCart = styled.article`
   & :hover .items__img {
     transform: translatey(-0.5rem);
   }
-`;
-export const WrapperItemImg = styled.img`
-  width: 100px;
-  position: absolute;
-  inset: 0;
-  top: -2rem;
-  margin: 0 auto;
-  transition: transform 0.3s;
-`;
-
-export const WrapperItemsName = styled.h3`
-  font-size: 0.938rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-`;
-
-export const WrapperItemsPrice = styled.span`
-  display: block;
-  font-weight: 600;
-  color: hsl(22, 72%, 50%);
-  margin-bottom: 0.5rem;
-`;
-
-export const WrapperItemsButton = styled.button`
-  display: inline-flex;
-  background-color: hsl(22, 72%, 50%);
-  color: #fff;
-  padding: 0.25rem 1.5rem;
-  border-radius: 4rem;
-  cursor: pointer;
-  transition: background 0.3s;
-  border: none;
-  outline: none;
-  & :hover {
-    background-color: hsl(22, 72%, 46%);
-  }
-`;
-
-export const WrapperParky = styled.section`
-  position: relative;
-`;
-
-export const WrapperParkyContainer = styled.div`
-  row-gap: 5rem;
-`;
-
-export const WrapperParkyData = styled.div`
-  text-align: center;
-`;
-
-export const WrapperParkyDescription = styled.p`
-  margin-bottom: 2rem;
 `;
 
 export const WrapperParkyStar1 = styled.img`
@@ -562,5 +401,111 @@ export const WrapperParkyStar2 = styled.img`
       transform: scale(1) rotate(15deg);
       opacity: 1;
     }
+  }
+`;
+
+export const WrapperNavbar = styled.div`
+  & .navbar-top {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0px 4px 8px 0px grey;
+    height: 70px;
+  }
+  & .title {
+    font-family: "Dancing Script", cursive;
+    padding-top: 15px;
+    position: absolute;
+    left: 45%;
+  }
+`;
+export const WrapperSidenav = styled.div`
+  background-color: #fff;
+  color: #333;
+  border-bottom-right-radius: 25px;
+  height: 86%;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+  position: absolute;
+  top: 90px;
+  width: 250px;
+
+  & .profile {
+    margin-bottom: 20px;
+    margin-top: -12px;
+    text-align: center;
+  }
+  & .profile img {
+    border-radius: 50%;
+    box-shadow: 0px 0px 5px 1px grey;
+  }
+  & .name {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 20px;
+  }
+  & .job {
+    font-size: 16px;
+    font-weight: bold;
+    padding-top: 10px;
+  }
+  & .url,
+  hr {
+    text-align: center;
+  }
+  & .url hr {
+    margin-left: 20%;
+    width: 60%;
+  }
+  & .url a {
+    color: #818181;
+    display: block;
+    font-size: 20px;
+    margin: 10px 0;
+    padding: 6px 8px;
+    text-decoration: none;
+  }
+  & .url a:hover,
+  .url .active {
+    background-color: #e8f5ff;
+    border-radius: 28px;
+    color: #000;
+    margin-left: 14%;
+    width: 65%;
+  }
+`;
+
+export const WrapperMainItem = styled.div`
+  & ..main {
+    margin-top: 2%;
+    margin-left: 29%;
+    font-size: 28px;
+    padding: 0 10px;
+    width: 58%;
+  }
+  & .main h2 {
+    color: #333;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  & .main .card {
+    background-color: #fff;
+    border-radius: 18px;
+    box-shadow: 1px 1px 8px 0 grey;
+    height: auto;
+    margin-bottom: 20px;
+    padding: 20px 0 20px 50px;
+  }
+  & .main .card table {
+    border: none;
+    font-size: 16px;
+    height: 270px;
+    width: 80%;
+  }
+  & .edit {
+    position: absolute;
+    color: #e7e7e8;
+    right: 14%;
   }
 `;
