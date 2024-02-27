@@ -782,7 +782,7 @@ form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 20px;
-  margin: 15px 0;
+  margin:0;
 }
 
 .card {
@@ -798,7 +798,7 @@ form {
 }
 
 .card:nth-child(2) {
-  background-color: #ff6d00;
+  background-color: #383b60;
 }
 
 .card:nth-child(3) {

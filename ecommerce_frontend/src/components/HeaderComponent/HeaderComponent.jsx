@@ -34,6 +34,12 @@ const HeaderComPonent = ({isHiddenSearch = false, isHiddenCart = false})=> {
   const [listChecked, setListChecked]= useState([])
   const {state} = useLocation()
   console.log("idHeadTest",id)
+
+   const path = window.location.pathname
+   const segments = path.split('/');
+  const adminPath = segments.pop();
+
+
   const fetchAllProduct = async ()=>{
       const res = await ProductService.getAllProduct("",100)
     return res.data
@@ -321,7 +327,7 @@ if (hasVatPham) {
           resetTranscript() },1500)
       return ()=>clearTimeout(setTimeNavi);   
           // navigate(`/`)
-          // resetTranscript();
+          resetTranscript();
           }
           else{
              if (text.includes("mua ngay")) {
@@ -467,11 +473,11 @@ if (hasVatPham) {
  
   console.log("listening",listening)
     return ( 
-      <div style={{width:"100%", background:isScrolled? "rgb(255,255,255,0.6)":"rgb(32, 33, 38)", display:"flex", justifyContent:"center", flexDirection:"column",padding:isScrolled? "10px 30px":"20px 30px", position: isScrolled? "fixed":"", zIndex:"10",transition: "all 0.5s"}}>
+      <div style={{width:"100%", background:isScrolled? "rgb(255,255,255,0.6)": adminPath ==="admin" ? "none":"rgb(32, 33, 38)", display:"flex", justifyContent:"center", flexDirection:"column",padding:isScrolled? "10px 30px":"20px 30px", position: isScrolled? "fixed":"", zIndex:"10",transition: "all 0.5s"}}>
         <WrapperHeader gutter={16} style={{justifyContent: isHiddenSearch && isHiddenCart ? "space-between" : "unset",marginRight:"0",marginLeft:"0"}}>
         <Col span={5} style={{display:"flex", justifyContent:"space-around", alignItems:"center"}}>
           <WrapperTextHeader style={{cursor:"pointer",color:isScrolled? "black":"#fff",}} onClick={()=> navigate("/")}><img style={{height:"50px"}} src={logo}/></WrapperTextHeader>  
-          <span style={{cursor:"pointer", fontSize:"20px", color:isScrolled? "black":"#fff", display:"flex"}} onClick={listening === false ? startListening: stopListening}>{listening=== false ?<AudioMutedOutlined />:<AudioOutlined />}</span>
+          <span style={{cursor:"pointer", fontSize:"20px", color:isScrolled? "black":  adminPath === "admin" ? "#000": "#fff", display:"flex"}} onClick={listening === false ? startListening: stopListening}>{listening=== false ?<AudioMutedOutlined />:<AudioOutlined />}</span>
           {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
         </Col>
         {!isHiddenSearch && (
@@ -546,7 +552,7 @@ if (hasVatPham) {
         {user?.access_token ?(
           <>
           <Popover content={content} trigger="click">    
-          <div  style={{cursor:"pointer",color:isScrolled? "black":"#fff"}}>{username?.length  ? username : "User" }</div>
+          <div  style={{cursor:"pointer",color:isScrolled? "black": adminPath === "admin" ? "#000": "#fff"}}>{username?.length  ? username : "User" }</div>
     </Popover>
           </>
         ) : (

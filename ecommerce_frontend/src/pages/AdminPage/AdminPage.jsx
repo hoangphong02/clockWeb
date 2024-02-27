@@ -1,5 +1,5 @@
 import { Menu } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getItem } from '../../utils';
 import { AppstoreOutlined, ContactsOutlined, DashboardOutlined, FileImageOutlined, MailOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import HeaderComPonent from '../../components/HeaderComponent/HeaderComponent';
@@ -12,13 +12,29 @@ import AdminSlider from '../../components/AdminSlider/AdminSlider';
 
 
 const AdminPage = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    // Lắng nghe sự kiện scroll
+    const handleScroll = () => {
+      // Kiểm tra vị trí scroll và cập nhật trạng thái
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    // Đăng ký sự kiện scroll
+    window.addEventListener('scroll', handleScroll);
+
+    // Hủy đăng ký sự kiện khi component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []); // useEffect chỉ chạy một lần sau khi component được render
   const items = [
-     getItem('Dashboard', 'home', <DashboardOutlined />),
-    getItem('Người dùng', 'user', <UserOutlined />),
-    getItem('Sản phẩm', 'product', <AppstoreOutlined /> ),
-    getItem('Đơn hàng', 'orders', <ShoppingCartOutlined /> ),
-    getItem('Liên hệ', 'contact', <ContactsOutlined />  ),
-    getItem('Slider', 'slider', <FileImageOutlined />  ),
+     getItem('DASHBOARD', 'home', <DashboardOutlined style={{fontSize:"22px"}}/>),
+    getItem('NGƯỜI DÙNG', 'user', <UserOutlined style={{fontSize:"22px"}}/>),
+    getItem('SẢN PHẨM', 'product', <AppstoreOutlined style={{fontSize:"22px"}}/> ),
+    getItem('ĐƠN HÀNG', 'orders', <ShoppingCartOutlined style={{fontSize:"22px"}}/> ),
+    getItem('LIÊN HỆ', 'contact', <ContactsOutlined style={{fontSize:"22px"}}/>  ),
+    getItem('SLIDER', 'slider', <FileImageOutlined style={{fontSize:"22px"}}/>  ),
 
 
     // getItem('Navigation Three', 'sub4', <SettingOutlined />, [
@@ -61,10 +77,12 @@ const AdminPage = () => {
     <Menu
     mode="inline"
     style={{
+      paddingTop: isScrolled? "70px":"0",
       width: 256,
       boxShadow: '1px 1px 2px #ccc',
       minHeight:"100vh",
-      position:"fixed"
+      position:"fixed",
+      background:"none"
 
     }}
     items={items}

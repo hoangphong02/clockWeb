@@ -133,13 +133,11 @@ console.log("products",products)
   return (
     <div style={{margin: "0",
   padding: "0",
-  backgroundColor: "#1d2634",
+  backgroundColor: "none",
   color: "#9e9ea4",
   fontFamily: "'Montserrat', sans-serif"}}>
     <main className='main-container'>
-        <div className='main-title'>
-            <h3>DASHBOARD</h3>
-        </div>
+       
 
         <div className='main-cards'>
             <div className='card'>

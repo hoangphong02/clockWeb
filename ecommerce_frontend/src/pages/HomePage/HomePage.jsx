@@ -8,7 +8,6 @@ import backgroundgiangsinh from "../../assets/images/bgNoel8.png"
 import backgroundgiangsinhRight from "../../assets/images/bgNoel6.png"
 import backgroundValentine from "../../assets/images/bgValentine3.png"
 import backgroundValentineRight from "../../assets/images/bgValentine5.png"
-import backgroundTitleValentine from "../../assets/images/factory_heading.png"
 import backgroundHalloween from "../../assets/images/background-1298031_1280.webp"
 import ImageContact from "../../assets/images/contact.png"
 import * as ProductService from "../../services/ProductService"
@@ -24,6 +23,8 @@ import moment from 'moment';
 import 'moment/locale/vi'; // Đặt ngôn ngữ hiển thị, ví dụ tiếng Việt
 import { useMutationHook } from "../../hooks/useMutationHook";
 import * as ContactService from '../../services/ContactService'
+import ScrollAnimation from 'react-animate-on-scroll';
+
 const HomePage =()=> {
     const searchProduct = useSelector((state)=> state?.product?.search)
     const searchDebounce = useDebounce(searchProduct, 100) //delay thời gian tìm kiếm 1s sau khi nhập kí tự
@@ -287,6 +288,7 @@ useEffect(() => {
                     backgroundPosition: "center", margin:"50px 0",textAlign:"center"}}>
                 <h2>SẢN PHẨM NỔI BẬT</h2>
             </div>
+            <ScrollAnimation animateIn="fadeIn" duration={2}>
              <div style={{display:"flex",justifyContent:"center",gap:"100px",padding:'50px', flexWrap:"wrap"}}>
                 {productsOutstanding?.map((pro)=>{
                     return(
@@ -299,6 +301,7 @@ useEffect(() => {
                     )
                 })}
             </div>
+            </ScrollAnimation>
             <div style={{textAlign:"center"}}>
                 <WrapperButtonComponent className="learn-more" onClick={()=> navigate("/productsTrending")}>
                 <span className="circle" aria-hidden="true">
@@ -322,10 +325,14 @@ useEffect(() => {
                 backgroundRepeat: "no-repeat",  // Tùy chọn để tránh lặp lại hình nền
                 backgroundPosition: "center", margin:"50px 0",textAlign:"center"}}>
                 <h2>VẬT PHẨM TRANG TRÍ TẾT</h2>
-            </div>
+            </div>           
             <div style={{width:"1207px", margin:"0 auto" }}>
+            <ScrollAnimation animateIn="bounceInLeft"
+            animateOut="fadeIn"
+            duration={1}>
             <SliderCartComponent products={productTypeTet}/> 
-            </div>
+            </ScrollAnimation>
+            </div>        
             </div>
             <div style={{backgroundColor:"#821a20",backgroundImage: `url(${backgroundgiangsinh}), url(${backgroundgiangsinhRight})`, // Lặp lại hình ảnh hai lần
     backgroundRepeat: "no-repeat, no-repeat", // Không lặp lại hình ảnh
@@ -343,7 +350,11 @@ useEffect(() => {
                      GIÁNG SINH</h2>
             </div>
             <div style={{width:"1207px", margin:"0 auto"}}>
+            <ScrollAnimation  animateIn="bounceInRight"
+            animateOut="fadeOut"
+            duration={1}>
             <SliderCartComponent products={productTypeNoel}/> 
+            </ScrollAnimation> 
             </div>
             </div>
 
@@ -362,7 +373,11 @@ useEffect(() => {
                     <br></br> LỄ TÌNH NHÂN</h2>
             </div>
             <div style={{width:"1207px", margin:"0 auto"}}>
+            <ScrollAnimation  animateIn="bounceInLeft"
+            animateOut="fadeOut"
+            duration={1}>
             <SliderCartComponent products={productTypeValentine}/> 
+            </ScrollAnimation>
             </div>
             </div>
 
@@ -379,7 +394,11 @@ useEffect(() => {
                 <h2>VẬT PHẨM TRANG TRÍ <br></br> TRUNG THU</h2>
             </div>
             <div style={{width:"1207px", margin:"0 auto"}}>
+            <ScrollAnimation animateIn="bounceInRight"
+            animateOut="fadeOut"
+            duration={1}>
             <SliderCartComponent products={productTypeTrungThu}/> 
+            </ScrollAnimation>
             </div>
             </div>
 
@@ -395,12 +414,17 @@ useEffect(() => {
                 <h2>VẬT PHẨM TRANG TRÍ <br></br> HALLOWEEN</h2>
             </div>
             <div style={{width:"1207px", margin:"0 auto"}}>
+                <ScrollAnimation animateIn="bounceInLeft"
+            animateOut="fadeOut"
+            duration={1}>
             <SliderCartComponent products={productTypeHalloween}/> 
+                </ScrollAnimation>
             </div>
 
             </div>
 
             {/* liên hệ */}
+            <ScrollAnimation animateIn="fadeIn" duration={2}>
             <div style={{display:"flex", width:"100%", padding:"50px 0",flexWrap:"wrap"}}>
                 <AnimatedImage>
                     <img src={ImageContact} style={{height:"450px"}}/>
@@ -440,6 +464,7 @@ useEffect(() => {
             </div>
                 </div>
             </div>
+            </ScrollAnimation>
                 
 
             </div>
