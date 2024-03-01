@@ -16,6 +16,7 @@ import DrawerComponent from '../DrawerComponent/DrawerComponent'
 import { useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
 import PieChartComponent from './PieChartComponent'
+import AdminHeader from '../AdminHeader/AdminHeader'
 
 const AdminSlider = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -395,7 +396,8 @@ const AdminSlider = () => {
 
   return (
     <div>
-      <WrapperHeader>Quản lý hình ảnh Slider</WrapperHeader>
+      <AdminHeader textHeader={"Quản lý hình ảnh"}/>
+      {/* <WrapperHeader>Quản lý hình ảnh Slider</WrapperHeader> */}
       <div style={{width:"200px", height:"200px"}}>
 
       <PieChartComponent data = {sliders?.data}/>

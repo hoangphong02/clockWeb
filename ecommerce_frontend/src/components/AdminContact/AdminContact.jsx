@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
 import * as ContactService from '../../services/ContactService'
 import PieChartComponent from './PieChartComponent'
+import AdminHeader from '../AdminHeader/AdminHeader'
 
 // import PieChartComponent from './PieChartComponent'
 
@@ -356,7 +357,8 @@ const AdminContact = () => {
 
   return (
     <div>
-      <WrapperHeader>Quản lý liên hệ</WrapperHeader>
+      <AdminHeader textHeader={"Quản lý liên hệ"}/>
+      {/* <WrapperHeader>Quản lý liên hệ</WrapperHeader> */}
       <div style={{width:"200px", height:"200px"}}>
       <PieChartComponent data={contacts?.data}/>
       </div>

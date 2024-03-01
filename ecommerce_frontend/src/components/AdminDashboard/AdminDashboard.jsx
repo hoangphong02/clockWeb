@@ -12,6 +12,7 @@ import * as UserService from '../../services/UserService'
 import * as ProductService from '../../services/ProductService'
 import * as OrderService from '../../services/OrderService'
 import * as ContactService from '../../services/ContactService'
+import AdminHeader from '../AdminHeader/AdminHeader';
 const AdminDashboard = () => {
     const user = useSelector((state)=> state?.user)
       const getAllUsers = async () => {
@@ -131,6 +132,8 @@ console.log("products",products)
     //     },
     //   ];
   return (
+    <div>
+      <AdminHeader textHeader={"Dashboard"}/>
     <div style={{margin: "0",
   padding: "0",
   backgroundColor: "none",
@@ -234,6 +237,7 @@ console.log("products",products)
 
         </div>
     </main>
+    </div>
     </div>
   )
 }

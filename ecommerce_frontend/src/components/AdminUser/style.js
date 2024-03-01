@@ -2,7 +2,7 @@ import { Upload } from "antd";
 import styled from "styled-components";
 
 export const WrapperHeader = styled.h1`
-  color: #000;
+  color: #fff;
   font-size: 18px;
 `;
 

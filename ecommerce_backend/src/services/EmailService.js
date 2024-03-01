@@ -68,7 +68,7 @@ const sendEmailUpdateProductToFollowers = async (data) => {
 
   let info = await transporter.sendMail({
     from: "hoangphongvl2021@gmail.com", // sender address
-    to: emailString != "" ? emailString : "abc@gmail.com", // list of receivers
+    to: emailString != "" ? emailString : "hoangphongvl2021@gmail.com", // list of receivers
     subject: "Sản phẩm bạn theo dõi đã được cập nhật", // Subject line
     text: "Hello world?", // plain text body
     html: `<div><b>Sản phẩm đã thay đổi </b></div> ${productDetail}`,

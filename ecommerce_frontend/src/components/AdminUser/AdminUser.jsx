@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {  WrapperAvatar, WrapperHeader } from './style'
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
+import {  WrapperAvatar} from './style'
+import {  CheckCircleOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import TableComponent from '../TableComponent/TableComponent'
-import { Button, Checkbox, Form, Input, Modal, Select, Space } from 'antd'
+import { Button, Checkbox, Form, Input, Modal, Popover, Select, Space } from 'antd'
 import * as message from '../../components/Message/Message'
 import InputComponent from '../InputComponent/InputComponent'
 import { getBase64, renderOptions } from '../../utils';
@@ -11,9 +11,10 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/Loading/Loading';
 import { useQuery } from '@tanstack/react-query'
 import DrawerComponent from '../DrawerComponent/DrawerComponent'
-import { useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
 import PieChartComponent from './PieChartComponent'
+import AdminHeader from '../AdminHeader/AdminHeader'
 
 const AdminUser = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -277,7 +278,7 @@ const AdminUser = () => {
     return {
       ...user,
       key: user._id,
-      isAdmin: user.isAdmin ? 'True' : 'False'
+      isAdmin: user.isAdmin ? <CheckCircleOutlined style={{fontSize:"25px", color: "rgb(70 255 74)"}} /> : <CloseCircleOutlined style={{fontSize:"25px", color: "rgb(255 ,11, 11)"}}/>
     }
    })
 
@@ -363,20 +364,21 @@ const AdminUser = () => {
     })
   }
 
-
-
+  
   return (
     <div>
-      <WrapperHeader>Quản lý người dùng</WrapperHeader>
-      <div style={{width:"200px", height:"200px"}}>
+      <AdminHeader textHeader ={"Quản lý người dùng"}/>
+      {/* <WrapperHeader>Quản lý người dùng</WrapperHeader> */}
+      <div style={{width:"200px", height:"200px", marginBottom:"30px"}}>
 
       <PieChartComponent data = {users?.data}/>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Số lượng người dùng</p>
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
       </div> */}
       <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDeleteMany={handleDeleteManyUser} columns={columns} isLoading={isLoadingUser} data={dataTable} onRow={(record, rowIndex) => {
+        <TableComponent  handleDeleteMany={handleDeleteManyUser} columns={columns} isLoading={isLoadingUser} data={dataTable} onRow={(record, rowIndex) => {
           return {
             onClick: event => {
               setRowSelected(record._id)

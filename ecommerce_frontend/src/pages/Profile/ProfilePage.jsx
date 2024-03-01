@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react'
-import { WrapperAvatar, WrapperContentProfile, WrapperHeader, WrapperInput, WrapperLabel } from './style'
+import { WrapperAvatar, WrapperContentProfile, WrapperHeader, WrapperInput, WrapperLabel, WrapperSidenav } from './style'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,18 +9,24 @@ import { useMutationHook } from '../../hooks/useMutationHook';
 import Loading from '../../components/Loading/Loading';
 import * as message from '../../components/Message/Message'
 import { updateUser } from '../../redux/slides/userSlide'
-import { Button, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Modal, Upload } from 'antd';
+import { EditOutlined, UploadOutlined } from '@ant-design/icons';
 import { getBase64 } from '../../utils';
+import icon_username from "../../assets/images/icon-username.png"
+import icon_address from "../../assets/images/icon-address.png"
+import icon_phone from "../../assets/images/icon-phone.png"
+import icon_email from "../../assets/images/icon-email.png"
 
 function ProfilePage() {
-  const user = useSelector((state)=> state.user)
-  const [name, setName] = useState("");
+    const user = useSelector((state)=> state.user)
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
  
+  
   const mutation = useMutationHook(
     (data) =>{
       const {id, access_token,...rests} = data
@@ -38,17 +44,8 @@ function ProfilePage() {
     setAvatar(user?.avatar)
   },[user])
  
- useEffect(()=>{
-  if(isSuccess){
-    message.success()
-    handleGetDetailsUser(user?.id, user?.access_token)
-   }
-   else if(isError){
-    message.error()
-   }
- },[isSuccess,isError])
 
- const handleGetDetailsUser = async (id, token)=>{
+   const handleGetDetailsUser = async (id, token)=>{
   // const res = await UserService.getDetailUser(id,token)
   // dispatch(updateUser({...res?.data,access_token: token}))
   const storage = localStorage.getItem('refresh_token')
@@ -57,7 +54,39 @@ const res = await UserService.getDetailUser(id, token)
 dispatch(updateUser({ ...res?.data, access_token: token,refreshToken }))
 }
 
-  const handleOnchangeName =(value)=>{
+ useEffect(()=>{
+  if(isSuccess){
+    message.success("Cập nhật thành công")
+    handleGetDetailsUser(user?.id, user?.access_token)
+   }
+   else if(isError){
+    message.error()
+   }
+ },[isSuccess,isError])
+
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+   const handleUpdate =()=>{
+    mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
+  
+  }
+  const handleOk = () => {
+    handleUpdate()
+    setIsModalOpen(false);
+
+  };
+  const handleCancel = () => {
+    setName(user?.name)
+    setEmail(user?.email)
+    setAddress(user?.address)
+    setPhone(user?.phone)
+    setAvatar(user?.avatar)
+    setIsModalOpen(false);
+  };
+	 const handleOnchangeName =(value)=>{
     setName(value)
   }
   const handleOnchangeEmail =(value)=>{
@@ -76,70 +105,59 @@ dispatch(updateUser({ ...res?.data, access_token: token,refreshToken }))
     }
     setAvatar(file.preview)
   }
-  const handleUpdate =()=>{
-    mutation.mutate({ id: user?.id, email, name, phone, address, avatar, access_token: user?.access_token })
-  
-  }
+
   return (
-    <div style={{width:'1270px', margin:' 0 auto'}}>
-        <WrapperHeader>Thông tin người dùng</WrapperHeader>
-        <Loading isLoading={isLoading}>
-        <WrapperContentProfile>
+    
+    <div>
+		<div style={{textAlign:"center", padding:"10px"}}>
+            <h3>Thông tin cá nhân</h3>
+        </div>
+   
+   <div style={{display:"flex", gap:"100px", padding:"30px", justifyContent:"center"}}>
+
+    <div className="sidenav" >
+        <div className="profile">
+            <img src={avatar} alt="" width="200" height="200" style={{borderRadius:"50%"}}/>
+
+          
+        </div>
+
+        <WrapperSidenav className="sidenav-url">
+            <div className="url" style={{cursor:'pointer'}} onClick={showModal}>
+                <p ><EditOutlined style={{fontSize:"30px", color:"#9b9797"}}/></p>
+                <hr align="center"/>
+            </div>
+        </WrapperSidenav>
+
+         <Modal title="Cập nhật thông tin cá nhân" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+         <WrapperContentProfile>
           <WrapperInput>
           <WrapperLabel htmlFor='name'>
             Name
           </WrapperLabel>
         <InputForm style={{width:'300px'}} id="name" value={name} onChange={handleOnchangeName} />
-        <ButtonComponent        
-          //  disabled={!email.length || !password.length}
-          onClick={handleUpdate}
-             size={20} 
-             style={{ borderRadius: "4px", border: "1px solid #rgb(26, 148, 255) ", height:"35px", width:"fit-content", fontSize:"15px"}}
-             textButton={"Cập nhật"}
-            styleTextButton={{color: "#rgb(26, 148, 255)"}}
-        ></ButtonComponent>
+        
           </WrapperInput>
           <WrapperInput>
           <WrapperLabel htmlFor='email'>
             Email
           </WrapperLabel>
         <InputForm style={{width:'300px'}} id="email" value={email} onChange={handleOnchangeEmail} />
-        <ButtonComponent        
-          //  disabled={!email.length || !password.length}
-          onClick={handleUpdate}
-             size={20} 
-             style={{ borderRadius: "4px", border: "1px solid #rgb(26, 148, 255) ", height:"35px", width:"fit-content", fontSize:"15px"}}
-             textButton={"Cập nhật"}
-            styleTextButton={{color: "#rgb(26, 148, 255)"}}
-        ></ButtonComponent>
+        
           </WrapperInput>
           <WrapperInput>
           <WrapperLabel htmlFor='phone'>
             Phone
           </WrapperLabel>
         <InputForm style={{width:'300px'}} id="phone" value={phone} onChange={handleOnchangePhone} />
-        <ButtonComponent        
-          //  disabled={!email.length || !password.length}
-          onClick={handleUpdate}
-             size={20} 
-             style={{ borderRadius: "4px", border: "1px solid #rgb(26, 148, 255) ", height:"35px", width:"fit-content", fontSize:"15px"}}
-             textButton={"Cập nhật"}
-            styleTextButton={{color: "#rgb(26, 148, 255)"}}
-        ></ButtonComponent>
+        
           </WrapperInput>
           <WrapperInput>
           <WrapperLabel htmlFor='address'>
             Address
           </WrapperLabel>
         <InputForm style={{width:'300px'}} id="address" value={address} onChange={handleOnchangeAddress} />
-        <ButtonComponent        
-          //  disabled={!email.length || !password.length}
-          onClick={handleUpdate}
-             size={20} 
-             style={{ borderRadius: "4px", border: "1px solid #rgb(26, 148, 255) ", height:"35px", width:"fit-content", fontSize:"15px"}}
-             textButton={"Cập nhật"}
-            styleTextButton={{color: "#rgb(26, 148, 255)"}}
-        ></ButtonComponent>
+        
           </WrapperInput>
           <WrapperInput>
           <WrapperLabel htmlFor='avatar'>
@@ -152,18 +170,40 @@ dispatch(updateUser({ ...res?.data, access_token: token,refreshToken }))
             <img src={avatar} style={{height:"60px", width:"60px", borderRadius:"50%", objectFit:"cover"}} alt='avatar' />
           )}
         {/* <InputForm style={{width:'300px'}} id="avatar" value={avatar} onChange={handleOnchangeAvatar} /> */}
-        <ButtonComponent        
-          //  disabled={!email.length || !password.length}
-          onClick={handleUpdate}
-             size={20} 
-             style={{ borderRadius: "4px", border: "1px solid #rgb(26, 148, 255) ", height:"35px", width:"fit-content", fontSize:"15px"}}
-             textButton={"Cập nhật"}
-            styleTextButton={{color: "#rgb(26, 148, 255)"}}
-        ></ButtonComponent>
+        
           </WrapperInput>
         </WrapperContentProfile>
-        </Loading>
+      </Modal>
     </div>
+    
+    <div style={{width:"40%"}} >
+        
+        <div style={{background: "rgb(43 42 42)",borderRadius: "30px"}} >
+            <div style={{padding:"10px 30px"}}>
+              <label htmlFor="" style={{width:"70px"}}><img src={icon_username} style={{width:"30px", height:"30px"}}/></label> 
+               <input type="text" value={name} style={{border:"none",background:"none", fontSize:"20px", color:"#fff",width:"80%" }} readOnly />
+            </div>
+            <div  style={{padding:"10px 0px 10px 30px"}}>
+               <label htmlFor="" style={{width:"70px"}}><img src={icon_email} style={{width:"30px", height:"30px"}}/></label> 
+               <input type="text" value={email} style={{border:"none",background:"none",fontSize:"20px", color:"#fff" ,width:"80%"}} readOnly/>
+            </div>
+            <div  style={{padding:"10px 30px"}}>
+                <label htmlFor="" style={{width:"70px"}}><img src={icon_phone} style={{width:"30px", height:"30px"}}/></label> 
+               <input type="text" value={phone} style={{border:"none",background:"none",fontSize:"20px", color:"#fff",width:"80%" }} readOnly />
+            </div>
+            <div  style={{padding:"10px 30px"}}>
+              <label htmlFor="" style={{width:"70px"}}><img src={icon_address} style={{width:"30px", height:"30px"}}/></label> 
+               <input type="text" value={address}  style={{border:"none",background:"none" ,fontSize:"20px", color:"#fff" ,width:"80%"}} readOnly/>
+            </div>
+            
+        </div>
+
+   
+
+    </div>
+   </div>
+	</div>
+ 
   )
 }
 

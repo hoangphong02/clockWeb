@@ -111,6 +111,6 @@ export const routes = [
   {
     path: "/testTrending",
     page: TestPage,
-    isShowHeader: true,
+    isShowHeader: false,
   },
 ];

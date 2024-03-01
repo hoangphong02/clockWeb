@@ -22,6 +22,7 @@ const TrendingProductPage = () => {
     const [imageSlider, setImageSlider]= useState([])
     const [slider, setSlider]= useState([])
     const [textCongratulation, setTextCongratulation]= useState('')
+    const user = useSelector((state)=> state?.user)
     const [panigate, setPanigate]= useState({
         page:0,
         limit:6,

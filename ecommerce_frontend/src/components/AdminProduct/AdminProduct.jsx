@@ -15,6 +15,7 @@ import DrawerComponent from '../DrawerComponent/DrawerComponent'
 import { useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
 import PieChartComponent from './PieChartComponent'
+import AdminHeader from '../AdminHeader/AdminHeader'
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -473,10 +474,11 @@ const AdminProduct = () => {
 
   return (
     <div>
-      <WrapperHeader>Quản lý sản phẩm</WrapperHeader>
-      <div style={{width:"200px", height:"200px"}}>
-
+      <AdminHeader textHeader={"Quản lý sản phẩm"}/>
+      {/* <WrapperHeader>Quản lý sản phẩm</WrapperHeader> */}
+      <div style={{width:"200px", height:"200px", textAlign:"center", marginBottom:"30px"}}>
       <PieChartComponent data = {products?.data}/>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Số lượng sản phẩm</p>
       </div>
       <div style={{ marginTop: '10px' }}>
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}

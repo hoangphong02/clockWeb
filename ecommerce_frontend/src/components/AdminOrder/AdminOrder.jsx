@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import ModalComponent from '../ModalComponent/ModalComponent'
 import * as OrderService from '../../services/OrderService'
 import PieChartComponent from './PieChartComponent'
+import AdminHeader from '../AdminHeader/AdminHeader'
 
 
 const AdminOrder = () => {
@@ -417,19 +418,20 @@ const getItems = (rowSelected) => {
 
   return (
     <div>
-      <WrapperHeader>Quản lý đơn hàng</WrapperHeader>
+      <AdminHeader textHeader={"Quản lý đơn hàng"}/>
+      {/* <WrapperHeader>Quản lý đơn hàng</WrapperHeader> */}
       <div style={{ display:"flex", marginBottom:"20px",padding:"20px", gap:"30px"}}>
       <div style={{width:"200px", height:"200px", textAlign:"center"}}>
       <PieChartComponent data={orders?.data} label ={"paymentMethod"} color={['#0088FE', '#00C49F']}/>
-      <p style={{fontSize:"15px", fontWeight:"bold"}}>Phương thức thanh toán</p>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Phương thức thanh toán</p>
         </div>
       <div style={{width:"200px", height:"200px", textAlign:"center"}}>
       <PieChartComponent data={orders?.data} label ={"isConfirm"} color={['#FFBB28', '#FF8042']}/>
-      <p style={{fontSize:"15px", fontWeight:"bold"}}>Xác nhận đơn hàng</p>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Xác nhận đơn hàng</p>
       </div>
       <div style={{width:"200px", height:"200px", textAlign:"center"}}>
       <PieChartComponent data={orders?.data} label ={"isDelivered"} color={['#258a3f', '#d61a2c']}/>
-      <p style={{fontSize:"15px", fontWeight:"bold"}}>Vận chuyển đơn hàng</p>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Vận chuyển đơn hàng</p>
       </div>
       </div>
       {/* <div style={{ marginTop: '10px' }}>

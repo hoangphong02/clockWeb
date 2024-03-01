@@ -3,7 +3,7 @@ import { Divider, Dropdown, Radio, Space, Table } from 'antd';
 import React, { useMemo, useState } from 'react'
 import Loading from '../Loading/Loading';
 import { Excel } from "antd-table-saveas-excel";
-import { WrapperButtonExportExcel } from './style';
+import { WrapperButtonExportExcel, WrapperTable } from './style';
 
 
 
@@ -57,7 +57,9 @@ const TableComponent = (props) => {
       <WrapperButtonExportExcel onClick={handleExportExcel}>
         Export Excel
       </WrapperButtonExportExcel>
-      <Table
+      <WrapperTable
+      
+        bordered ={false}
         rowSelection={{
           type: selectionType,
           ...rowSelection,

@@ -51,7 +51,6 @@ export const converDataChart = (data, type) => {
           object[opt[type]] = 1;
         } else {
           object[opt[type]] += 1;
-          console.log("ob", object[opt[type]]);
         }
       });
     const results =
