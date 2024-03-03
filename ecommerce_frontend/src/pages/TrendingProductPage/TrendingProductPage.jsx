@@ -159,7 +159,7 @@ const TrendingProductPage = () => {
    
   return (
     <div>
-        <div style={{width:"100%", margin:"0 auto"}}>
+        <div style={{width:"100%", margin:"0 auto", background:"rgb(130, 26, 32)"}}>
        
         <SliderComponent arrImg ={slider}/>
         <WrappertextCongratulation>

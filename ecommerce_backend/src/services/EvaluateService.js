@@ -1,24 +1,23 @@
-const Comment = require("../models/CommentProduct");
+const Evaluate = require("../models/EvaluateProduct");
 // const bcrypt = require("bcrypt");
 const EmailService = require("./EmailService");
-const createComment = (newComment) => {
+const createEvaluate = (newEvaluate) => {
   return new Promise(async (resolve, reject) => {
-    const { name, avatar, rating, description, user, productItems } =
-      newComment;
+    const { name, avatar, rating, description, user, product } = newEvaluate;
     try {
-      const createComment = await Comment.create({
+      const createEvaluate = await Evaluate.create({
         name,
         avatar,
         description,
         rating,
         user,
-        productItems,
+        product,
       });
-      if (createComment) {
+      if (createEvaluate) {
         resolve({
           status: "OK",
           message: "success",
-          data: createComment,
+          data: createEvaluate,
         });
       }
     } catch (e) {
@@ -26,13 +25,13 @@ const createComment = (newComment) => {
     }
   });
 };
-const getAllCommentDetails = (id) => {
+const getAllEvaluateDetails = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const comment = await Comment.find({
-        "productItems.product": id,
+      const evaluate = await Evaluate.find({
+        product: id,
       }).sort({ createdAt: -1, updatedAt: -1 });
-      if (comment === null) {
+      if (evaluate === null) {
         resolve({
           status: "ERR",
           message: "The order is not defined",
@@ -42,7 +41,7 @@ const getAllCommentDetails = (id) => {
       resolve({
         status: "OK",
         message: "SUCESSS",
-        data: comment,
+        data: evaluate,
       });
     } catch (e) {
       reject(e);
@@ -50,19 +49,19 @@ const getAllCommentDetails = (id) => {
   });
 };
 
-const deleteComment = (id) => {
+const deleteEvaluate = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const checkComment = await Comment.findOne({
+      const checkEvaluate = await Evaluate.findOne({
         _id: id,
       });
-      if (checkComment === null) {
+      if (checkEvaluate === null) {
         resolve({
           status: "OK",
           message: "The user is not defined",
         });
       }
-      await Comment.findByIdAndDelete(id);
+      await Evaluate.findByIdAndDelete(id);
 
       resolve({
         status: "OK",
@@ -75,7 +74,7 @@ const deleteComment = (id) => {
 };
 
 module.exports = {
-  createComment,
-  getAllCommentDetails,
-  deleteComment,
+  createEvaluate,
+  getAllEvaluateDetails,
+  deleteEvaluate,
 };

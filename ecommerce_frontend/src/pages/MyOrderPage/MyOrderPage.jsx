@@ -10,7 +10,7 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { useEffect, useState } from "react";
 import { Modal, Rate, message } from "antd";
-import * as CommentService from '../../services/CommentService'
+import * as EvaluateService from '../../services/EvaluateService'
 
 const MyOrderPage =()=> {
    
@@ -30,6 +30,7 @@ const MyOrderPage =()=> {
      const [idProduct, setIdProduct] = useState([])
      const [idOrder, setIdOrder] = useState('')
       const [isEvaluate, setIsEvaluate] = useState(false)
+      const [evaluatedProducts, setEvaluatedProducts] = useState([]);
 
     const fetchMyOrder = async()=>{
       const res = await OrderService.getOrderByUserId(state?.id, state?.token)
@@ -44,7 +45,8 @@ const MyOrderPage =()=> {
       const res = await OrderService.getDetailOrder(id,token)
      res?.data?.orderItems?.forEach(item => {
   if (item.product) {
-    arrIdProduct.push({ product: item.product });
+    arrIdProduct.push({ product: item.product,
+    name: item?.name  });
   }
 });
       setIdProduct(arrIdProduct)
@@ -110,35 +112,68 @@ const onUpdateOrder = (id) => {
   setDescription(e.target.value)
   }
 
-  const mutationAddComment = useMutationHook(
+  const mutationAddEvaluate = useMutationHook(
     (data) => {
       console.log("dataUser",data)
       const { 
         token,
         ...rests } = data
-      const res = CommentService.createComment(
+      const res = EvaluateService.createEvaluate(
           { ...rests }, token)
       return res
     },
   )
  
-const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddComment
-      const handleAddComment = () => {
+const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddEvaluate
+      const handleAddEvaluate = (id) => {
     if(user?.access_token  ) {
         // eslint-disable-next-line no-unused-expressions
-        mutationAddComment.mutate(
+        mutationAddEvaluate.mutate(
           { token: user?.access_token, 
             name:user?.name,
             avatar:user?.avatar,        
             description:description,
             rating:valueRating,
             user: user?.id,
-            productItems: idProduct
+            product: id
           }
         )
       }
-      setModal2Open(false)
+       setEvaluatedProducts([...evaluatedProducts, id]);
+      // setModal2Open(false)
       onUpdateOrder(idOrder)
+  }
+  console.log("dataAdd",dataAdd)
+  useEffect(()=>{
+    if (dataAdd?.status ==="OK"){
+      message.success("Đánh giá thành công")
+      if(evaluatedProducts.length == idProduct.length){
+        setModal2Open(false)
+      }
+    }
+    else{
+     if(dataAdd?.status==="ERR"){
+      message.err("Đánh giá thất bại")
+     }
+    }
+  },[dataAdd])
+
+   const handleOnOK = () => {
+    // if(user?.access_token  ) {
+    //     // eslint-disable-next-line no-unused-expressions
+    //     mutationAddEvaluate.mutate(
+    //       { token: user?.access_token, 
+    //         name:user?.name,
+    //         avatar:user?.avatar,        
+    //         description:description,
+    //         rating:valueRating,
+    //         user: user?.id,
+    //         product: id
+    //       }
+    //     )
+    //   }
+      setModal2Open(false)
+      // onUpdateOrder(idOrder)
   }
 
   const handleEvaluate =(id)=>{
@@ -214,10 +249,20 @@ const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: 
         title="Đánh giá sản phẩm"
         centered
         open={modal2Open}
-        onOk={()=>handleAddComment()}
+        onOk={()=>handleOnOK()}
         onCancel={() => setModal2Open(false)}
       >
-        <div class="card" style={{background:"none",border:"none"}}>             
+        {
+          idProduct.map(product =>{
+             const isEvaluated = evaluatedProducts.includes(product.product);
+    // Nếu sản phẩm đã được đánh giá, không render nó
+            if (isEvaluated) {
+                return null;
+            }
+            return(
+
+        <div class="card" style={{background:"none",border:"none"}}>  
+              Đánh giá sản phẩm {product?.name}           
               <div class="row">         
                   <div class="col-2">              
                       <img src={user?.avatar} width="70" class="rounded-circle mt-2"/>   
@@ -230,11 +275,18 @@ const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: 
                           </div>                         
                           <div class="comment-area">                            
                               <textarea class="form-control" placeholder="Your comment" rows="4" value={description} onChange={onChange}/>                     
-                          </div>                    
+                          </div>        
+                          <div>
+                            <ButtonComponent onClick={()=>handleAddEvaluate(product?.product)} textButton={"Đánh giá"} disabled={valueRating > 0 && description !==""? false: true } style={{margin:"20px 0",background:"blue", color:"#fff"}}/>
+                            </div>            
                       </div> 
                   </div>
               </div>
           </div>
+            )
+
+          })
+        }
       </Modal>
 
       </div>

@@ -327,7 +327,7 @@ const getItems = (rowSelected) => {
         render: renderAction,
       },
     ];
-   const dataTable = orders?.data?.length && orders?.data?.map((order)=>{
+   const dataTable = orders?.data?.length && orders?.data?.reverse().map((order)=>{
     return {
       ...order,
       key: order._id,

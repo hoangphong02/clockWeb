@@ -16,8 +16,8 @@ export const WrappertextCongratulation = styled.div`
   font-weight: 700;
   font-family: "Poppins", sans-serif;
   text-align: center;
-  background: #fffae8;
   border-radius: 10px;
+  color: rgb(255, 213, 141);
 `;
 
 export const Wrappertext = styled.div`

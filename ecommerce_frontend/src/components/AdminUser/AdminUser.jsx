@@ -273,7 +273,7 @@ const AdminUser = () => {
         render: renderAction,
       },
     ];
-   const dataTable = users?.data?.length && users?.data?.map((user)=>{
+   const dataTable = users?.data?.length && users?.data?.reverse().map((user)=>{
     console.log("user",user)
     return {
       ...user,
@@ -372,7 +372,7 @@ const AdminUser = () => {
       <div style={{width:"200px", height:"200px", marginBottom:"30px"}}>
 
       <PieChartComponent data = {users?.data}/>
-      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Số lượng người dùng</p>
+      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff", display:"flex", justifyContent:"center"}}>Số lượng người dùng</p>
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>

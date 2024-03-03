@@ -283,7 +283,7 @@ const AdminContact = () => {
         render: renderAction,
       },
     ];
-   const dataTable = contacts?.data?.length && contacts?.data?.map((contact)=>{
+   const dataTable = contacts?.data?.length && contacts?.data?.reverse().map((contact)=>{
     return {
       ...contact,
       key: contact._id,

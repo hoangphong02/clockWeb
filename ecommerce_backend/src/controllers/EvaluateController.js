@@ -1,7 +1,7 @@
-const CommentService = require("../services/CommentService");
+const EvaluateService = require("../services/EvaluateService");
 const JwtService = require("../services/JwtService");
 
-const createComment = async (req, res) => {
+const createEvaluate = async (req, res) => {
   try {
     const { name, avatar, description, rating } = req.body;
     if (!description || !name || !avatar || !rating) {
@@ -10,7 +10,7 @@ const createComment = async (req, res) => {
         message: "The input is required",
       });
     }
-    const response = await CommentService.createComment(req.body);
+    const response = await EvaluateService.createEvaluate(req.body);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -19,7 +19,7 @@ const createComment = async (req, res) => {
   }
 };
 
-const getAllCommentDetails = async (req, res) => {
+const getAllEvaluateDetails = async (req, res) => {
   try {
     const productId = req.params.id;
     if (!productId) {
@@ -28,7 +28,7 @@ const getAllCommentDetails = async (req, res) => {
         message: "The userId is required",
       });
     }
-    const response = await CommentService.getAllCommentDetails(productId);
+    const response = await EvaluateService.getAllEvaluateDetails(productId);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -37,16 +37,16 @@ const getAllCommentDetails = async (req, res) => {
   }
 };
 
-const deleteComment = async (req, res) => {
+const deleteEvaluate = async (req, res) => {
   try {
-    const commentId = req.params.id;
-    if (!commentId) {
+    const evaluateId = req.params.id;
+    if (!evaluateId) {
       return res.status(200).json({
         status: "ERR",
         message: "The userId is required",
       });
     }
-    const response = await CommentService.deleteComment(commentId);
+    const response = await EvaluateService.deleteEvaluate(evaluateId);
     return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
@@ -56,7 +56,7 @@ const deleteComment = async (req, res) => {
 };
 
 module.exports = {
-  createComment,
-  getAllCommentDetails,
-  deleteComment,
+  createEvaluate,
+  getAllEvaluateDetails,
+  deleteEvaluate,
 };

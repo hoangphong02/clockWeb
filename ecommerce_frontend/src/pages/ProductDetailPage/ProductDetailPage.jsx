@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ProductDetailComponent from '../../components/ProductDetailComponent/ProductDetailComponent'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { useMutationHook } from '../../hooks/useMutationHook'
-import * as CommentService from '../../services/CommentService'
+import * as EvaluateService from '../../services/EvaluateService'
 import { useSelector } from 'react-redux'
 import { Input, Rate, message } from 'antd'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
@@ -32,23 +32,23 @@ const ProductDetailPage = () => {
     console.log("params",id)
  
     console.log("addCartHeader",addCartHeader)
-     const mutationAddComment = useMutationHook(
+     const mutationAddEvaluate = useMutationHook(
     (data) => {
       console.log("dataUser",data)
       const { 
         token,
         ...rests } = data
-      const res = CommentService.createComment(
+      const res = EvaluateService.createEvaluate(
           { ...rests }, token)
       return res
     },
   )
  
-const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddComment
-      const handleAddComment = () => {
+const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: isError } = mutationAddEvaluate
+      const handleAddEvaluate = () => {
     if(user?.access_token  ) {
         // eslint-disable-next-line no-unused-expressions
-        mutationAddComment.mutate(
+        mutationAddEvaluate.mutate(
           { token: user?.access_token, 
             name:user?.name,
             avatar:user?.avatar,        
@@ -59,7 +59,7 @@ const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: 
           }
         ), {
           onSuccess:()=>{
-            queryComment.refetch()
+            queryEvaluate.refetch()
           }
         }
       }
@@ -72,19 +72,19 @@ const { data: dataAdd, isLoading: isLoadingAdd, isSuccess: isSuccsess, isError: 
   
   console.log("user",user)
 
-   const fetchMyComment = async()=>{
-      const res = await CommentService.getCommentByProductId(id, user?.access_token)
+   const fetchMyEvaluate = async()=>{
+      const res = await EvaluateService.getEvaluateByProductId(id, user?.access_token)
       return res.data
     }
 
-    const queryComment =useQuery({queryKey:['comment'], queryFn: fetchMyComment})
-    const { isLoading, data } = queryComment
+    const queryEvaluate =useQuery({queryKey:['evaluate'], queryFn: fetchMyEvaluate})
+    const { isLoading, data } = queryEvaluate
 
     console.log("dataComm",data)
     useEffect(() => {
     if (isSuccsess && dataAdd?.status === 'OK') {
       message.success("Bình luận thành công")
-      queryComment.refetch()
+      queryEvaluate.refetch()
       setDescription("")
       setValueRating(0)
     } else if (isSuccsess && dataAdd?.status === 'ERR') {
@@ -110,7 +110,7 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
       const { id,
         token,
       } = data
-      const res = CommentService.deleteComment(
+      const res = EvaluateService.deleteEvaluate(
         id,
         token)
       return res
@@ -118,10 +118,10 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
   )
   
   const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
-  const handleDeleteComment = (id) => {
+  const handleDeleteEvaluate = (id) => {
     mutationDeleted.mutate({ id: id, token: user?.access_token }, {
       onSettled: () => {
-        queryComment.refetch()
+        queryEvaluate.refetch()
       }
     })
   }
@@ -129,7 +129,7 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
   useEffect(() => {
     if (isSuccessDelected && dataDeleted?.status === 'OK') {
       message.success("Xóa bình luận thành công")
-      // queryComment.refetch()
+      // queryEvaluate.refetch()
     } else if (isErrorDeleted) {
       message.error("Xóa không thành công")
     }
@@ -170,26 +170,26 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
       <img src={user?.avatar} style={{width:"40px", height:"40px", borderRadius:"50%", objectFit:"cover"}}/>
       <div style={{width:"100%",lineHeight:"2"}}>
       <Rate onChange={setValueRating} value={valueRating} />
-      <Input placeholder="Add comment" value={description} onChange={onChange} />
+      <Input placeholder="Add evaluate" value={description} onChange={onChange} />
       </div>
-      <ButtonComponent textButton={"Comment"} onClick={()=>handleAddComment()}/>
+      <ButtonComponent textButton={"evaluate"} onClick={()=>handleAddevaluate()}/>
       </div> */}
       <div>
         {
-          data?.map((comment)=>{
+          data?.map((evaluate)=>{
             return(
           <div style={{margin:" 10px 0 ",display:"flex",alignItems:"center"}}>
           <div >
-          <img src={comment?.avatar} alt='avatar' style={{height:"40px", width:'40px', borderRadius:"50%",margin:"0 10px"}}/>
+          <img src={evaluate?.avatar} alt='avatar' style={{height:"40px", width:'40px', borderRadius:"50%",margin:"0 10px"}}/>
           </div>
           <div style={{ background: "#ccc",padding: "15px", borderRadius: "15px", width:"689px", overflow:"hidden"}}>
-          <span style={{fontWeight:"800"}}>{comment?.name}</span> <span>{formatDateTime(comment.updatedAt)}</span>
-          <div >{comment?.description}</div>
+          <span style={{fontWeight:"800"}}>{evaluate?.name}</span> <span>{formatDateTime(evaluate.updatedAt)}</span>
+          <div >{evaluate?.description}</div>
           <div>
-            <Rate defaultValue={comment?.rating} value={comment?.rating}/>
+            <Rate defaultValue={evaluate?.rating} value={evaluate?.rating}/>
           </div>
           <div style={{display:"flex", float:"right"}}>
-          {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteComment(comment?._id)}/>:("")}
+          {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")}
           </div>
           </div>
         </div>

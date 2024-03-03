@@ -1,9 +1,9 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
-export const createComment = async (data, access_token) => {
+export const createEvaluate = async (data, access_token) => {
   console.log("acccess", { access_token, data });
   const res = await axiosJWT.post(
-    `${process.env.REACT_APP_API_URL}/comment/create/${data.user}`,
+    `${process.env.REACT_APP_API_URL}/evaluate/create/${data.user}`,
     data,
     {
       headers: {
@@ -14,9 +14,9 @@ export const createComment = async (data, access_token) => {
   return res.data;
 };
 
-export const getCommentByProductId = async (id, access_token) => {
+export const getEvaluateByProductId = async (id, access_token) => {
   const res = await axiosJWT.get(
-    `${process.env.REACT_APP_API_URL}/comment/get-all-comment/${id}`,
+    `${process.env.REACT_APP_API_URL}/evaluate/get-all-evaluate/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,
@@ -26,9 +26,9 @@ export const getCommentByProductId = async (id, access_token) => {
   return res.data;
 };
 
-export const deleteComment = async (id, access_token) => {
+export const deleteEvaluate = async (id, access_token) => {
   const res = await axiosJWT.delete(
-    `${process.env.REACT_APP_API_URL}/comment/delete-comment/${id}`,
+    `${process.env.REACT_APP_API_URL}/evaluate/delete-evaluate/${id}`,
     {
       headers: {
         token: `Bearer ${access_token}`,

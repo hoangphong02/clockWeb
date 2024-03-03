@@ -96,7 +96,7 @@ import { Wrapper} from './style'
 import logo from "../../assets/images/logo-decoration.png"
 import { useNavigate } from 'react-router';
 import { getItem } from '../../utils';
-import { AppstoreOutlined, ContactsOutlined, DashboardOutlined, FileImageOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, ContactsOutlined, DashboardOutlined, FileImageOutlined, ShoppingCartOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
 import AdminOrder from '../../components/AdminOrder/AdminOrder';
@@ -104,6 +104,7 @@ import AdminContact from '../../components/AdminContact/AdminContact';
 import AdminDashboard from '../../components/AdminDashboard/AdminDashboard';
 import AdminSlider from '../../components/AdminSlider/AdminSlider';
 import { Menu } from 'antd';
+import AdminPost from '../../components/AdminPost/AdminPost';
 
 const AdminPage = () => {
       const navigate = useNavigate()
@@ -114,6 +115,8 @@ const items = [
     getItem('ĐƠN HÀNG', 'orders', <ShoppingCartOutlined style={{fontSize:"22px"}}/> ),
     getItem('LIÊN HỆ', 'contact', <ContactsOutlined style={{fontSize:"22px"}}/>  ),
     getItem('SLIDER', 'slider', <FileImageOutlined style={{fontSize:"22px"}}/>  ),
+    getItem('BÀI ĐĂNG', 'post', <WalletOutlined style={{fontSize:"22px"}}/> ),
+
   ];
    const [keySelected, setKeySelected] = useState('')
   const renderPage = (key)=>{
@@ -130,6 +133,8 @@ const items = [
         return (<AdminContact/>)
       case 'slider':
         return (<AdminSlider/>)
+      case 'post':
+        return (<AdminPost/>)
         default:
           return <></>
     }

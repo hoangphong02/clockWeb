@@ -318,7 +318,7 @@ const AdminProduct = () => {
       render: renderAction
     },
   ];
-  const dataTable = products?.data?.length && products?.data?.map((product) => {
+  const dataTable = products?.data?.length && products?.data?.reverse().map((product) => {
     return { ...product, key: product._id }
   })
 
