@@ -5,7 +5,7 @@ const createPost = (newPost) => {
   return new Promise(async (resolve, reject) => {
     const { title, content, likeCount, image } = newPost;
     try {
-      const createPost = await Evaluate.create({
+      const createPost = await Post.create({
         title,
         content,
         likeCount,
