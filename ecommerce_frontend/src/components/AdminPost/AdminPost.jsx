@@ -420,8 +420,8 @@ const AdminPost = () => {
     ArrImage = imageUploadDetail.filter((image) => image?.urlImage !== url)
     setImageUploadDetail(ArrImage)
   }
+  console.log("imageULDT",statePost.imageUL )
 
-  console.log("imageUlDETAIL", imageUploadDetail)
   return (
     <div>
       <AdminHeader textHeader={"Quản lý bài đăng"} />
@@ -494,7 +494,7 @@ const AdminPost = () => {
                   }} alt="avatar" />
                 )}
               </WrapperAvatar>
-              <Button style={{ margin: "20px 0", background: "#1677ff", color: "#fff" }} disabled={statePost?.imageUL !== "" ? false : true} onClick={handleIncreaseImage}>Upload</Button>
+              <Button style={{ margin: "20px 0", background: "#1677ff", color: "#fff" }} disabled={statePost?.imageUL ? false : true} onClick={handleIncreaseImage}>Upload</Button>
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
@@ -568,7 +568,7 @@ const AdminPost = () => {
                 }
 
               </WrapperAvatar>
-              <Button style={{ margin: "20px 130px", background: "#1677ff", color: "#fff", padding: "0 25px" }} disabled={statePostDetails?.imageUL !== "" ? false : true} onClick={handleIncreaseImageDetails}>Upload</Button>
+              <Button style={{ margin: "20px 130px", background: "#1677ff", color: "#fff", padding: "0 25px" }} disabled={statePostDetails?.imageUL ? false : true} onClick={handleIncreaseImageDetails}>Upload</Button>
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>

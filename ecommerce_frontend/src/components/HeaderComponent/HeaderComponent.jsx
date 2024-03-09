@@ -505,7 +505,7 @@ if (hasVatPham) {
     
   </ul>
 </WrapperButtonDropdown>
-        <WrapperMenuItem className='news' style={{color:isScrolled? "black":"#fff"}}>Tin tức</WrapperMenuItem>
+        <WrapperMenuItem className='news' style={{color:isScrolled? "black":"#fff"}} onClick={()=> navigate("/blog")}>Tin tức</WrapperMenuItem>
         <WrapperMenuItem className='trendingProducts' style={{color:isScrolled? "black":"#fff"}} onClick={()=> navigate("/productsTrending")} >Gợi ý sản phẩm</WrapperMenuItem>
         <WrapperMenuItem className='' style={{color:isScrolled? "black":"#fff"}} onClick={()=> navigate("/contact")}>Liên hệ</WrapperMenuItem>
 

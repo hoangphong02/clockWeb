@@ -51,3 +51,49 @@ export const getDetailPost = async (id) => {
   );
   return res.data;
 };
+
+export const addLike = async (id, access_token, data) => {
+  const res = await axiosJWT.put(
+    `${process.env.REACT_APP_API_URL}/post/addLike/${id}`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const deleteLike = async (id, access_token) => {
+  const res = await axiosJWT.delete(
+    `${process.env.REACT_APP_API_URL}/post/deleteLike/${id}`,
+
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getPostLiked = async (access_token, data) => {
+  const res = await axiosJWT.post(
+    `${process.env.REACT_APP_API_URL}/post/get-post-liked`,
+    data,
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};
+
+export const getLikePost = async (id) => {
+  const res = await axiosJWT.get(
+    `${process.env.REACT_APP_API_URL}/post/get-like-post/${id}`,
+  );
+  return res.data;
+};

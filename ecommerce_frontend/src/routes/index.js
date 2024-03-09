@@ -17,6 +17,7 @@ import ContactPage from "../pages/ContactPage/ContactPage";
 import TestPage from "../pages/TestPage/TestPage";
 import ForgetPasswordPage from "../pages/ForgetPassword/ForgetPasswordPage";
 import CreateNewPassword from "../pages/CreateNewPassword/CreateNewPassword";
+import BlogPage from "../pages/BlogPage/BlogPage";
 export const routes = [
   {
     path: "/",
@@ -66,6 +67,11 @@ export const routes = [
   {
     path: "/contact",
     page: ContactPage,
+    isShowHeader: true,
+  },
+   {
+    path: "/blog",
+    page: BlogPage,
     isShowHeader: true,
   },
   {
