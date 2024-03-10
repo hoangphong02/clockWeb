@@ -2,45 +2,49 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import * as PostService from "../../services/PostService";
 import slidergiangsinh1 from "../../assets/images/noel1.png";
-import { Button, Image, Modal } from "antd";
+import { Button, Image, Input, Modal, message } from "antd";
 import {
   CloudFilled,
   CommentOutlined,
   HeartFilled,
   HeartOutlined,
   MessageFilled,
+  SendOutlined,
 } from "@ant-design/icons";
-import { WrapperH1 } from "./style";
+import { WrapperH1, WrapperModal } from "./style";
 import logo from "../../assets/images/logo-decoration.png";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 const BlogPage = () => {
   const user = useSelector((state) => state?.user);
-  console.log("user", user);
   const [postLiked, setPostLiked] = useState([]);
-  const [likeCount, setLikeCount]  =useState([])
-   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [likeCount, setLikeCount] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [content, setContent] = useState("");
+  const [idPostByOpenModal, setIdPostByOpenModal] = useState("");
+
   const getAllPost = async () => {
     const res = await PostService.getAllPost();
     return res;
   };
+
+  //like
   const queryPost = useQuery({ queryKey: ["posts"], queryFn: getAllPost });
   const { data: posts } = queryPost;
-  
+
   useEffect(() => {
-    const newLikeCount =[]
-    posts?.data?.forEach(post => {
-        newLikeCount.push({
-          id: post?._id,
-          like: post?.likeCount?.length
-        })
+    const newLikeCount = [];
+    posts?.data?.forEach((post) => {
+      newLikeCount.push({
+        id: post?._id,
+        like: post?.likeCount?.length,
+      });
     });
-    setLikeCount(newLikeCount)
-}, [posts]);
-
-  console.log("likeCount", likeCount)
-
+    setLikeCount(newLikeCount);
+  }, [posts]);
 
   const custumDay = (dateTimeStr) => {
     const dateTime = new Date(dateTimeStr);
@@ -103,7 +107,6 @@ const BlogPage = () => {
     isError: isErrorUpdated,
   } = mutationAddLike;
 
-
   const onAddLike = (idPost) => {
     mutationAddLike.mutate({
       id: idPost,
@@ -116,11 +119,9 @@ const BlogPage = () => {
       ],
     });
   };
-
   const onDeleteLike = () => {
     mutationDeletedLike.mutate({ id: user?.id, token: user?.access_token }, {});
   };
-
   const isPostLike = (postId) => {
     if (postLiked?.includes(postId)) {
       return true;
@@ -128,36 +129,36 @@ const BlogPage = () => {
       return false;
     }
   };
-const likePost = (postId) => {
-    setLikeCount(prev => {
-        const updatedLikeCount = prev.map(item => {
-            if (item.id === postId) {
-                return { ...item, like: item.like + 1 };
-            }
-            return item;
-        });
-        return updatedLikeCount;
+  const likePost = (postId) => {
+    setLikeCount((prev) => {
+      const updatedLikeCount = prev.map((item) => {
+        if (item.id === postId) {
+          return { ...item, like: item.like + 1 };
+        }
+        return item;
+      });
+      return updatedLikeCount;
     });
-};
+  };
   const deleteLikePost = (postId) => {
-    setLikeCount(prev => {
-        const updatedLikeCount = prev.map(item => {
-            if (item.id === postId) {
-                return { ...item, like: item?.like> 0 ? item.like - 1: 0 };
-            }
-            return item;
-        });
-        return updatedLikeCount;
+    setLikeCount((prev) => {
+      const updatedLikeCount = prev.map((item) => {
+        if (item.id === postId) {
+          return { ...item, like: item?.like > 0 ? item.like - 1 : 0 };
+        }
+        return item;
+      });
+      return updatedLikeCount;
     });
-};
+  };
 
   const onHandleLike = (idPost) => {
     if (isPostLike(idPost) === false) {
       onAddLike(idPost);
-        likePost(idPost)    
+      likePost(idPost);
     } else {
       onDeleteLike();
-     deleteLikePost(idPost)
+      deleteLikePost(idPost);
     }
   };
 
@@ -167,108 +168,114 @@ const likePost = (postId) => {
     }
   }, [dataAddLike, dataDeleteLike]);
 
-  
-  const handleComment = (id) => {
-    setIsModalOpen(true);
+  //Comment
+  const fetchMyComments = async () => {
+    if (idPostByOpenModal) {
+      const res = await PostService.getCommentByIdPost(
+        idPostByOpenModal,
+        user?.access_token
+      );
+      return res.data;
+    }
   };
-  const handleCancel=()=>{
-    setIsModalOpen(false);
-  }
 
+  const queryComment = useQuery({
+    queryKey: ["comment"],
+    queryFn: fetchMyComments,
+  });
+  const { isLoading, data: commentQuery } = queryComment;
+
+  console.log("commentQuery", commentQuery);
+  const fetchCommentByIdPost = async (id) => {
+    const res = await PostService.getCommentByIdPost(id, user?.access_token);
+    if (res?.data) {
+      setComments(res?.data);
+    }
+  };
+
+  const handleComment = (id) => {
+    fetchCommentByIdPost(id);
+    setIsModalOpen(true);
+    setIdPostByOpenModal(id);
+  };
+  const handleCancel = () => {
+    setContent("");
+    setIsModalOpen(false);
+  };
+  const mutationCreateComment = useMutationHook((data) => {
+    const { token, ...rests } = data;
+    const res = PostService.createComment({ ...rests }, token);
+    return res;
+  });
+  const {
+    data: dataAdd,
+    isLoading: isLoadingAdd,
+    isSuccess: isSuccsess,
+    isError: isError,
+  } = mutationCreateComment;
+  console.log("idPostByOpenModal", idPostByOpenModal);
+
+  const onChangeContentComment = (e) => {
+    setContent(e.target.value);
+  };
+  const handleCreateComment = () => {
+    if (user?.access_token) {
+      mutationCreateComment.mutate({
+        token: user?.access_token,
+        name: user?.name,
+        avatar: user?.avatar,
+        content: content,
+        user: user?.id,
+        post: idPostByOpenModal,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (dataAdd?.status === "OK") {
+      message.success("Bình luận thành công");
+      setContent("");
+      fetchCommentByIdPost(idPostByOpenModal);
+    } else {
+      if (dataAdd?.status === "ERR") {
+        message.error("Bình luận thất bại");
+      }
+    }
+  }, [dataAdd, isSuccsess, isError]);
+  useEffect(() => {
+    if (idPostByOpenModal) {
+      fetchMyComments();
+    }
+  }, [idPostByOpenModal]);
+  useEffect(() => {
+    if (commentQuery) {
+      fetchCommentByIdPost(idPostByOpenModal);
+    }
+  }, [commentQuery]);
   return (
     <>
-    <div style={{ background: "#f0f2f5" }}>
-      <div style={{ width: "100%" }}>
-        <div style={{ textAlign: "center" }}>
-          <img src={logo} style={{ height: "200px" }} />
-        </div>
-        {posts?.data &&
-          posts?.data?.map((post) => {
-            return (
-              <div
-                className="container"
-                style={{
-                  width: "900px",
-                  height: "100%",
-                  border: "1px solid rgb(255 253 253)",
-                  borderRadius: "30px",
-                  background: "#fff",
-                  filter: "drop-shadow(1px 2px 2px #333)",
-                  marginBottom: "30px",
-                }}
-              >
-                <div>
-                  <div style={{ padding: "20px" }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <p
-                        style={{
-                          fontSize: "25px",
-                          fontWeight: "bold",
-                          fontFamily: "inherit",
-                        }}
-                      >
-                        {post.title}
-                      </p>{" "}
-                      <p>
-                        <em>{custumDay(post?.createdAt)}</em>
-                      </p>
-                    </div>
-                    <div>{post?.content}</div>
-                  </div>
-                  <div
-                    style={{
-                      height: "500px",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {post?.image && post?.image.length === 1 ? (
-                      <Image
-                        src={post.image[0].urlImage}
-                        style={{ width: "100%", height: "100%" }}
-                        preview={true}
-                      />
-                    ) : (
-                      post?.image && (
-                        <>
-                          <Image
-                            key={post.image[0].id}
-                            src={post.image[0].urlImage}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                          <div
-                            style={{ display: "flex", flexDirection: "column" }}
-                          >
-                            {post.image.slice(1).map((image, index) => (
-                              <Image
-                                key={image.id}
-                                src={image.urlImage}
-                                style={{
-                                  width: "100%",
-                                  height: `calc(500px / ${
-                                    post.image.length - 1
-                                  })`,
-                                  objectFit: "cover",
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )
-                    )}
-                  </div>
-
-                  <div style={{ padding: "30px" }}>
-                    <div>
+      <div style={{ background: "#f0f2f5" }}>
+        <div style={{ width: "100%" }}>
+          <div style={{ textAlign: "center" }}>
+            <img src={logo} style={{ height: "200px" }} />
+          </div>
+          {posts?.data &&
+            posts?.data?.map((post) => {
+              return (
+                <div
+                  className="container"
+                  style={{
+                    width: "900px",
+                    height: "100%",
+                    border: "1px solid rgb(255 253 253)",
+                    borderRadius: "30px",
+                    background: "#fff",
+                    filter: "drop-shadow(1px 2px 2px #333)",
+                    marginBottom: "30px",
+                  }}
+                >
+                  <div>
+                    <div style={{ padding: "20px" }}>
                       <div
                         style={{
                           display: "flex",
@@ -277,88 +284,256 @@ const likePost = (postId) => {
                       >
                         <p
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "20px",
+                            fontSize: "25px",
+                            fontWeight: "bold",
+                            fontFamily: "inherit",
                           }}
                         >
-                          { likeCount?.length?  likeCount?.find((item)=>item?.id === post?._id).like
-                              : post?.likeCount?.length
-                          }
-                          {" "}
-                          <HeartFilled
-                            style={{ padding: "0 4px", color: "#d60055" }}
-                          />
-                        </p>
-                        <p
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "20px",
-                          }}
-                        >
-                          30{" "}
-                          <MessageFilled
-                            style={{ padding: "0 4px", color: "#1f82f3" }}
-                          />
+                          {post.title}
+                        </p>{" "}
+                        <p>
+                          <em>{custumDay(post?.createdAt)}</em>
                         </p>
                       </div>
-                      <div
-                        style={{
-                          borderTop: "1px solid #333",
-                          paddingTop: "20px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Button
+                      <div>{post?.content}</div>
+                    </div>
+                    <div
+                      style={{
+                        height: "500px",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {post?.image && post?.image.length === 1 ? (
+                        <Image
+                          src={post.image[0].urlImage}
+                          style={{ width: "100%", height: "100%" }}
+                          preview={true}
+                        />
+                      ) : (
+                        post?.image && (
+                          <>
+                            <Image
+                              key={post.image[0].id}
+                              src={post.image[0].urlImage}
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              {post.image.slice(1).map((image, index) => (
+                                <Image
+                                  key={image.id}
+                                  src={image.urlImage}
+                                  style={{
+                                    width: "100%",
+                                    height: `calc(500px / ${
+                                      post.image.length - 1
+                                    })`,
+                                    objectFit: "cover",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </>
+                        )
+                      )}
+                    </div>
+
+                    <div style={{ padding: "30px" }}>
+                      <div>
+                        <div
                           style={{
                             display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "30px",
-                            border: "none",
-                            background: "none",
+                            justifyContent: "space-between",
                           }}
-                          onClick={() => onHandleLike(post?._id)}
                         >
-                          {isPostLike(post?._id) === false ? (
-                            <HeartOutlined />
-                          ) : (
-                            <HeartFilled style={{ color: "#d60055" }} />
-                          )}
-                        </Button>
-                        <Button
+                          <p
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: "20px",
+                            }}
+                          >
+                            {likeCount?.length
+                              ? likeCount?.find(
+                                  (item) => item?.id === post?._id
+                                ).like
+                              : post?.likeCount?.length}{" "}
+                            <HeartFilled
+                              style={{ padding: "0 4px", color: "#d60055" }}
+                            />
+                          </p>
+                          <p
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: "20px",
+                            }}
+                          >
+                            30{" "}
+                            <MessageFilled
+                              style={{ padding: "0 4px", color: "#1f82f3" }}
+                            />
+                          </p>
+                        </div>
+                        <div
                           style={{
+                            borderTop: "1px solid #333",
+                            paddingTop: "20px",
                             display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "30px",
-                            border: "none",
-                            background: "none",
+                            justifyContent: "space-between",
                           }}
-                          onClick={()=>handleComment(post?._id)}
                         >
-                          <CommentOutlined />
-                        </Button>
+                          <Button
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: "30px",
+                              border: "none",
+                              background: "none",
+                            }}
+                            onClick={() => onHandleLike(post?._id)}
+                          >
+                            {isPostLike(post?._id) === false ? (
+                              <HeartOutlined />
+                            ) : (
+                              <HeartFilled style={{ color: "#d60055" }} />
+                            )}
+                          </Button>
+                          <Button
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontSize: "30px",
+                              border: "none",
+                              background: "none",
+                            }}
+                            onClick={() => handleComment(post?._id)}
+                          >
+                            <CommentOutlined />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+        </div>
       </div>
-    </div>
-    <Modal title="Basic Modal" open={isModalOpen} onCancel={handleCancel} footer={false}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
+      <WrapperModal
+        title="Bình luận"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={false}
+        width={900}
+      >
+        <div style={{ paddingBottom: "100px" }}>
+          {comments.length > 0 &&
+            comments?.map((comment) => {
+              return (
+                <div
+                  style={{
+                    margin: " 10px 0 ",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <img
+                      src={comment?.avatar}
+                      alt="avatar"
+                      style={{
+                        height: "40px",
+                        width: "40px",
+                        borderRadius: "50%",
+                        margin: "0 10px",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      background: "#f0f2f5",
+                      padding: "15px",
+                      borderRadius: "15px",
+                      width: "689px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <span style={{ fontWeight: "800" }}>{comment?.name}</span>{" "}
+                    <span>{custumDay(comment?.createdAt)}</span>
+                    <div>{comment?.content} </div>
+                    <div style={{ display: "flex", float: "right" }}>
+                      {/* {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")} */}
+                      <ButtonComponent textButton={"Xóa"} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+
+        <div
+          style={{
+            margin: " 10px 0 ",
+            display: "flex",
+            alignItems: "center",
+            position: "absolute",
+            bottom: "0",
+            background: "#fff",
+          }}
+        >
+          <div>
+            <img
+              src={user?.avatar}
+              alt="avatar"
+              style={{
+                height: "40px",
+                width: "40px",
+                borderRadius: "50%",
+                margin: "0 10px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              background: "#f0f2f5",
+              padding: "15px",
+              borderRadius: "15px",
+              width: "689px",
+              overflow: "hidden",
+            }}
+          >
+            <Input
+              placeholder="Nhập bình luận"
+              style={{ background: "none", outline: "none", border: "none" }}
+              onChange={onChangeContentComment}
+              value={content}
+            />
+            <div style={{ display: "flex", float: "right" }}>
+              {/* {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")} */}
+              <ButtonComponent
+                disabled={content !== "" ? false : true}
+                textButton={<SendOutlined />}
+                onClick={handleCreateComment}
+              />
+            </div>
+          </div>
+        </div>
+      </WrapperModal>
     </>
-    
   );
 };
 

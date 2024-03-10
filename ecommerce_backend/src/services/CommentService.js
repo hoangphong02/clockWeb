@@ -1,7 +1,7 @@
 const Comment = require("../models/CommentModel");
 // const bcrypt = require("bcrypt");
 const EmailService = require("./EmailService");
-const createEvaluate = (newComment) => {
+const createComment = (newComment) => {
   return new Promise(async (resolve, reject) => {
     const { name, avatar, content, user, post } = newComment;
     try {
@@ -24,7 +24,7 @@ const createEvaluate = (newComment) => {
     }
   });
 };
-const getAllEvaluateDetails = (id) => {
+const getAllCommentByIdPost = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const comment = await Comment.find({
@@ -48,7 +48,7 @@ const getAllEvaluateDetails = (id) => {
   });
 };
 
-const deleteEvaluate = (id) => {
+const deleteComment = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const checkComment = await Comment.findOne({
@@ -73,7 +73,7 @@ const deleteEvaluate = (id) => {
 };
 
 module.exports = {
-  createEvaluate,
-  getAllEvaluateDetails,
-  deleteEvaluate,
+  createComment,
+  getAllCommentByIdPost,
+  deleteComment,
 };

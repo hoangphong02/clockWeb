@@ -6,7 +6,7 @@ const {
   authMiddleWare,
 } = require("../MiddleWare/authMiddleWare");
 
-router.post("/create/:id", commentController.createComment);
+router.post("/create/:id", authUserMiddleWare, commentController.createComment);
 router.get("/get-all-comment/:id", commentController.getAllCommentByIdPost);
 router.delete(
   "/delete-comment/:id",
