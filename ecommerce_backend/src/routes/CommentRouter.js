@@ -13,4 +13,6 @@ router.delete(
   authUserMiddleWare,
   commentController.deleteComment
 );
+router.get("/get-all-comment", commentController.getAllComment);
+
 module.exports = router;

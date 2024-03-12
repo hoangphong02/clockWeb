@@ -18,7 +18,16 @@ const createComment = async (req, res) => {
     });
   }
 };
-
+const getAllComment = async (req, res) => {
+  try {
+    const response = await CommentService.getAllComment();
+    return res.status(200).json(response);
+  } catch (e) {
+    return res.status(404).json({
+      message: e,
+    });
+  }
+};
 const getAllCommentByIdPost = async (req, res) => {
   try {
     const postId = req.params.id;
@@ -59,4 +68,5 @@ module.exports = {
   createComment,
   getAllCommentByIdPost,
   deleteComment,
+  getAllComment
 };

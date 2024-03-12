@@ -25,6 +25,8 @@ const BlogPage = () => {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
   const [idPostByOpenModal, setIdPostByOpenModal] = useState("");
+  const [numberComments, setNumberComments] = useState([]);
+
 
   const getAllPost = async () => {
     const res = await PostService.getAllPost();
@@ -252,6 +254,63 @@ const BlogPage = () => {
       fetchCommentByIdPost(idPostByOpenModal);
     }
   }, [commentQuery]);
+
+    const mutationDeletedComment = useMutationHook(
+    (data) => {
+      const { id,
+        token,
+      } = data
+      const res = PostService.deleteComment(
+        id,
+        token)
+      return res
+    },
+  )
+  const { data: dataDeletedComment, isLoading: isLoadingDeleted, isSuccess: isSuccessDelectedComment, isError: isErrorDeletedComment } = mutationDeletedComment
+  const handleDeleteComment = (id) => {
+    mutationDeletedComment.mutate({ id: id, token: user?.access_token }, {
+      onSettled: () => {
+        queryComment.refetch()
+      }
+    })
+  }
+   useEffect(() => {
+    if (dataDeletedComment?.status === "OK") {
+      message.success("Xóa bình luận thành công");
+    } else {
+      if (dataDeletedComment?.status === "ERR") {
+        message.error("Xóa bình luận thất bại");
+      }
+    }
+  }, [dataDeletedComment, isSuccessDelectedComment, isErrorDeletedComment]);
+  
+    const getAllComment = async () => {
+    const res = await PostService.getAllComment()
+    return res
+  }
+  const queryGetAllComments = useQuery({ queryKey: ['allComment'], queryFn: getAllComment })
+const { isLoading: isLoadingOrder, data: allComment } = queryGetAllComments
+
+
+  useEffect(()=>{
+    const postCounts = {};
+allComment?.data?.forEach(comment => {
+  const postId = comment.post;
+  postCounts[postId] = (postCounts[postId] || 0) + 1;
+});
+
+// Chuyển đổi đối tượng postCounts thành mảng kết quả
+const result = Object.entries(postCounts).map(([id, count]) => ({ id, count }));
+
+setNumberComments(result)
+
+  },[allComment])
+
+
+const getNumberCommentById = (id)=>{
+  const data = numberComments?.find(item=> item?.id === id)
+  return data?.count
+}
   return (
     <>
       <div style={{ background: "#f0f2f5" }}>
@@ -380,7 +439,7 @@ const BlogPage = () => {
                               fontSize: "20px",
                             }}
                           >
-                            30{" "}
+                            {getNumberCommentById(post?._id) > 0 ? getNumberCommentById(post?._id) : 0}{" "}
                             <MessageFilled
                               style={{ padding: "0 4px", color: "#1f82f3" }}
                             />
@@ -441,7 +500,7 @@ const BlogPage = () => {
         width={900}
       >
         <div style={{ paddingBottom: "100px" }}>
-          {comments.length > 0 &&
+          {comments?.length > 0 &&
             comments?.map((comment) => {
               return (
                 <div
@@ -477,7 +536,7 @@ const BlogPage = () => {
                     <div>{comment?.content} </div>
                     <div style={{ display: "flex", float: "right" }}>
                       {/* {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")} */}
-                      <ButtonComponent textButton={"Xóa"} />
+                      <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteComment(comment?._id)} style={{display: user?.isAdmin === true ||  user?.id === comment?.user  ? "block" : "none"}} /> 
                     </div>
                   </div>
                 </div>

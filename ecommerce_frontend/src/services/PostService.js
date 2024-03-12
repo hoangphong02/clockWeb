@@ -134,3 +134,11 @@ export const deleteComment = async (id, access_token) => {
   );
   return res.data;
 };
+
+export const getAllComment = async () => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/comment/get-all-comment`
+  );
+  return res.data;
+};
+

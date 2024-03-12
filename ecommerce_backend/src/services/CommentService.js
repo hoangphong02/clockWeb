@@ -71,9 +71,31 @@ const deleteComment = (id) => {
     }
   });
 };
+const getAllComment = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const comment = await Comment.find();
+      if (comment === null) {
+        resolve({
+          status: "ERR",
+          message: "The order is not defined",
+        });
+      }
+
+      resolve({
+        status: "OK",
+        message: "SUCESSS",
+        data: comment,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
 
 module.exports = {
   createComment,
   getAllCommentByIdPost,
   deleteComment,
+  getAllComment
 };
