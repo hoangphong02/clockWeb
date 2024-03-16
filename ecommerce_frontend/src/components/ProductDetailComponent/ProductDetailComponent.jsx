@@ -13,7 +13,7 @@
   import { useMutationHook } from '../../hooks/useMutationHook'
 
 
-  const ProductDetailComponent = ({idProduct,addCart,buyNow,numberIncrease}) => {
+  const ProductDetailComponent = ({idProduct,addCart,buyNow,numberIncrease, ratingDetail}) => {
       const [numberProduct, setNumberProduct]= useState(1)
       const [isFollowerProduct, setIsFollowerProduct] = useState(false)
 
@@ -274,7 +274,7 @@
           {stateProductDetails?.name}
           </WrapperStyleNameProduct>
           <div>
-          <Rate allowHalf defaultValue={stateProductDetails?.rating} value={stateProductDetails?.rating} />
+          <Rate allowHalf defaultValue={ratingDetail} value={ratingDetail} />
           <WrapperStyleTextSell> | Đã bán {stateProductDetails?.selled ? stateProductDetails?.selled : 0}+</WrapperStyleTextSell>     
           </div>
           <WrapperPriceProduct>

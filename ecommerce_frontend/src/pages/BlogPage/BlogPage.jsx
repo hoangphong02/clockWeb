@@ -318,6 +318,7 @@ const getNumberCommentById = (id)=>{
           <div style={{ textAlign: "center" }}>
             <img src={logo} style={{ height: "200px" }} />
           </div>
+          <div style={{display:"flex", flexDirection:"column", gap:"10px"}}>
           {posts?.data &&
             posts?.data?.map((post) => {
               return (
@@ -490,6 +491,7 @@ const getNumberCommentById = (id)=>{
                 </div>
               );
             })}
+          </div>
         </div>
       </div>
       <WrapperModal

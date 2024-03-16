@@ -1,94 +1,80 @@
-
-import React, { useEffect, useRef, useState } from 'react'
-import {  WrapperAvatar, WrapperHeader } from './style'
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import TableComponent from '../TableComponent/TableComponent'
-import { Button, Checkbox, Form, Input, Modal, Select, Space } from 'antd'
-import * as message from '../../components/Message/Message'
-import InputComponent from '../InputComponent/InputComponent'
-import { getBase64, renderOptions } from '../../utils';
-import * as UserService from '../../services/UserService'
-import { useMutationHook } from '../../hooks/useMutationHook';
-import Loading from '../../components/Loading/Loading';
-import { useQuery } from '@tanstack/react-query'
-import DrawerComponent from '../DrawerComponent/DrawerComponent'
-import { useSelector } from 'react-redux'
-import ModalComponent from '../ModalComponent/ModalComponent'
-import * as ContactService from '../../services/ContactService'
-import PieChartComponent from './PieChartComponent'
-import AdminHeader from '../AdminHeader/AdminHeader'
+import React, { useEffect, useRef, useState } from "react";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import TableComponent from "../TableComponent/TableComponent";
+import { Button, Form, Radio, Space } from "antd";
+import * as message from "../../components/Message/Message";
+import InputComponent from "../InputComponent/InputComponent";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import Loading from "../../components/Loading/Loading";
+import { useQuery } from "@tanstack/react-query";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import { useSelector } from "react-redux";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import * as ContactService from "../../services/ContactService";
+import PieChartComponent from "./PieChartComponent";
+import AdminHeader from "../AdminHeader/AdminHeader";
 
 // import PieChartComponent from './PieChartComponent'
 
-
 const AdminContact = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rowSelected, setRowSelected] = useState('')
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
-  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
-  const user = useSelector((state) => state?.user)
-  
-  
+  const [rowSelected, setRowSelected] = useState("");
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const user = useSelector((state) => state?.user);
+  const [valueIsExplain, setValueIsExplain] = useState("false");
+  console.log("valueIsExplain", valueIsExplain);
+
   const searchInput = useRef(null);
- 
 
-    
-    const [stateContactsDetails, setStateContactDetails] =useState({
-        id:'',
-        name:'',
-        email:'',
-        phone:'',
-        message:'',
-        isExplain:'',
-        createdAt:''
-
-    })
+  const [stateContactsDetails, setStateContactDetails] = useState({
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+    isExplain: "",
+    createdAt: "",
+  });
 
   const [form] = Form.useForm();
 
+  const mutationUpdate = useMutationHook((data) => {
+    console.log("dataUser", data);
+    const { id, token, ...rests } = data;
+    const res = ContactService.updateContact(id, token, { ...rests });
+    return res;
+  });
 
-  const mutationUpdate = useMutationHook(
-    (data) => {
-      console.log("dataUser",data)
-      const { id,
-        token,
-        ...rests } = data
-      const res = ContactService.updateContact(
-        id,
-          token,{ ...rests },)
-      return res
-    },
-  )
+  const mutationDeleted = useMutationHook((data) => {
+    const { id, token } = data;
+    const res = ContactService.deleteContact(id, token);
+    return res;
+  });
 
+  console.log("rowSe", rowSelected);
 
-
-  const mutationDeleted = useMutationHook(
-    (data) => {
-      const { id,
-        token,
-      } = data
-      const res = ContactService.deleteContact(
-        id,
-        token)
-      return res
-    },
-  )
-    
-  console.log("rowSe",rowSelected)
-
-  
-    const handleDeleteContact = async (rowSelected)=>{
-        mutationDeleted.mutate({id: rowSelected, token: user?.access_token},{
-          onSuccess:()=>{
-            queryContact.refetch()
-          }
-        })
-    }
+  const handleDeleteContact = async (rowSelected) => {
+    mutationDeleted.mutate(
+      { id: rowSelected, token: user?.access_token },
+      {
+        onSuccess: () => {
+          queryContact.refetch();
+        },
+      }
+    );
+  };
 
   // const mutationDeletedMany = useMutationHook(
   //   (data) => {
-  //     const { 
+  //     const {
   //       token, ...ids
   //     } = data
   //     const res = UserService.deleteManyUser(
@@ -98,97 +84,109 @@ const AdminContact = () => {
   //   },
   // )
 
-  
+  const getAllContact = async () => {
+    const res = await ContactService.getAllContact();
+    return res;
+  };
 
-
-  
-
-    const getAllContact = async () => {
-    const res = await ContactService.getAllContact()
-    return res
-  }
-
-  
-
- const fetchGetDetailsContact= async (rowSelected) => {
-    const res = await ContactService.getDetailContact(rowSelected)
-    console.log("resta",res.data)
+  const fetchGetDetailsContact = async (rowSelected) => {
+    const res = await ContactService.getDetailContact(rowSelected);
+    console.log("resta", res.data);
     if (res?.data) {
       setStateContactDetails({
         _id: res?.data?._id,
-       name : res?.data?.name,
-       email: res?.data?.email,
+        name: res?.data?.name,
+        email: res?.data?.email,
         phone: res?.data?.phone,
         message: res?.data?.message,
         isExplain: res?.data?.isExplain,
-        createdAt: res?.data?.createdAt
-    
-      })
+        createdAt: res?.data?.createdAt,
+      });
+      setValueIsExplain(res?.data?.isExplain);
     }
-    setIsLoadingUpdate(false)
-  }
- 
-  console.log("stateContact",stateContactsDetails)
+    setIsLoadingUpdate(false);
+  };
 
+  console.log("stateContact", stateContactsDetails);
   useEffect(() => {
-    if(!isModalOpen) {
-      form.setFieldsValue(stateContactsDetails)
+    if (!isModalOpen) {
+      form.setFieldsValue(stateContactsDetails);
     }
-  }, [form, stateContactsDetails, isModalOpen])
-
+  }, [form, stateContactsDetails, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
-      setIsLoadingUpdate(true)
-      fetchGetDetailsContact(rowSelected)
+      setIsLoadingUpdate(true);
+      fetchGetDetailsContact(rowSelected);
     }
-  }, [rowSelected, isOpenDrawer])
+  }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsOrder = () => {
-    setIsOpenDrawer(true)
-  }
+    setIsOpenDrawer(true);
+  };
 
-  const handleDeleteManyUser =(ids)=>{
+  const handleDeleteManyUser = (ids) => {
     // mutationDeletedMany.mutate({ ids: ids, token: user?.access_token }, {
     //   onSettled: () => {
     //     queryUser.refetch()
     //   }
     // })
-  }
-  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
-  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
-//  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
+  };
+  const {
+    data: dataUpdated,
+    isLoading: isLoadingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated,
+  } = mutationUpdate;
+  const {
+    data: dataDeleted,
+    isLoading: isLoadingDeleted,
+    isSuccess: isSuccessDelected,
+    isError: isErrorDeleted,
+  } = mutationDeleted;
+  //  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
-  
-  const queryContact = useQuery({ queryKey: ['contacts'], queryFn: getAllContact })
+  const queryContact = useQuery({
+    queryKey: ["contacts"],
+    queryFn: getAllContact,
+  });
 
+  const { isLoading: isLoadingOrder, data: contacts } = queryContact;
 
-  const { isLoading: isLoadingOrder, data: contacts } = queryContact
-
-   console.log("contacts",contacts?.data)
+  console.log("contacts", contacts?.data);
   const renderAction = () => {
     return (
       <div>
-        <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => setIsModalOpenDelete(true)} />
-        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} onClick={handleDetailsOrder} />
+        <DeleteOutlined
+          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          onClick={() => setIsModalOpenDelete(true)}
+        />
+        <EditOutlined
+          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+          onClick={handleDetailsOrder}
+        />
       </div>
-    )
-  }
-
+    );
+  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     // setSearchText(selectedKeys[0]);
     // setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters,confirm) => {
+  const handleReset = (clearFilters, confirm) => {
     clearFilters();
     // setSearchText('');
-    confirm()
+    confirm();
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -199,11 +197,13 @@ const AdminContact = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: 'block',
+            display: "block",
           }}
         />
         <Space>
@@ -219,7 +219,7 @@ const AdminContact = () => {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters,confirm)}
+            onClick={() => clearFilters && handleReset(clearFilters, confirm)}
             size="small"
             style={{
               width: 90,
@@ -233,7 +233,7 @@ const AdminContact = () => {
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
-          color: filtered ? '#1890ff' : undefined,
+          color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
@@ -244,78 +244,102 @@ const AdminContact = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    
   });
 
-
-         //columns and data truyền vào tablecomponent
-         const columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-        render: (text) => <a>{text}</a>,
-        sorter: (a,b) => a.name.length - b.name.length,
-        ...getColumnSearchProps('name')
-      },
-      {
-        title: 'phone',
-        dataIndex: 'phone',
-        sorter: (a,b) => a.phone.length - b.phone.length,
-        ...getColumnSearchProps('phone')
-      
-    
-      },
-      {
-        title: 'Message',
-      dataIndex: 'message',
+  //columns and data truyền vào tablecomponent
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a.name.length - b.name.length,
+      ...getColumnSearchProps("name"),
+    },
+    {
+      title: "phone",
+      dataIndex: "phone",
+      sorter: (a, b) => a.phone.length - b.phone.length,
+      ...getColumnSearchProps("phone"),
+    },
+    {
+      title: "Message",
+      dataIndex: "message",
       sorter: (a, b) => a.message.length - b.message.length,
-      ...getColumnSearchProps('message')
+      ...getColumnSearchProps("message"),
+    },
+    {
+      title: "isExplain",
+      dataIndex: "isExplain",
+      // sorter: (a, b) => a.isExplain - b.isExplain,
+      // ...getColumnSearchProps("isExplain"),
+      filters: [
+        {
+          text: "True",
+          value: true,
+        },
+        {
+          text: "False",
+          value: false,
+        },
+      ],
+      onFilter: (value, record) => {
+        console.log("record", record);
+        if (value === true) {
+          console.log("record", record);
+          return record.isExplain.type.render.name === "CheckCircleOutlined";
+        }
+        return record.isExplain.type.render.name === "CloseCircleOutlined";
       },
-      {
-        title: 'isExplain',
-        dataIndex: 'isExplain',
-        sorter: (a,b) => a.isExplain - b.isExplain,
-        ...getColumnSearchProps('isExplain')
-      },
-      {
-        title: 'Action',
-        dataIndex: 'action',
-        render: renderAction,
-      },
-    ];
-   const dataTable = contacts?.data?.length && contacts?.data?.reverse().map((contact)=>{
-    return {
-      ...contact,
-      key: contact._id,
-      isExplain: contact?.isExplain? 'TRUE' : 'FALSE',
-      name: contact?.name,
-      phone: contact?.phone,
-      message: contact?.message
-    }
-   })
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: renderAction,
+    },
+  ];
+  const dataTable =
+    contacts?.data?.length &&
+    contacts?.data?.reverse().map((contact) => {
+      return {
+        ...contact,
+        key: contact._id,
+        isExplain: contact?.isExplain ? (
+          <CheckCircleOutlined
+            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
+          />
+        ) : (
+          <CloseCircleOutlined
+            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
+          />
+        ),
+        name: contact?.name,
+        phone: contact?.phone,
+        message: contact?.message,
+      };
+    });
 
   useEffect(() => {
-    if (isSuccessDelected && dataDeleted?.status === 'OK') {
-      message.success()
-      handleCancelDelete()
+    if (isSuccessDelected && dataDeleted?.status === "OK") {
+      message.success();
+      handleCancelDelete();
     } else if (isErrorDeleted) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessDelected])
+  }, [isSuccessDelected]);
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);
-    form.resetFields()
+    form.resetFields();
   };
 
   useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-      message.success()
-      handleCloseDrawer()
+    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+      message.success();
+      handleCloseDrawer();
     } else if (isErrorUpdated) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessUpdated])
+  }, [isSuccessUpdated]);
 
   // useEffect(() => {
   //   if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
@@ -327,190 +351,208 @@ const AdminContact = () => {
   // }, [isSuccessDelectedMany])
 
   const handleCancelDelete = () => {
-    setIsModalOpenDelete(false)
-  }
+    setIsModalOpenDelete(false);
+  };
 
-  const handleOnchangeDetails = (e) => {
-    if(e.target.name === "isExplain"){
-      e.target.value =( e.target.value ).toLowerCase()
-    }
-    setStateContactDetails({
-      ...stateContactsDetails,
-      [e.target.name]: e.target.value
-    })
- 
-  }
+  // const handleOnchangeDetails = (e) => {
+  //   setStateContactDetails({
+  //     ...stateContactsDetails,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
-
-
-  
   const onUpdateContact = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateContactsDetails }, {
-      onSettled: () => {
-        queryContact.refetch()
+    mutationUpdate.mutate(
+      { id: rowSelected, token: user?.access_token, isExplain: valueIsExplain },
+      {
+        onSettled: () => {
+          queryContact.refetch();
+        },
       }
-    })
-  }
-
-
- 
+    );
+  };
+  const onChange = (e) => {
+    console.log("radio checked", e.target.value);
+    setValueIsExplain(e.target.value);
+  };
 
   return (
     <div>
-      <AdminHeader textHeader={"Quản lý liên hệ"}/>
+      <AdminHeader textHeader={"Quản lý liên hệ"} />
       {/* <WrapperHeader>Quản lý liên hệ</WrapperHeader> */}
-      <div style={{width:"200px", height:"200px"}}>
-      <PieChartComponent data={contacts?.data}/>
+      <div style={{ width: "200px", height: "200px" }}>
+        <PieChartComponent data={contacts?.data} />
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
       </div> */}
-      <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDeleteMany={handleDeleteManyUser} columns={columns} isLoading={isLoadingOrder} data={dataTable} onRow={(record, rowIndex) => {
-          return {
-            onClick: event => {
-              setRowSelected(record._id)
-            }
-          };
-        }} />
+      <div style={{ marginTop: "20px" }}>
+        <TableComponent
+          handleDeleteMany={handleDeleteManyUser}
+          columns={columns}
+          isLoading={isLoadingOrder}
+          data={dataTable}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                setRowSelected(record._id);
+              },
+            };
+          }}
+        />
       </div>
-      <DrawerComponent title='Chi tiết liên hệ' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width="90%">
+      <DrawerComponent
+        title="Chi tiết liên hệ"
+        isOpen={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
+        width="90%"
+      >
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
-        <Form form = {form}
-    name="basic"
-    labelCol={{
-      span: 4,
-    }}
-    wrapperCol={{
-      span: 20,
-    }}
-   
-    initialValues={{
-      remember: true,
-    }}
-    onFinish={onUpdateContact}
-    autoComplete="on"
-  >
-    <Form.Item
-      label="Id"
-      name="_id"
-      rules={[
-        {
-          required: true,
-          message: 'Please input user id!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {stateOrdersDetails._id} onChange ={handleOnchangeDetails} name="_id"/> */}
-      <span>{stateContactsDetails._id}</span>
-    </Form.Item>
-    <Form.Item
-      label="Name"
-      name="name"
-      rules={[
-        {
-          required: true,
-          message: 'Please input user name!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {stateOrdersDetails.name} onChange ={handleOnchangeDetails} name="name"/> */}
-        <span>{stateContactsDetails.name}</span>
-    </Form.Item>
+          <Form
+            form={form}
+            name="basic"
+            labelCol={{
+              span: 4,
+            }}
+            wrapperCol={{
+              span: 20,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onUpdateContact}
+            autoComplete="on"
+          >
+            <Form.Item
+              label="Id"
+              name="_id"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user id!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails._id} onChange ={handleOnchangeDetails} name="_id"/> */}
+              <span>{stateContactsDetails._id}</span>
+            </Form.Item>
+            <Form.Item
+              label="Name"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user name!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.name} onChange ={handleOnchangeDetails} name="name"/> */}
+              <span>{stateContactsDetails.name}</span>
+            </Form.Item>
 
-    <Form.Item
-      label="Email"
-      name="email"
-      rules={[
-        {
-          required: true,
-          message: 'Please input user email!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {stateOrdersDetails.address} onChange ={handleOnchangeDetails} name="address"/> */}
-       <span>{stateContactsDetails.email}</span>
-    </Form.Item>
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user email!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.address} onChange ={handleOnchangeDetails} name="address"/> */}
+              <span>{stateContactsDetails.email}</span>
+            </Form.Item>
 
-    <Form.Item
-      label="Phone"
-      name="phone"
-      rules={[
-        {
-          required: true,
-          message: 'Please input user address!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {stateOrdersDetails.phone} onChange ={handleOnchangeDetails} name="phone"/> */}
-      <span>{stateContactsDetails.phone}</span>
-    </Form.Item>
+            <Form.Item
+              label="Phone"
+              name="phone"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user address!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.phone} onChange ={handleOnchangeDetails} name="phone"/> */}
+              <span>{stateContactsDetails.phone}</span>
+            </Form.Item>
 
-     <Form.Item
-      label="Message"
-      name="message"
-      rules={[
-        {
-          required: true,
-          message: 'Please input user address!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {(stateOrdersDetails.totalPrice).toLocaleString()} onChange ={handleOnchangeDetails} name="totalPrice"/> */}
-      <span>{stateContactsDetails.message}</span>
-    </Form.Item>
+            <Form.Item
+              label="Message"
+              name="message"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user address!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {(stateOrdersDetails.totalPrice).toLocaleString()} onChange ={handleOnchangeDetails} name="totalPrice"/> */}
+              <span>{stateContactsDetails.message}</span>
+            </Form.Item>
 
-    <Form.Item
-      label="Explain"
-      name="isExplain"
-      rules={[
-        {
-          required: true,
-          message: 'Please input isPaid!',
-        },
-      ]}
-    >
-      
-      <InputComponent value = {stateContactsDetails.isExplain} onChange ={handleOnchangeDetails} name="isExplain"/>
-      
-    </Form.Item>
+            <Form.Item
+              label="Explain"
+              name="isExplain"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input isExplain!",
+                },
+              ]}
+            >
+              {/* <InputComponent
+                value={stateContactsDetails.isExplain}
+                onChange={handleOnchangeDetails}
+                name="isExplain"
+              /> */}
+              <Radio.Group onChange={onChange} value={valueIsExplain}>
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+            </Form.Item>
 
-    <Form.Item
-      label="Created At"
-      name="createdAt"
-      rules={[
-        {
-          required: true,
-          message: 'Please input is Admin!',
-        },
-      ]}
-    >
-      {/* <InputComponent value = {stateOrdersDetails.createdAt} onChange ={handleOnchangeDetails} name="createdAt"/> */}
-       <span>{(stateContactsDetails?.createdAt)}</span>
-    </Form.Item>
+            <Form.Item
+              label="Created At"
+              name="createdAt"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input is Admin!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.createdAt} onChange ={handleOnchangeDetails} name="createdAt"/> */}
+              <span>{stateContactsDetails?.createdAt}</span>
+            </Form.Item>
 
-    <Form.Item
-      wrapperCol={{
-        offset: 20,
-        span: 16,
-      }}
-    >
-      <Button type="primary" htmlType="submit">
-        Apply
-      </Button>
-    </Form.Item>
-  </Form>
-          
+            <Form.Item
+              wrapperCol={{
+                offset: 20,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Apply
+              </Button>
+            </Form.Item>
+          </Form>
         </Loading>
       </DrawerComponent>
-      
-      <ModalComponent title="Xóa người dùng" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={() => handleDeleteContact(rowSelected)}>
+
+      <ModalComponent
+        title="Xóa liên hệ"
+        open={isModalOpenDelete}
+        onCancel={handleCancelDelete}
+        onOk={() => handleDeleteContact(rowSelected)}
+      >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa liên hệ này không?</div>
         </Loading>
       </ModalComponent>
     </div>
-  )
-}
+  );
+};
 
-export default AdminContact
+export default AdminContact;

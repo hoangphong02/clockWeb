@@ -16,6 +16,8 @@ const ProductDetailPage = () => {
     const [buyNow,setBuynow] = useState(false)
     const [valueRating,setValueRating] = useState(0)
     const [numberIncrease,setNumberIncrease] = useState(0)
+    const [dataRating, setDataRating]= useState([])
+    const [ratingDetail, setRatingDetail] = useState(0)
 
   const {id} = useParams()
   // const {state}= useLocation()
@@ -161,10 +163,26 @@ function formatDateTime(dateTimeString, locale = 'vi-VN') {
   },[numberIncreaseFromState])
   console.log("valuerATIN", valueRating)
 
+  const setRatingToDetail =()=>{
+    let newData = []
+    if(data){
+      newData = data?.map((item)=>item.rating)
+      setDataRating(newData)
+    }
+  }
+  useEffect(()=>{
+    setRatingToDetail()
+  },[data])
+
+  useEffect(()=>{
+    const totalRating = dataRating?.length && dataRating?.reduce((acc,cur)=> acc + cur) 
+    setRatingDetail(totalRating/data?.length)
+  },[dataRating])
+
   return (
     <div style={{padding: "0 120px", background:"#efefef "}}>
       <h3 style={{margin:"0", fontSize:"15px", padding:"15px 0"}}><span style={{cursor:"pointer"}} onClick={()=> navigate("/")}>Trang chủ</span> - Chi tiết sản phẩm</h3>
-      <ProductDetailComponent idProduct = {id} addCart={addCart} buyNow={buyNow} numberIncrease={numberIncrease}/>
+      <ProductDetailComponent idProduct = {id} addCart={addCart} buyNow={buyNow} numberIncrease={numberIncrease} ratingDetail = {ratingDetail > 0 ? ratingDetail : 5}  />
        <div style={{padding:"30px 0 0 0", fontSize:"25px", fontWeight:"bold"}}>Bình luận và đánh giá</div>
       {/* <div style={{margin:"30px 0", display:"flex",gap:"10px",alignItems:"center"}}>
       <img src={user?.avatar} style={{width:"40px", height:"40px", borderRadius:"50%", objectFit:"cover"}}/>

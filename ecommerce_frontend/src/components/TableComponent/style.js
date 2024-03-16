@@ -20,9 +20,15 @@ export const WrapperTable = styled(Table)`
       border-box;
     color: #fff;
   }
+   & .ant-table-row:not(:hover) .ant-table-cell {
+    color: #fff; /* Màu chữ mặc định của các dòng */
+}
   & .ant-table :hover {
     color: #000;
-  }
+  } 
+  &.ant-table-row:hover .ant-table-cell {
+    color: #000; /* Màu chữ khi hover */
+}
   & .ant-table-row-selected {
     color: #000;
   }
