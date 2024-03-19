@@ -71,7 +71,7 @@ const AdminDashboard = () => {
 
   console.log("products", products);
 
-  const totalPriceReceived = orders?.data.reduce((total, order) => {
+  const totalPriceReceived = orders?.data?.reduce((total, order) => {
     if (order.isReceived) {
       return total + order.totalPrice;
     } else {
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
   const currentYear = currentDate.getFullYear();
   console.log("date", currentMonth, currentYear);
 
-  const totalPriceReceivedOfMonth = orders?.data.reduce((total, order) => {
+  const totalPriceReceivedOfMonth = orders?.data?.reduce((total, order) => {
     const updatedAtDate = new Date(order.updatedAt);
     const orderMonth = updatedAtDate.getMonth() + 1;
     const orderYear = updatedAtDate.getFullYear();
