@@ -1,5 +1,4 @@
 import { Badge, Col, Popover, message } from "antd";
-// import Search from 'antd/es/input/Search';
 import {
   WrapperHeader,
   WrapperHeaderAccount,
@@ -8,9 +7,7 @@ import {
   WrapperCartHeader,
   WrapperContentPopover,
   WrapperImgAvatar,
-  WrapperTypeProduct,
   WrapperButtonDropdown,
-  WrapperMenu,
   WrapperMenuItem,
 } from "./style";
 import React, { useEffect, useState } from "react";
@@ -52,7 +49,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const { id } = useParams();
   const [productOfType, setProductOfType] = useState([]);
   const [addCartHeader, setAddCartHeader] = useState(false);
-  const [listChecked, setListChecked] = useState([]);
   const { state } = useLocation();
   console.log("idHeadTest", id);
 
@@ -89,9 +85,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     fetchAllProductType(state, 0, 100);
   }, [state]);
 
-  console.log("setProductOfType", productOfType);
-  console.log("productsHead", products);
-
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     setTypeProduct(res.data);
@@ -103,7 +96,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const handleNavigateLogin = () => {
     navigate("/sign-in");
   };
-  console.log("orderHead", order);
+
   const handleLogout = async () => {
     setLoading(true);
     await UserService.logoutUser();
@@ -165,33 +158,35 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     };
   }, []); // useEffect chỉ chạy một lần sau khi component được render
 
+  console.log("typeProduct", typeProduct);
+
   //test mic
 
-  const getIdProduct = async (str) => {
-    const text = str.toLowerCase();
-    console.log("text", text);
-    if (products && Array.isArray(products)) {
-      const foundProduct = await products.find(
-        (product) =>
-          product.name.toLowerCase() === text ||
-          product.name.toLowerCase().includes(text)
-      );
+  // const getIdProduct = async (str) => {
+  //   const text = str.toLowerCase();
+  //   console.log("text", text);
+  //   if (products && Array.isArray(products)) {
+  //     const foundProduct = await products.find(
+  //       (product) =>
+  //         product.name.toLowerCase() === text ||
+  //         product.name.toLowerCase().includes(text)
+  //     );
 
-      if (foundProduct) {
-        console.log("foundProduct:", foundProduct);
-        return foundProduct._id;
-      } else {
-        console.error("Product not found for text:", text);
-        return undefined;
-      }
-    } else {
-      console.error(
-        "productOfType is undefined or not an array",
-        productOfType
-      );
-      return undefined;
-    }
-  };
+  //     if (foundProduct) {
+  //       console.log("foundProduct:", foundProduct);
+  //       return foundProduct._id;
+  //     } else {
+  //       console.error("Product not found for text:", text);
+  //       return undefined;
+  //     }
+  //   } else {
+  //     console.error(
+  //       "productOfType is undefined or not an array",
+  //       productOfType
+  //     );
+  //     return undefined;
+  //   }
+  // };
   const getArrProductByText = async (str) => {
     const text = str.toLowerCase();
     const arr = [];
@@ -262,6 +257,10 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     let order = false;
     let increaseCount = false;
     let decreaseCount = false;
+    let news = false;
+    let unCheckNumber = false;
+    let checkAll = false;
+    let cancelCheck = false;
     if (text.includes("vật phẩm")) {
       hasVatPham = true;
     }
@@ -310,23 +309,43 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     if (text.includes("giảm số lượng xuống")) {
       decreaseCount = true;
     }
-
+    if (text.includes("tin tức")) {
+      news = true;
+    }
+    if (text.includes("xóa sản phẩm số")) {
+      unCheckNumber = true;
+    }
+    if (text.includes("chọn tất cả")) {
+      checkAll = true;
+    }
+    if (text.includes("hủy chọn")) {
+      cancelCheck = true;
+    }
     if (hasVatPham) {
       if (text.includes("vật phẩm trang trí")) {
         const newType = text.split("trí")[1].trim();
-        handleDoc(`vật phẩm trang trí ${newType}`);
-        console.log("newType", newType);
-        const setTimeNavi = setTimeout(() => {
-          navigate(
-            `/product/${newType
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              ?.replace(/ /g, "_")}`,
-            { state: newType }
+        const findTypeProduct = typeProduct?.find((item) => item === newType);
+        if (findTypeProduct) {
+          handleDoc(`vật phẩm trang trí ${newType}`);
+          console.log("newType", newType);
+          const setTimeNavi = setTimeout(() => {
+            navigate(
+              `/product/${newType
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                ?.replace(/ /g, "_")}`,
+              { state: newType }
+            );
+            resetTranscript();
+          }, 1500);
+          return () => clearTimeout(setTimeNavi);
+        } else {
+          message.error(
+            "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
           );
+          handleDoc("Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!");
           resetTranscript();
-        }, 1500);
-        return () => clearTimeout(setTimeNavi);
+        }
         // navigate(`/product/${newType.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')}`, { state: newType });
         resetTranscript();
       }
@@ -380,10 +399,10 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             } else {
               if (getArrTest?.length === 0) {
                 message.error(
-                  "Không nhận được dữ liệu hoặc giọng nói chưa rõ. Yêu cầu bạn hãy nói lại!"
+                  "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
                 );
                 handleDoc(
-                  "Không nhận được dữ liệu hoặc giọng nói chưa rõ. Yêu cầu bạn hãy nói lại!"
+                  "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
                 );
                 resetTranscript();
               }
@@ -444,8 +463,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     resetTranscript();
                   }, 1500);
                   return () => clearTimeout(setTimeNavi);
-                  // navigate(`/`)
-                  resetTranscript();
                 } else {
                   if (buyNow) {
                     handleDoc(`chọn mua ngay`);
@@ -454,9 +471,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                       resetTranscript();
                     }, 1500);
                     return () => clearTimeout(setTimeNavi);
-
-                    //      navigate("",{state: {buyNowHeader: true}})
-                    // resetTranscript();
                   } else {
                     if (chooseProductNumber) {
                       const number = text.split("số")[1].trim();
@@ -468,8 +482,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                         resetTranscript();
                       }, 1500);
                       return () => clearTimeout(setTimeNavi);
-                      // navigate("",{state: {numcheck: id}})
-                      // resetTranscript()
                     } else {
                       if (payment) {
                         handleDoc(`chọn thanh toán`);
@@ -478,9 +490,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                           resetTranscript();
                         }, 1500);
                         return () => clearTimeout(setTimeNavi);
-
-                        //      navigate("",{state: {buy: true}})
-                        // resetTranscript();
                       } else {
                         if (paymentBy) {
                           const namePay = text.split("ví")[1].trim();
@@ -494,7 +503,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                               resetTranscript();
                             }, 1000);
                             return () => clearTimeout(setTimeNavi);
-                            // navigate("",{state: {value: "Thanh toán bằng ví MoMo"}})
                           } else {
                             handleDoc(`Thanh toán bằng ví bây bồ`);
                             const setTimeNavi = setTimeout(() => {
@@ -504,9 +512,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                               resetTranscript();
                             }, 1000);
                             return () => clearTimeout(setTimeNavi);
-                            // navigate("",{state: {value: "Thanh toán bằng ví Paypal"}})
                           }
-                          // resetTranscript();
                         } else {
                           if (paymentOnDelivery) {
                             handleDoc(`Thanh toán khi nhận hàng`);
@@ -517,8 +523,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                               resetTranscript();
                             }, 1000);
                             return () => clearTimeout(setTimeNavi);
-                            //         navigate("",{state: {value: "Thanh toán khi nhận hàng"}})
-                            // resetTranscript();
                           } else {
                             if (booking) {
                               handleDoc(`chọn đặt hàng`);
@@ -527,9 +531,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                 resetTranscript();
                               }, 1500);
                               return () => clearTimeout(setTimeNavi);
-
-                              //      navigate("",{state: {buy: true}})
-                              // resetTranscript();
                             } else {
                               if (order) {
                                 handleDoc(`Xem đơn hàng`);
@@ -543,12 +544,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                   resetTranscript();
                                 }, 1500);
                                 return () => clearTimeout(setTimeNavi);
-                                //      navigate("/my-order",{ state : {
-                                //     id: user?.id,
-                                //     token : user?.access_token
-                                //   }
-                                // })
-                                // resetTranscript();
                               } else {
                                 if (increaseCount) {
                                   let number = text.split("lên")[1].trim();
@@ -568,7 +563,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                     resetTranscript();
                                   }, 1500);
                                   return () => clearTimeout(setTimeNavi);
-                                  // navigate("",{state: {numberIncrease: Number(number)}})
                                   resetTranscript();
                                 } else {
                                   if (decreaseCount) {
@@ -589,8 +583,61 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                       resetTranscript();
                                     }, 1500);
                                     return () => clearTimeout(setTimeNavi);
-                                    // navigate("",{state: {numberIncrease: Number(number)}})
                                     resetTranscript();
+                                  } else {
+                                    if (news) {
+                                      handleDoc(`Xem tin tức`);
+                                      const setTimeNavi = setTimeout(() => {
+                                        navigate("/blog");
+                                        resetTranscript();
+                                      }, 1500);
+                                      return () => clearTimeout(setTimeNavi);
+                                    } else {
+                                      if (unCheckNumber) {
+                                        const number = text
+                                          .split("số")[1]
+                                          .trim();
+                                        console.log("number", number);
+                                        const id = getChecked(number);
+                                        handleDoc(`Xóa sản phẩm số ${number}`);
+                                        const setTimeNavi = setTimeout(() => {
+                                          navigate("", {
+                                            state: { numUncheck: id },
+                                          });
+                                          resetTranscript();
+                                        }, 1500);
+                                        return () => clearTimeout(setTimeNavi);
+                                      } else {
+                                        if (checkAll) {
+                                          handleDoc("Chọn tất cả sản phẩm");
+                                          const setTimeNavi = setTimeout(() => {
+                                            navigate("", {
+                                              state: { isCheckAll: true },
+                                            });
+                                            resetTranscript();
+                                          }, 1500);
+                                          return () =>
+                                            clearTimeout(setTimeNavi);
+                                        } else {
+                                          if (cancelCheck) {
+                                            handleDoc("Hủy chọn tất cả");
+                                            const setTimeNavi = setTimeout(
+                                              () => {
+                                                navigate("", {
+                                                  state: {
+                                                    isCancelCheck: true,
+                                                  },
+                                                });
+                                                resetTranscript();
+                                              },
+                                              1500
+                                            );
+                                            return () =>
+                                              clearTimeout(setTimeNavi);
+                                          }
+                                        }
+                                      }
+                                    }
                                   }
                                 }
                               }
@@ -681,21 +728,41 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               src={logo}
             />
           </WrapperTextHeader>
-          <span
-            style={{
-              cursor: "pointer",
-              fontSize: "20px",
-              color: isScrolled
-                ? "black"
-                : adminPath === "admin"
-                ? "#000"
-                : "#fff",
-              display: "flex",
-            }}
-            onClick={listening === false ? startListening : stopListening}
-          >
-            {listening === false ? <AudioMutedOutlined /> : <AudioOutlined />}
-          </span>
+
+          <div style={{ position: "relative" }}>
+            <span
+              style={{
+                cursor: "pointer",
+                fontSize: "20px",
+                color: isScrolled
+                  ? "black"
+                  : adminPath === "admin"
+                  ? "#000"
+                  : "#fff",
+                display: "flex",
+              }}
+              onClick={listening === false ? startListening : stopListening}
+            >
+              {listening === false ? <AudioMutedOutlined /> : <AudioOutlined />}
+            </span>
+            <div
+              style={{
+                width: "400px",
+                height: "30px",
+                overflow: "auto",
+                display: listening === true ? "block" : "none",
+                position: "absolute",
+                zIndex: "5",
+                background: "#fff",
+                top: isScrolled ? "40px" : "52px",
+                textAlign: "center",
+                left: "-100px",
+                borderRadius: "15px",
+              }}
+            >
+              <span>{transcript}</span>
+            </div>
+          </div>
           {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
         </Col>
         {!isHiddenSearch && (
@@ -715,7 +782,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               >
                 <WrapperButtonDropdown className="dropdown">
                   <button
-                    className="dropdown-toggle buttonmenu"
+                    className="buttonmenu"
                     type="button"
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"

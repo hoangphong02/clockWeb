@@ -258,16 +258,22 @@ const ProductDetailComponent = ({
   }, [numberProduct]);
 
   useEffect(() => {
-    console.log("Number", numberIncrease);
     if (numberIncrease > 0) {
-      setNumberProduct((prev) => prev + numberIncrease);
+      if (numberProduct + numberIncrease <= stateProductDetails?.countInStock) {
+        setNumberProduct((prev) => prev + numberIncrease);
+      } else {
+        setNumberProduct(stateProductDetails?.countInStock);
+      }
     }
   }, [numberIncrease]);
 
   useEffect(() => {
-    console.log("Number", numberDecrease);
     if (numberDecrease > 0) {
-      setNumberProduct((prev) => prev - numberDecrease);
+      if (numberProduct > numberDecrease) {
+        setNumberProduct((prev) => prev - numberDecrease);
+      } else {
+        setNumberProduct(1);
+      }
     }
   }, [numberDecrease]);
 
@@ -279,26 +285,6 @@ const ProductDetailComponent = ({
           alt="Image Product"
           preview={true}
         />
-        {/* <Row style={{paddingTop:"10px", justifyContent:" space-between"}}>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-                  <WrapperStyledColImage span={4}>
-                      <WrapperStyledImageSmall src={imageSmallProduct} alt='imageSmall' preview={false}/>
-                  </WrapperStyledColImage>
-              </Row> */}
       </Col>
       <Col
         span={14}

@@ -27,7 +27,6 @@ const BlogPage = () => {
   const [idPostByOpenModal, setIdPostByOpenModal] = useState("");
   const [numberComments, setNumberComments] = useState([]);
 
-
   const getAllPost = async () => {
     const res = await PostService.getAllPost();
     return res;
@@ -255,26 +254,28 @@ const BlogPage = () => {
     }
   }, [commentQuery]);
 
-    const mutationDeletedComment = useMutationHook(
-    (data) => {
-      const { id,
-        token,
-      } = data
-      const res = PostService.deleteComment(
-        id,
-        token)
-      return res
-    },
-  )
-  const { data: dataDeletedComment, isLoading: isLoadingDeleted, isSuccess: isSuccessDelectedComment, isError: isErrorDeletedComment } = mutationDeletedComment
+  const mutationDeletedComment = useMutationHook((data) => {
+    const { id, token } = data;
+    const res = PostService.deleteComment(id, token);
+    return res;
+  });
+  const {
+    data: dataDeletedComment,
+    isLoading: isLoadingDeleted,
+    isSuccess: isSuccessDelectedComment,
+    isError: isErrorDeletedComment,
+  } = mutationDeletedComment;
   const handleDeleteComment = (id) => {
-    mutationDeletedComment.mutate({ id: id, token: user?.access_token }, {
-      onSettled: () => {
-        queryComment.refetch()
+    mutationDeletedComment.mutate(
+      { id: id, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryComment.refetch();
+        },
       }
-    })
-  }
-   useEffect(() => {
+    );
+  };
+  useEffect(() => {
     if (dataDeletedComment?.status === "OK") {
       message.success("Xóa bình luận thành công");
     } else {
@@ -283,132 +284,64 @@ const BlogPage = () => {
       }
     }
   }, [dataDeletedComment, isSuccessDelectedComment, isErrorDeletedComment]);
-  
-    const getAllComment = async () => {
-    const res = await PostService.getAllComment()
-    return res
-  }
-  const queryGetAllComments = useQuery({ queryKey: ['allComment'], queryFn: getAllComment })
-const { isLoading: isLoadingOrder, data: allComment } = queryGetAllComments
 
+  const getAllComment = async () => {
+    const res = await PostService.getAllComment();
+    return res;
+  };
+  const queryGetAllComments = useQuery({
+    queryKey: ["allComment"],
+    queryFn: getAllComment,
+  });
+  const { isLoading: isLoadingOrder, data: allComment } = queryGetAllComments;
 
-  useEffect(()=>{
+  useEffect(() => {
     const postCounts = {};
-allComment?.data?.forEach(comment => {
-  const postId = comment.post;
-  postCounts[postId] = (postCounts[postId] || 0) + 1;
-});
+    allComment?.data?.forEach((comment) => {
+      const postId = comment.post;
+      postCounts[postId] = (postCounts[postId] || 0) + 1;
+    });
 
-// Chuyển đổi đối tượng postCounts thành mảng kết quả
-const result = Object.entries(postCounts).map(([id, count]) => ({ id, count }));
+    // Chuyển đổi đối tượng postCounts thành mảng kết quả
+    const result = Object.entries(postCounts).map(([id, count]) => ({
+      id,
+      count,
+    }));
 
-setNumberComments(result)
+    setNumberComments(result);
+  }, [allComment]);
 
-  },[allComment])
-
-
-const getNumberCommentById = (id)=>{
-  const data = numberComments?.find(item=> item?.id === id)
-  return data?.count
-}
+  const getNumberCommentById = (id) => {
+    const data = numberComments?.find((item) => item?.id === id);
+    return data?.count;
+  };
   return (
     <>
-      <div style={{ background: "#f0f2f5" }}>
+      <div style={{ background: "#fff" }}>
         <div style={{ width: "100%" }}>
           <div style={{ textAlign: "center" }}>
             <img src={logo} style={{ height: "200px" }} />
           </div>
-          <div style={{display:"flex", flexDirection:"column", gap:"10px"}}>
-          {posts?.data &&
-            posts?.data?.map((post) => {
-              return (
-                <div
-                  className="container"
-                  style={{
-                    width: "900px",
-                    height: "100%",
-                    border: "1px solid rgb(255 253 253)",
-                    borderRadius: "30px",
-                    background: "#fff",
-                    filter: "drop-shadow(1px 2px 2px #333)",
-                    marginBottom: "30px",
-                  }}
-                >
-                  <div>
-                    <div style={{ padding: "20px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <p
-                          style={{
-                            fontSize: "25px",
-                            fontWeight: "bold",
-                            fontFamily: "inherit",
-                          }}
-                        >
-                          {post.title}
-                        </p>{" "}
-                        <p>
-                          <em>{custumDay(post?.createdAt)}</em>
-                        </p>
-                      </div>
-                      <div>{post?.content}</div>
-                    </div>
-                    <div
-                      style={{
-                        height: "500px",
-                        display: "flex",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {post?.image && post?.image.length === 1 ? (
-                        <Image
-                          src={post.image[0].urlImage}
-                          style={{ width: "100%", height: "100%" }}
-                          preview={true}
-                        />
-                      ) : (
-                        post?.image && (
-                          <>
-                            <Image
-                              key={post.image[0].id}
-                              src={post.image[0].urlImage}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                              }}
-                            >
-                              {post.image.slice(1).map((image, index) => (
-                                <Image
-                                  key={image.id}
-                                  src={image.urlImage}
-                                  style={{
-                                    width: "100%",
-                                    height: `calc(500px / ${
-                                      post.image.length - 1
-                                    })`,
-                                    objectFit: "cover",
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          </>
-                        )
-                      )}
-                    </div>
-
-                    <div style={{ padding: "30px" }}>
-                      <div>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            {posts?.data &&
+              posts?.data?.map((post) => {
+                return (
+                  <div
+                    className="container"
+                    style={{
+                      width: "900px",
+                      height: "100%",
+                      border: "1px solid rgb(255 253 253)",
+                      borderRadius: "30px",
+                      background: "#fff",
+                      filter: "drop-shadow(1px 2px 2px #333)",
+                      marginBottom: "30px",
+                    }}
+                  >
+                    <div>
+                      <div style={{ padding: "20px" }}>
                         <div
                           style={{
                             display: "flex",
@@ -417,80 +350,155 @@ const getNumberCommentById = (id)=>{
                         >
                           <p
                             style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              fontSize: "20px",
+                              fontSize: "25px",
+                              fontWeight: "bold",
+                              fontFamily: "inherit",
                             }}
                           >
-                            {likeCount?.length
-                              ? likeCount?.find(
-                                  (item) => item?.id === post?._id
-                                ).like
-                              : post?.likeCount?.length}{" "}
-                            <HeartFilled
-                              style={{ padding: "0 4px", color: "#d60055" }}
-                            />
-                          </p>
-                          <p
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              fontSize: "20px",
-                            }}
-                          >
-                            {getNumberCommentById(post?._id) > 0 ? getNumberCommentById(post?._id) : 0}{" "}
-                            <MessageFilled
-                              style={{ padding: "0 4px", color: "#1f82f3" }}
-                            />
+                            {post.title}
+                          </p>{" "}
+                          <p>
+                            <em>{custumDay(post?.createdAt)}</em>
                           </p>
                         </div>
-                        <div
-                          style={{
-                            borderTop: "1px solid #333",
-                            paddingTop: "20px",
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Button
+                        <div>{post?.content}</div>
+                      </div>
+                      <div
+                        style={{
+                          height: "500px",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {post?.image && post?.image.length === 1 ? (
+                          <Image
+                            src={post.image[0].urlImage}
+                            style={{ width: "100%", height: "100%" }}
+                            preview={true}
+                          />
+                        ) : (
+                          post?.image && (
+                            <>
+                              <Image
+                                key={post.image[0].id}
+                                src={post.image[0].urlImage}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                {post.image.slice(1).map((image, index) => (
+                                  <Image
+                                    key={image.id}
+                                    src={image.urlImage}
+                                    style={{
+                                      width: "100%",
+                                      height: `calc(500px / ${
+                                        post.image.length - 1
+                                      })`,
+                                      objectFit: "cover",
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )
+                        )}
+                      </div>
+
+                      <div style={{ padding: "30px" }}>
+                        <div>
+                          <div
                             style={{
                               display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              fontSize: "30px",
-                              border: "none",
-                              background: "none",
+                              justifyContent: "space-between",
                             }}
-                            onClick={() => onHandleLike(post?._id)}
                           >
-                            {isPostLike(post?._id) === false ? (
-                              <HeartOutlined />
-                            ) : (
-                              <HeartFilled style={{ color: "#d60055" }} />
-                            )}
-                          </Button>
-                          <Button
+                            <p
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "20px",
+                              }}
+                            >
+                              {likeCount?.length
+                                ? likeCount?.find(
+                                    (item) => item?.id === post?._id
+                                  ).like
+                                : post?.likeCount?.length}{" "}
+                              <HeartFilled
+                                style={{ padding: "0 4px", color: "#d60055" }}
+                              />
+                            </p>
+                            <p
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "20px",
+                              }}
+                            >
+                              {getNumberCommentById(post?._id) > 0
+                                ? getNumberCommentById(post?._id)
+                                : 0}{" "}
+                              <MessageFilled
+                                style={{ padding: "0 4px", color: "#1f82f3" }}
+                              />
+                            </p>
+                          </div>
+                          <div
                             style={{
+                              borderTop: "1px solid #333",
+                              paddingTop: "20px",
                               display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              fontSize: "30px",
-                              border: "none",
-                              background: "none",
+                              justifyContent: "space-between",
                             }}
-                            onClick={() => handleComment(post?._id)}
                           >
-                            <CommentOutlined />
-                          </Button>
+                            <Button
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "30px",
+                                border: "none",
+                                background: "none",
+                              }}
+                              onClick={() => onHandleLike(post?._id)}
+                            >
+                              {isPostLike(post?._id) === false ? (
+                                <HeartOutlined />
+                              ) : (
+                                <HeartFilled style={{ color: "#d60055" }} />
+                              )}
+                            </Button>
+                            <Button
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "30px",
+                                border: "none",
+                                background: "none",
+                              }}
+                              onClick={() => handleComment(post?._id)}
+                            >
+                              <CommentOutlined />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
           </div>
         </div>
       </div>
@@ -538,7 +546,16 @@ const getNumberCommentById = (id)=>{
                     <div>{comment?.content} </div>
                     <div style={{ display: "flex", float: "right" }}>
                       {/* {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")} */}
-                      <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteComment(comment?._id)} style={{display: user?.isAdmin === true ||  user?.id === comment?.user  ? "block" : "none"}} /> 
+                      <ButtonComponent
+                        textButton={"Xóa"}
+                        onClick={() => handleDeleteComment(comment?._id)}
+                        style={{
+                          display:
+                            user?.isAdmin === true || user?.id === comment?.user
+                              ? "block"
+                              : "none",
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

@@ -292,6 +292,13 @@ const AdminOrder = () => {
   //columns and data truyền vào tablecomponent
   const columns = [
     {
+      title: "Id",
+      dataIndex: "key",
+      // render: (text) => <a>{text}</a>,
+      sorter: (a, b) => a.key.length - b.key.length,
+      ...getColumnSearchProps("key"),
+    },
+    {
       title: "User Name",
       dataIndex: "userName",
       render: (text) => <a>{text}</a>,
@@ -406,12 +413,12 @@ const AdminOrder = () => {
         return record.isDelivered.type.render.name === "CloseCircleOutlined";
       },
     },
-    {
-      title: "Payment method",
-      dataIndex: "paymentMethod",
-      sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
-      ...getColumnSearchProps("paymentMethod"),
-    },
+    // {
+    //   title: "Payment method",
+    //   dataIndex: "paymentMethod",
+    //   sorter: (a, b) => a.paymentMethod.length - b.paymentMethod.length,
+    //   ...getColumnSearchProps("paymentMethod"),
+    // },
     {
       title: "Total price",
       dataIndex: "totalPrice",
@@ -736,7 +743,7 @@ const AdminOrder = () => {
               <span>{stateOrdersDetails.phone}</span>
             </Form.Item>
 
-            <Form.Item label="Sản phẩm">
+            <Form.Item label="Products">
               {stateOrdersDetails?.orderItems.map((order) => {
                 return (
                   <div>
@@ -751,9 +758,14 @@ const AdminOrder = () => {
                       }}
                       alt="avatar"
                     />
-                    <span> Số lượng: {order?.amount} </span>
+
                     <span>
-                      Giá sản phẩm: {(order?.price).toLocaleString()} VND
+                      {""} Số lượng: <strong>{order?.amount}</strong>
+                    </span>
+                    <span>
+                      {" "}
+                      Giá sản phẩm:{" "}
+                      <strong>{(order?.price).toLocaleString()} VND</strong>
                     </span>
                   </div>
                 );
