@@ -826,6 +826,30 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                           </li>
                         )
                     )}
+                    {typeProduct.map((type) => {
+                      if (
+                        !typeProductContant.some((item) => item.type === type)
+                      ) {
+                        return (
+                          <li key={type}>
+                            <div
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "0 20px",
+                                color: "#000",
+                              }}
+                            >
+                              <TypeProduct
+                                name={type}
+                                key={type}
+                                style={{ color: "#000" }}
+                              />
+                            </div>
+                          </li>
+                        );
+                      }
+                    })}
                   </ul>
                 </WrapperButtonDropdown>
                 <WrapperMenuItem

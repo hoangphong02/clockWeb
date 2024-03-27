@@ -214,6 +214,26 @@ const TypeProductPage = () => {
                       </div>
                     )
                 )}
+                {typeProduct.map((type) => {
+                  if (!typeProductContant.some((item) => item.type === type)) {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "0 20px",
+                          color: "#000",
+                        }}
+                      >
+                        <TypeProduct
+                          name={type}
+                          key={type}
+                          style={{ color: "#fff" }}
+                        />
+                      </div>
+                    );
+                  }
+                })}
                 {/* {typeProduct.map((item)=>{
                 return (
                     <TypeProduct name={item} key={item} param={type} />

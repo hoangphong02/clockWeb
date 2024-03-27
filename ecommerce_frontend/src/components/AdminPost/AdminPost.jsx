@@ -9,7 +9,7 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Checkbox, Form, Input, Modal, Select, Space } from "antd";
+import { Button, Checkbox, Form, Input, Modal, Select, Space, Upload } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64, renderOptions } from "../../utils";
@@ -381,25 +381,25 @@ const AdminPost = () => {
 
   const handleOnchangeAvatar = async ({ fileList }) => {
     console.log("fileList", fileList);
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+    const images = [];
+    for (const file of fileList) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      images.push({urlImage: file.preview});
     }
-    setStatePost({
-      ...statePost,
-      imageUL: file.preview,
-    });
+    setImageUpload(images);
   };
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+    const images = [];
+    for (const file of fileList) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      images.push({urlImage: file.preview});
     }
-    setStatePostDetails({
-      ...statePostDetails,
-      imageUL: file.preview,
-    });
+    setImageUploadDetail(images);
   };
   const onUpdatePost = () => {
     mutationUpdate.mutate(
@@ -524,40 +524,21 @@ const AdminPost = () => {
                 gap: "20px",
               }}
             >
-              {imageUpload?.length > 0 &&
-                imageUpload?.map((image) => {
-                  return (
-                    <div
-                      style={{
-                        height: "80px",
-                        width: "80px",
-                        position: "relative",
-                      }}
-                    >
-                      <img
-                        src={image?.urlImage}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                      <CloseOutlined
-                        onClick={() => handleDeleteImageUpload(image?.urlImage)}
-                        style={{
-                          top: "-6px",
-                          position: "absolute",
-                          right: "-7px",
-                          background: "#a5a4a3",
-                          borderRadius: " 30px",
-                          color: "#fff",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </div>
-                  );
-                })}
             </div>
 
             <div style={{ padding: "0 50px" }}>
               <p>Thêm hình ảnh</p>
-              <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
+              <Upload
+                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                listType="picture"
+                maxCount={6}
+                multiple
+                onChange={handleOnchangeAvatar}
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+
+              {/* <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
                 <Button>Select File</Button>
                 {statePost?.imageUL && (
                   <img
@@ -572,8 +553,8 @@ const AdminPost = () => {
                     alt="avatar"
                   />
                 )}
-              </WrapperAvatar>
-              <Button
+              </WrapperAvatar> */}
+              {/* <Button
                 style={{
                   margin: "20px 0",
                   background: "#1677ff",
@@ -583,7 +564,7 @@ const AdminPost = () => {
                 onClick={handleIncreaseImage}
               >
                 Upload
-              </Button>
+              </Button> */}
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
@@ -684,38 +665,17 @@ const AdminPost = () => {
             </div>
 
             <div style={{ padding: "0" }}>
-              <WrapperAvatar
+               <p>Thêm hình ảnh</p>
+              <Upload
+                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                listType="picture"
+                maxCount={6}
+                multiple
                 onChange={handleOnchangeAvatarDetails}
-                maxCount={1}
               >
-                <p style={{ padding: "0 20px" }}>Thêm hình ảnh</p>
-                <Button>Select File</Button>
-                {statePostDetails.imageUL && (
-                  <img
-                    src={statePostDetails.imageUL}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      marginLeft: "10px",
-                    }}
-                    alt="Hình ảnh"
-                  />
-                )}
-              </WrapperAvatar>
-              <Button
-                style={{
-                  margin: "20px 130px",
-                  background: "#1677ff",
-                  color: "#fff",
-                  padding: "0 25px",
-                }}
-                disabled={statePostDetails?.imageUL ? false : true}
-                onClick={handleIncreaseImageDetails}
-              >
-                Upload
-              </Button>
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>

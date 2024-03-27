@@ -291,6 +291,7 @@ console.log("state",stateUserDetails)
 
     
     return ( 
+      <Loading isLoading={isLoading}>
         <div style={{width:"100%",height:"100vh",background: "rgb(239, 239, 239)"}}>
             <div style={{height:"100%", width:"1270px", margin:"0 auto"}}> 
             <h3 style={{margin:"0", fontSize:"15px", padding:"15px 0"}}><span style={{cursor:"pointer"}} onClick={()=> navigate("/")}>Trang chủ</span> - Phương thức thanh toán</h3>
@@ -455,6 +456,7 @@ console.log("state",stateUserDetails)
         {/* </Loading> */}
       </ModalComponent>
         </div>
+      </Loading>
      );
 }
 
