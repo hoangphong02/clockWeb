@@ -11,7 +11,12 @@ import {
   MessageFilled,
   SendOutlined,
 } from "@ant-design/icons";
-import { WrapperH1, WrapperModal } from "./style";
+import {
+  WrapperBlogItem,
+  WrapperContentComment,
+  WrapperH1,
+  WrapperModal,
+} from "./style";
 import logo from "../../assets/images/logo-decoration.png";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
@@ -328,18 +333,7 @@ const BlogPage = () => {
             {posts?.data &&
               posts?.data?.map((post) => {
                 return (
-                  <div
-                    className="container"
-                    style={{
-                      width: "900px",
-                      height: "100%",
-                      border: "1px solid rgb(255 253 253)",
-                      borderRadius: "30px",
-                      background: "#fff",
-                      filter: "drop-shadow(1px 2px 2px #333)",
-                      marginBottom: "30px",
-                    }}
-                  >
+                  <WrapperBlogItem className="container">
                     <div>
                       <div style={{ padding: "20px" }}>
                         <div
@@ -496,7 +490,7 @@ const BlogPage = () => {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </WrapperBlogItem>
                 );
               })}
           </div>
@@ -585,15 +579,7 @@ const BlogPage = () => {
               }}
             />
           </div>
-          <div
-            style={{
-              background: "#f0f2f5",
-              padding: "15px",
-              borderRadius: "15px",
-              width: "689px",
-              overflow: "hidden",
-            }}
-          >
+          <WrapperContentComment>
             <Input
               placeholder="Nhập bình luận"
               style={{ background: "none", outline: "none", border: "none" }}
@@ -608,7 +594,7 @@ const BlogPage = () => {
                 onClick={handleCreateComment}
               />
             </div>
-          </div>
+          </WrapperContentComment>
         </div>
       </WrapperModal>
     </>

@@ -1,5 +1,6 @@
 import Upload from "antd/es/upload/Upload";
 import styled from "styled-components";
+import InputForm from "../../components/InputForm/InputForm";
 
 export const WrapperHeader = styled.h1`
   color: #000;
@@ -79,5 +80,29 @@ export const WrapperSidenav = styled.div`
     color: #000;
     margin-left: 14%;
     width: 65%;
+  }
+`;
+
+export const WrapperAllProfile = styled.div`
+  display: flex;
+  gap: 100px;
+  padding: 30px;
+  justify-content: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const WrapperInfo = styled.div`
+  width: 40%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+export const WrapperInputForm = styled(InputForm)`
+  width: 300px;
+  @media (max-width: 768px) {
+    width: 40%;
   }
 `;

@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import {
   WrapperAll,
+  WrapperBody,
   WrapperButtonMore,
   WrapperMic,
   WrapperPanigation,
   WrapperProducts,
+  WrapperRight,
+  WrapperSideBar,
   WrapperTypeProduct,
 } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
@@ -174,17 +177,8 @@ const TypeProductPage = () => {
   return (
     <Loading isLoading={loading}>
       <WrapperAll arrImageBackgoundAmination={arrImageBackgroundAmination}>
-        <div className="all" style={{ display: "flex", width: "100%" }}>
-          <div
-            style={{
-              width: "20%",
-              margin: "0 auto",
-              display: "flex",
-              flexDirection: "column",
-              marginTop: "20px",
-              zIndex: "5",
-            }}
-          >
+        <WrapperBody className="all">
+          <WrapperSideBar>
             <div>
               <WrapperTypeProduct
                 style={{ flexDirection: "column", padding: "0 20px" }}
@@ -283,8 +277,8 @@ const TypeProductPage = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="body" style={{ width: "80%" }}>
+          </WrapperSideBar>
+          <WrapperRight className="body">
             <div
               id="container"
               style={{ width: "100%", margin: "0 auto", height: "100%" }}
@@ -419,8 +413,8 @@ const TypeProductPage = () => {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </WrapperRight>
+        </WrapperBody>
       </WrapperAll>
     </Loading>
   );

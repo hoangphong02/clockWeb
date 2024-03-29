@@ -9,6 +9,9 @@ export const WrapperProducts = styled.div`
   width: 1270px;
   margin: 0 auto;
   justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 export const WrappertextCongratulation = styled.div`
   padding: 20px 10px;

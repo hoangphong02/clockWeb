@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Row } from "antd";
+import { Col, Row } from "antd";
 
 export const WrapperHeader = styled(Row)`
   align-items: center;
@@ -77,4 +77,11 @@ export const WrapperMenuItem = styled.div`
     border-radius: 10px;
   }
   cursor: pointer;
+`;
+
+export const WrapperColMenu = styled(Col)`
+   @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;

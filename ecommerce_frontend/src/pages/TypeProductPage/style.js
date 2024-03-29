@@ -140,3 +140,28 @@ export const WrapperPanigation = styled(Pagination)`
     color: #fff;
   }
 `;
+
+export const WrapperBody = styled.div`
+  display: flex;
+  width: 100%;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+export const WrapperSideBar = styled.div`
+  width: 20%;
+  margin: 20px auto 0px;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+export const WrapperRight = styled.div`
+  width: 80%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;

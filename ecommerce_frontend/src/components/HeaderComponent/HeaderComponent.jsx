@@ -9,6 +9,7 @@ import {
   WrapperImgAvatar,
   WrapperButtonDropdown,
   WrapperMenuItem,
+  WrapperColMenu,
 } from "./style";
 import React, { useEffect, useState } from "react";
 import {
@@ -766,7 +767,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
         </Col>
         {!isHiddenSearch && (
-          <Col span={13}>
+          <WrapperColMenu span={13}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <div
                 style={{
@@ -912,7 +913,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </ul>
               </div>
             </div>
-          </Col>
+          </WrapperColMenu>
         )}
         <Col
           span={6}
