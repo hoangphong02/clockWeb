@@ -569,10 +569,10 @@ const OrderPage = () => {
           form={form}
           name="basic"
           labelCol={{
-            span: 4,
+            span: 7,
           }}
           wrapperCol={{
-            span: 20,
+            span: 17,
           }}
           initialValues={{
             remember: true,
@@ -581,7 +581,7 @@ const OrderPage = () => {
           autoComplete="on"
         >
           <Form.Item
-            label="Name"
+            label="Tên khách hàng"
             name="name"
             rules={[
               {
@@ -598,7 +598,7 @@ const OrderPage = () => {
           </Form.Item>
 
           <Form.Item
-            label="Address"
+            label="Địa chỉ giao hàng"
             name="address"
             rules={[
               {
@@ -614,7 +614,7 @@ const OrderPage = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Phone"
+            label="Số điện thoại"
             name="phone"
             rules={[
               {
@@ -631,7 +631,7 @@ const OrderPage = () => {
           </Form.Item>
 
           <Form.Item
-            label="City"
+            label="Thành phố"
             name="city"
             rules={[
               {

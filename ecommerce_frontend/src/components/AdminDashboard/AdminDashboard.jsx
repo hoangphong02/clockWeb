@@ -1,20 +1,12 @@
 import {
-  AppstoreOutlined,
   ContactsOutlined,
   DollarOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-// import
-// { BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, BsFillBellFill}
-//  from 'react-icons/bs'
 import {
-  BarChart,
-  Bar,
-  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -33,8 +25,11 @@ import * as ContactService from "../../services/ContactService";
 import AdminHeader from "../AdminHeader/AdminHeader";
 import CustomShapeBarchart from "./CustomShapeBarchart";
 import SimpleBarChart from "./SimpleBarChart";
+import { WrapperTable } from "./style";
 const AdminDashboard = () => {
   const user = useSelector((state) => state?.user);
+  const [dataTableBestSeller, setDataTableBestSeller] = useState([]);
+  const [dataTableSlowestSeller, setDataTableSlowestSeller] = useState([]);
   const getAllUsers = async () => {
     const res = await UserService.getAllUser(user?.access_token);
     return res;
@@ -69,8 +64,6 @@ const AdminDashboard = () => {
   const { data: products } = queryProduct;
   const { data: users } = queryUser;
 
-  console.log("products", products);
-
   const totalPriceReceived = orders?.data?.reduce((total, order) => {
     if (order.isReceived) {
       return total + order.totalPrice;
@@ -82,7 +75,6 @@ const AdminDashboard = () => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
-  console.log("date", currentMonth, currentYear);
 
   const totalPriceReceivedOfMonth = orders?.data?.reduce((total, order) => {
     const updatedAtDate = new Date(order.updatedAt);
@@ -104,9 +96,7 @@ const AdminDashboard = () => {
   Array.isArray(orders?.data) &&
     orders?.data?.forEach((order) => {
       const orderDate = new Date(order?.createdAt);
-
       const month = orderDate.getMonth() + 1;
-      console.log("month", month);
       const monthKey = `thang${month}`;
       if (monthlyOrders[monthKey]) {
         monthlyOrders[monthKey].uv += 1;
@@ -117,16 +107,6 @@ const AdminDashboard = () => {
   const data = Object.values(monthlyOrders);
   console.log("data", data);
 
-  const test = [
-    { type: "tết", count: 10, selled: 4 },
-    { type: "halloween", count: 4, selled: 5 },
-    { type: "tết", count: 20, selled: 2 },
-    { type: "trung thu", count: 24 },
-    { type: "tết", count: 5 },
-    { type: "halloween", count: 4, selled: 4 },
-    { type: "tết", count: 15 },
-    { type: "trung thu", count: 4, selled: 2 },
-  ];
   // [
   //   { type: "tết", total: 50, totalSell: 6 },
   //   { type: "halloween", total: 8, totalSell: 9 },
@@ -141,7 +121,6 @@ const AdminDashboard = () => {
     }
     return acc;
   }, []);
-  console.log("transformedData", transformedDataCountInStock);
   const transformedDataCountInStockAndSelled = products?.data?.reduce(
     (acc, curr) => {
       const existingItem = acc.findIndex((item) => item.name === curr.type);
@@ -159,10 +138,53 @@ const AdminDashboard = () => {
     },
     []
   );
-  console.log(
-    "transformedDataCountInStockAndSelled",
-    transformedDataCountInStockAndSelled
-  );
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Sales",
+      dataIndex: "selled",
+      key: "selled",
+    },
+    {
+      title: "Stock",
+      dataIndex: "countInStock",
+      key: "countInStock",
+    },
+  ];
+
+  useEffect(() => {
+    let arrProductsBestSeller = [];
+    let arrProductsSlowestSeller = [];
+    if (products?.data?.length) {
+      products?.data?.map((pro) => {
+        if (pro?.selled >= pro?.countInStock) {
+          arrProductsBestSeller.push({
+            name: pro?.name,
+            selled: pro?.selled ? pro?.selled : 0,
+            countInStock: pro?.countInStock,
+          });
+        } else {
+          arrProductsSlowestSeller.push({
+            name: pro?.name,
+            selled: pro?.selled ? pro?.selled : 0,
+            countInStock: pro?.countInStock,
+          });
+        }
+      });
+    }
+    setDataTableBestSeller(arrProductsBestSeller);
+    setDataTableSlowestSeller(arrProductsSlowestSeller);
+  }, [products]);
+  console.log("dataBestSeller", dataTableBestSeller);
+  console.log("dataSlowSeller", dataTableSlowestSeller);
+
+  console.log("");
   return (
     <div>
       <AdminHeader textHeader={"Dashboard"} />
@@ -286,6 +308,34 @@ const AdminDashboard = () => {
             <div className="charts" style={{ marginTop: "50px" }}>
               <CustomShapeBarchart data={transformedDataCountInStock} />
               <SimpleBarChart data={transformedDataCountInStockAndSelled} />
+            </div>
+          </div>
+
+          <div
+            style={{
+              padding: "30px 0",
+              fontSize: "17px",
+              background: "rgb(23 24 43)",
+              marginTop: "20px",
+              borderRadius: "15px",
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-around",
+            }}
+          >
+            <div style={{ width: "40%" }}>
+              <p>Best sellers</p>
+              <WrapperTable
+                columns={columns}
+                dataSource={dataTableBestSeller}
+              />
+            </div>
+            <div style={{ width: "40%" }}>
+              <p>Slowest sellers</p>
+              <WrapperTable
+                columns={columns}
+                dataSource={dataTableSlowestSeller}
+              />
             </div>
           </div>
         </main>

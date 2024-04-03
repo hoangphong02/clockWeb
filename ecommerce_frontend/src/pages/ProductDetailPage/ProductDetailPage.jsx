@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Input, Rate, message } from "antd";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useQuery } from "@tanstack/react-query";
+import { WrapperProductDetail } from "./style";
 
 const ProductDetailPage = () => {
   const navigate = useNavigate();
@@ -167,7 +168,7 @@ const ProductDetailPage = () => {
   }, [dataRating]);
 
   return (
-    <div style={{ padding: "0 120px", background: "#efefef " }}>
+    <WrapperProductDetail>
       <h3 style={{ margin: "0", fontSize: "15px", padding: "15px 0" }}>
         <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
           Trang chủ
@@ -250,7 +251,7 @@ const ProductDetailPage = () => {
           );
         })}
       </div>
-    </div>
+    </WrapperProductDetail>
   );
 };
 

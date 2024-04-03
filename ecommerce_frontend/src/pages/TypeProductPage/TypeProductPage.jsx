@@ -84,8 +84,6 @@ const TypeProductPage = () => {
       setLoading(false);
     }
   };
-  console.log("total", panigate.total);
-
   useEffect(() => {
     fetchAllProductType(type, panigate.page, panigate.limit);
   }, [type, panigate.page, panigate.limit]);
@@ -107,7 +105,6 @@ const TypeProductPage = () => {
   }, []);
 
   const onChange = (current, pageSize) => {
-    console.log({ current, pageSize });
     setPanigate({ ...panigate, page: current - 1 });
   };
   const customName = (str) => {
@@ -118,8 +115,6 @@ const TypeProductPage = () => {
     return name;
   };
 
-  console.log("products", products);
-
   const handleOnChange = () => {
     let range1 = document.getElementsByClassName("range1")[0];
     let range2 = document.getElementsByClassName("range2")[0];
@@ -128,8 +123,6 @@ const TypeProductPage = () => {
     setValue1(slide1);
     setValue2(slide2);
   };
-
-  console.log("valu1 value2", value1, value2);
 
   const handleFilter = () => {
     // const filter =[]
@@ -168,11 +161,8 @@ const TypeProductPage = () => {
   };
 
   useEffect(() => {
-    console.log("Type changed:", type);
     getImageBgAmination();
   }, [type]);
-
-  console.log("arrImage", arrImageBackgroundAmination);
 
   return (
     <Loading isLoading={loading}>

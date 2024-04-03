@@ -1,14 +1,5 @@
 import { Table } from "antd";
 import styled from "styled-components";
-export const WrapperButtonExportExcel = styled.button`
-  padding: 7px;
-  color: #fff;
-  background: darkseagreen;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-bottom: 10px;
-`;
 
 export const WrapperTable = styled(Table)`
   & .ant-table {
@@ -20,24 +11,17 @@ export const WrapperTable = styled(Table)`
       border-box;
     color: #fff;
   }
-  // & .ant-table-row:not(:hover) .ant-table-cell {
-  //   color: #fff; /* Màu chữ mặc định của các dòng */
-  // }
-  .ant-table-row:not(.ant-table-row-selected):not(:hover) .ant-table-cell {
+  & .ant-table-row:not(:hover) .ant-table-cell {
     color: #fff; /* Màu chữ mặc định của các dòng */
   }
-  .ant-table-row.ant-table-row-selected:not(:hover) .ant-table-cell {
-    color: #000;
-  }
-
   & .ant-table :hover {
     color: #000;
   }
   &.ant-table-row:hover .ant-table-cell {
     color: #000; /* Màu chữ khi hover */
   }
-  &.ant-table-row .ant-table-row-selected .ant-table-cell {
-    color: #000 !important; /* Màu chữ khi active */
+  & .ant-table-row-selected {
+    color: #000;
   }
   & .ant-pagination {
     padding: 0 50px;

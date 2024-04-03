@@ -15,3 +15,10 @@ export const WrapperMic = styled.div`
   cursor: pointer;
   z-index: 4;
 `;
+export const WrapperProductDetail = styled.div`
+  padding: 0px 120px;
+  background: rgb(239, 239, 239);
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;

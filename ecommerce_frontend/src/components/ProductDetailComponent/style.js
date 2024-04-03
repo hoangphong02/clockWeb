@@ -1,5 +1,6 @@
 import { Col, Image, InputNumber } from "antd";
 import styled from "styled-components";
+import ButtonComponent from "../ButtonComponent/ButtonComponent";
 
 export const WrapperStyledImageSmall = styled(Image)`
   height: 64px !important;
@@ -73,4 +74,31 @@ export const WrapperBtnBuyCart = styled.div`
   margin: 15px 0px;
   display: flex;
   gap: 4px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const WrapperBtnAddCart = styled(ButtonComponent)`
+  background: rgb(255, 66, 78);
+  border-radius: 4px;
+  border: none;
+  height: 48px;
+  width: 220px;
+  font-size: 15px;
+  @media (max-width: 768px) {
+    width: auto;
+  }
+`;
+export const WrapperBtnFollowProduct = styled(ButtonComponent)`
+  background: ${(props) =>
+    props?.isFollowerProduct ? "rgb(31 58 201)" : "rgb(255, 255, 255)"};
+  border-radius: 4px;
+  border: 1px solid rgb(10, 104, 255);
+  height: 48px;
+  width: 220px;
+  font-size: 15px;
+  @media (max-width: 768px) {
+    width: auto;
+  }
 `;

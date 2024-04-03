@@ -51,7 +51,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [productOfType, setProductOfType] = useState([]);
   const [addCartHeader, setAddCartHeader] = useState(false);
   const { state } = useLocation();
-  console.log("idHeadTest", id);
 
   const path = window.location.pathname;
   const segments = path.split("/");
@@ -75,7 +74,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     if (res?.status === "OK") {
       setLoading(false);
       setProductOfType(res?.data);
-      console.log("res", res);
       // setPanigate({...panigate,total: res?.totalPage})
     } else {
       setLoading(false);
@@ -159,8 +157,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     };
   }, []); // useEffect chỉ chạy một lần sau khi component được render
 
-  console.log("typeProduct", typeProduct);
-
   //test mic
 
   // const getIdProduct = async (str) => {
@@ -201,7 +197,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         .map((item) => {
           arr.push(item);
         });
-      console.log("arr", arr);
       return arr?.length ? arr : [];
     } else {
       console.error(
@@ -328,7 +323,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         const findTypeProduct = typeProduct?.find((item) => item === newType);
         if (findTypeProduct) {
           handleDoc(`vật phẩm trang trí ${newType}`);
-          console.log("newType", newType);
           const setTimeNavi = setTimeout(() => {
             navigate(
               `/product/${newType
@@ -344,317 +338,617 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           message.error(
             "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
           );
-          handleDoc("Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!");
           resetTranscript();
         }
         // navigate(`/product/${newType.normalize('NFD').replace(/[\u0300-\u036f]/g, '')?.replace(/ /g, '_')}`, { state: newType });
         resetTranscript();
       }
-    } else {
-      if (hasMuonMua) {
-        if (text.includes("muốn mua") || text.includes("muốn xem")) {
-          let newType = "";
+    }
+    if (hasMuonMua) {
+      if (text.includes("muốn mua") || text.includes("muốn xem")) {
+        let newType = "";
+        if (text.includes("muốn mua")) {
+          newType = text.split("mua")[1]?.trim();
+        } else if (text.includes("muốn xem")) {
+          newType = text.split("xem")[1]?.trim();
+        }
+        let getArrTest = await getArrProductByText(newType);
+        if (getArrTest?.length === 1) {
+          const idProduct = getArrTest[0]?._id;
           if (text.includes("muốn mua")) {
-            newType = text.split("mua")[1]?.trim();
+            handleDoc(`tôi muốn mua ${newType}`);
           } else if (text.includes("muốn xem")) {
-            newType = text.split("xem")[1]?.trim();
+            handleDoc(`tôi muốn xem ${newType}`);
           }
-          let getArrTest = await getArrProductByText(newType);
-          console.log("getArrTest", getArrTest);
-          if (getArrTest?.length === 1) {
-            const idProduct = getArrTest[0]?._id;
+          const setTimeNavi = setTimeout(() => {
+            navigate(`/product-detail/${idProduct}`, { state: idProduct });
+            resetTranscript();
+          }, 1500);
+          return () => clearTimeout(setTimeNavi);
+        } else {
+          if (getArrTest?.length > 1) {
+            const typeProduct = getArrTest[0]?.type;
             if (text.includes("muốn mua")) {
               handleDoc(`tôi muốn mua ${newType}`);
             } else if (text.includes("muốn xem")) {
               handleDoc(`tôi muốn xem ${newType}`);
             }
             const setTimeNavi = setTimeout(() => {
-              navigate(`/product-detail/${idProduct}`, { state: idProduct });
-              resetTranscript();
-            }, 1500);
-            return () => clearTimeout(setTimeNavi);
-          } else {
-            if (getArrTest?.length > 1) {
-              const typeProduct = getArrTest[0]?.type;
-              if (text.includes("muốn mua")) {
-                handleDoc(`tôi muốn mua ${newType}`);
-              } else if (text.includes("muốn xem")) {
-                handleDoc(`tôi muốn xem ${newType}`);
-              }
-              const setTimeNavi = setTimeout(() => {
-                navigate(
-                  `/product/${typeProduct
-                    .normalize("NFD")
-                    .replace(/[\u0300-\u036f]/g, "")
-                    ?.replace(/ /g, "_")}`,
-                  {
-                    state: {
-                      type: typeProduct,
-                      stateData: getArrTest,
-                    },
-                  }
-                );
-                resetTranscript();
-              }, 1500);
-              return () => clearTimeout(setTimeNavi);
-            } else {
-              if (getArrTest?.length === 0) {
-                message.error(
-                  "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
-                );
-                handleDoc(
-                  "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
-                );
-                resetTranscript();
-              }
-            }
-          }
-        }
-      } else {
-        if (addCart) {
-          if (text.includes("thêm vào giỏ hàng")) {
-            // setAddCartHeader(true)
-            handleDoc(`thêm vào giỏ hàng`);
-            const setTimeNavi = setTimeout(() => {
-              navigate("", { state: { addCartHeader: true } });
-              resetTranscript();
-            }, 1500);
-            return () => clearTimeout(setTimeNavi);
-
-            // navigate("",{state: {addCartHeader: true}})
-            resetTranscript();
-          }
-        } else {
-          if (seeCart) {
-            if (text.includes("xem giỏ hàng")) {
-              handleDoc(`xem giỏ hàng`);
-              const setTimeNavi = setTimeout(() => {
-                navigate(`/order`);
-                resetTranscript();
-              }, 1500);
-              return () => clearTimeout(setTimeNavi);
-              // navigate(`/order`)
-              // resetTranscript();
-            }
-          } else {
-            if (suggest) {
-              handleDoc(`gợi ý sản phẩm`);
-              const setTimeNavi = setTimeout(() => {
-                navigate(`/productsTrending`);
-                resetTranscript();
-              }, 1500);
-              return () => clearTimeout(setTimeNavi);
-              // navigate(`/productsTrending`)
-              // resetTranscript();
-            } else {
-              if (contact) {
-                handleDoc(`liên hệ`);
-                const setTimeNavi = setTimeout(() => {
-                  navigate(`/contact`);
-                  resetTranscript();
-                }, 1500);
-                return () => clearTimeout(setTimeNavi);
-                // navigate(`/contact`)
-                // resetTranscript();
-              } else {
-                if (home) {
-                  handleDoc(`Quay lại trang chủ`);
-                  const setTimeNavi = setTimeout(() => {
-                    navigate(`/`);
-                    resetTranscript();
-                  }, 1500);
-                  return () => clearTimeout(setTimeNavi);
-                } else {
-                  if (buyNow) {
-                    handleDoc(`chọn mua ngay`);
-                    const setTimeNavi = setTimeout(() => {
-                      navigate("", { state: { buyNowHeader: true } });
-                      resetTranscript();
-                    }, 1500);
-                    return () => clearTimeout(setTimeNavi);
-                  } else {
-                    if (chooseProductNumber) {
-                      const number = text.split("số")[1].trim();
-                      console.log("number", number);
-                      const id = getChecked(number);
-                      handleDoc(`chọn sản phẩm số ${number}`);
-                      const setTimeNavi = setTimeout(() => {
-                        navigate("", { state: { numcheck: id } });
-                        resetTranscript();
-                      }, 1500);
-                      return () => clearTimeout(setTimeNavi);
-                    } else {
-                      if (payment) {
-                        handleDoc(`chọn thanh toán`);
-                        const setTimeNavi = setTimeout(() => {
-                          navigate("", { state: { buy: true } });
-                          resetTranscript();
-                        }, 1500);
-                        return () => clearTimeout(setTimeNavi);
-                      } else {
-                        if (paymentBy) {
-                          const namePay = text.split("ví")[1].trim();
-                          console.log("namePay", namePay);
-                          if (namePay === "momo") {
-                            handleDoc(`Thanh toán bằng ví mô mô`);
-                            const setTimeNavi = setTimeout(() => {
-                              navigate("", {
-                                state: { value: "Thanh toán bằng ví MoMo" },
-                              });
-                              resetTranscript();
-                            }, 1000);
-                            return () => clearTimeout(setTimeNavi);
-                          } else {
-                            handleDoc(`Thanh toán bằng ví bây bồ`);
-                            const setTimeNavi = setTimeout(() => {
-                              navigate("", {
-                                state: { value: "Thanh toán bằng ví Paypal" },
-                              });
-                              resetTranscript();
-                            }, 1000);
-                            return () => clearTimeout(setTimeNavi);
-                          }
-                        } else {
-                          if (paymentOnDelivery) {
-                            handleDoc(`Thanh toán khi nhận hàng`);
-                            const setTimeNavi = setTimeout(() => {
-                              navigate("", {
-                                state: { value: "Thanh toán khi nhận hàng" },
-                              });
-                              resetTranscript();
-                            }, 1000);
-                            return () => clearTimeout(setTimeNavi);
-                          } else {
-                            if (booking) {
-                              handleDoc(`chọn đặt hàng`);
-                              const setTimeNavi = setTimeout(() => {
-                                navigate("", { state: { buy: true } });
-                                resetTranscript();
-                              }, 1500);
-                              return () => clearTimeout(setTimeNavi);
-                            } else {
-                              if (order) {
-                                handleDoc(`Xem đơn hàng`);
-                                const setTimeNavi = setTimeout(() => {
-                                  navigate("/my-order", {
-                                    state: {
-                                      id: user?.id,
-                                      token: user?.access_token,
-                                    },
-                                  });
-                                  resetTranscript();
-                                }, 1500);
-                                return () => clearTimeout(setTimeNavi);
-                              } else {
-                                if (increaseCount) {
-                                  let number = text.split("lên")[1].trim();
-                                  if (number === "một") {
-                                    number = 1;
-                                  }
-                                  if (number === "ba") {
-                                    number = 3;
-                                  }
-                                  handleDoc(`tăng số lượng lên ${number}`);
-                                  const setTimeNavi = setTimeout(() => {
-                                    navigate("", {
-                                      state: {
-                                        numberIncrease: Number(number),
-                                      },
-                                    });
-                                    resetTranscript();
-                                  }, 1500);
-                                  return () => clearTimeout(setTimeNavi);
-                                  resetTranscript();
-                                } else {
-                                  if (decreaseCount) {
-                                    let number = text.split("xuống")[1].trim();
-                                    if (number === "một") {
-                                      number = 1;
-                                    }
-                                    if (number === "ba") {
-                                      number = 3;
-                                    }
-                                    handleDoc(`giảm số lượng xuống ${number}`);
-                                    const setTimeNavi = setTimeout(() => {
-                                      navigate("", {
-                                        state: {
-                                          numberDecrease: Number(number),
-                                        },
-                                      });
-                                      resetTranscript();
-                                    }, 1500);
-                                    return () => clearTimeout(setTimeNavi);
-                                    resetTranscript();
-                                  } else {
-                                    if (news) {
-                                      handleDoc(`Xem tin tức`);
-                                      const setTimeNavi = setTimeout(() => {
-                                        navigate("/blog");
-                                        resetTranscript();
-                                      }, 1500);
-                                      return () => clearTimeout(setTimeNavi);
-                                    } else {
-                                      if (unCheckNumber) {
-                                        const number = text
-                                          .split("số")[1]
-                                          .trim();
-                                        console.log("number", number);
-                                        const id = getChecked(number);
-                                        handleDoc(`Xóa sản phẩm số ${number}`);
-                                        const setTimeNavi = setTimeout(() => {
-                                          navigate("", {
-                                            state: { numUncheck: id },
-                                          });
-                                          resetTranscript();
-                                        }, 1500);
-                                        return () => clearTimeout(setTimeNavi);
-                                      } else {
-                                        if (checkAll) {
-                                          handleDoc("Chọn tất cả sản phẩm");
-                                          const setTimeNavi = setTimeout(() => {
-                                            navigate("", {
-                                              state: { isCheckAll: true },
-                                            });
-                                            resetTranscript();
-                                          }, 1500);
-                                          return () =>
-                                            clearTimeout(setTimeNavi);
-                                        } else {
-                                          if (cancelCheck) {
-                                            handleDoc("Hủy chọn tất cả");
-                                            const setTimeNavi = setTimeout(
-                                              () => {
-                                                navigate("", {
-                                                  state: {
-                                                    isCancelCheck: true,
-                                                  },
-                                                });
-                                                resetTranscript();
-                                              },
-                                              1500
-                                            );
-                                            return () =>
-                                              clearTimeout(setTimeNavi);
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+              navigate(
+                `/product/${typeProduct
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+                  ?.replace(/ /g, "_")}`,
+                {
+                  state: {
+                    type: typeProduct,
+                    stateData: getArrTest,
+                  },
                 }
-              }
+              );
+              resetTranscript();
+            }, 1500);
+            return () => clearTimeout(setTimeNavi);
+          } else {
+            if (getArrTest?.length === 0) {
+              message.error(
+                "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
+              );
+              resetTranscript();
             }
           }
         }
       }
     }
+    if (addCart) {
+      if (text.includes("thêm vào giỏ hàng")) {
+        // setAddCartHeader(true)
+        handleDoc(`thêm vào giỏ hàng`);
+        const setTimeNavi = setTimeout(() => {
+          navigate("", { state: { addCartHeader: true } });
+          resetTranscript();
+        }, 1500);
+        return () => clearTimeout(setTimeNavi);
+
+        // navigate("",{state: {addCartHeader: true}})
+        resetTranscript();
+      }
+    }
+    if (seeCart) {
+      if (text.includes("xem giỏ hàng")) {
+        handleDoc(`xem giỏ hàng`);
+        const setTimeNavi = setTimeout(() => {
+          navigate(`/order`);
+          resetTranscript();
+        }, 1500);
+        return () => clearTimeout(setTimeNavi);
+        // navigate(`/order`)
+        // resetTranscript();
+      }
+    }
+    if (suggest) {
+      handleDoc(`gợi ý sản phẩm`);
+      const setTimeNavi = setTimeout(() => {
+        navigate(`/productsTrending`);
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+      // navigate(`/productsTrending`)
+      // resetTranscript();
+    }
+    if (contact) {
+      handleDoc(`liên hệ`);
+      const setTimeNavi = setTimeout(() => {
+        navigate(`/contact`);
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+      // navigate(`/contact`)
+      // resetTranscript();
+    }
+    if (home) {
+      handleDoc(`Quay lại trang chủ`);
+      const setTimeNavi = setTimeout(() => {
+        navigate(`/`);
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (buyNow) {
+      handleDoc(`chọn mua ngay`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", { state: { buyNowHeader: true } });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (chooseProductNumber) {
+      const number = text.split("số")[1].trim();
+      const id = getChecked(number);
+      handleDoc(`chọn sản phẩm số ${number}`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", { state: { numcheck: id } });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (payment) {
+      handleDoc(`chọn thanh toán`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", { state: { buy: true } });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (paymentBy) {
+      const namePay = text.split("ví")[1].trim();
+      if (namePay === "momo") {
+        handleDoc(`Thanh toán bằng ví mô mô`);
+        const setTimeNavi = setTimeout(() => {
+          navigate("", {
+            state: { value: "Thanh toán bằng ví MoMo" },
+          });
+          resetTranscript();
+        }, 1000);
+        return () => clearTimeout(setTimeNavi);
+      } else {
+        handleDoc(`Thanh toán bằng ví bây bồ`);
+        const setTimeNavi = setTimeout(() => {
+          navigate("", {
+            state: { value: "Thanh toán bằng ví Paypal" },
+          });
+          resetTranscript();
+        }, 1000);
+        return () => clearTimeout(setTimeNavi);
+      }
+    }
+    if (paymentOnDelivery) {
+      handleDoc(`Thanh toán khi nhận hàng`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: { value: "Thanh toán khi nhận hàng" },
+        });
+        resetTranscript();
+      }, 1000);
+      return () => clearTimeout(setTimeNavi);
+    }
+
+    if (booking) {
+      handleDoc(`chọn đặt hàng`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", { state: { buy: true } });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+
+    if (order) {
+      handleDoc(`Xem đơn hàng`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("/my-order", {
+          state: {
+            id: user?.id,
+            token: user?.access_token,
+          },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (increaseCount) {
+      let number = text.split("lên")[1].trim();
+      if (number === "một") {
+        number = 1;
+      }
+      if (number === "ba") {
+        number = 3;
+      }
+      handleDoc(`tăng số lượng lên ${number}`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: {
+            numberIncrease: Number(number),
+          },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+      resetTranscript();
+    }
+    if (decreaseCount) {
+      let number = text.split("xuống")[1].trim();
+      if (number === "một") {
+        number = 1;
+      }
+      if (number === "ba") {
+        number = 3;
+      }
+      handleDoc(`giảm số lượng xuống ${number}`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: {
+            numberDecrease: Number(number),
+          },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+      resetTranscript();
+    }
+    if (news) {
+      handleDoc(`Xem tin tức`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("/blog");
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (unCheckNumber) {
+      const number = text.split("số")[1].trim();
+      const id = getChecked(number);
+      handleDoc(`Xóa sản phẩm số ${number}`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: { numUncheck: id },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (checkAll) {
+      handleDoc("Chọn tất cả sản phẩm");
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: { isCheckAll: true },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (cancelCheck) {
+      handleDoc("Hủy chọn tất cả");
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: {
+            isCancelCheck: true,
+          },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    } else {
+      if (
+        text &&
+        !hasVatPham &&
+        !hasMuonMua &&
+        !foundIdProduct &&
+        !addCart &&
+        !seeCart &&
+        !suggest &&
+        !contact &&
+        !home &&
+        !buyNow &&
+        !chooseProductNumber &&
+        !payment &&
+        !paymentBy &&
+        !paymentOnDelivery &&
+        !booking &&
+        !order &&
+        !increaseCount &&
+        !decreaseCount &&
+        !news &&
+        !unCheckNumber &&
+        !checkAll &&
+        !cancelCheck
+      ) {
+        message.error("Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!");
+      }
+    }
+
+    //  else {
+    //    if (hasMuonMua) {
+    //      if (text.includes("muốn mua") || text.includes("muốn xem")) {
+    //        let newType = "";
+    //        if (text.includes("muốn mua")) {
+    //          newType = text.split("mua")[1]?.trim();
+    //        } else if (text.includes("muốn xem")) {
+    //          newType = text.split("xem")[1]?.trim();
+    //        }
+    //        let getArrTest = await getArrProductByText(newType);
+    //        if (getArrTest?.length === 1) {
+    //          const idProduct = getArrTest[0]?._id;
+    //          if (text.includes("muốn mua")) {
+    //            handleDoc(`tôi muốn mua ${newType}`);
+    //          } else if (text.includes("muốn xem")) {
+    //            handleDoc(`tôi muốn xem ${newType}`);
+    //          }
+    //          const setTimeNavi = setTimeout(() => {
+    //            navigate(`/product-detail/${idProduct}`, { state: idProduct });
+    //            resetTranscript();
+    //          }, 1500);
+    //          return () => clearTimeout(setTimeNavi);
+    //        } else {
+    //          if (getArrTest?.length > 1) {
+    //            const typeProduct = getArrTest[0]?.type;
+    //            if (text.includes("muốn mua")) {
+    //              handleDoc(`tôi muốn mua ${newType}`);
+    //            } else if (text.includes("muốn xem")) {
+    //              handleDoc(`tôi muốn xem ${newType}`);
+    //            }
+    //            const setTimeNavi = setTimeout(() => {
+    //              navigate(
+    //                `/product/${typeProduct
+    //                  .normalize("NFD")
+    //                  .replace(/[\u0300-\u036f]/g, "")
+    //                  ?.replace(/ /g, "_")}`,
+    //                {
+    //                  state: {
+    //                    type: typeProduct,
+    //                    stateData: getArrTest,
+    //                  },
+    //                }
+    //              );
+    //              resetTranscript();
+    //            }, 1500);
+    //            return () => clearTimeout(setTimeNavi);
+    //          } else {
+    //            if (getArrTest?.length === 0) {
+    //              message.error(
+    //                "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
+    //              );
+    //              handleDoc(
+    //                "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
+    //              );
+    //              resetTranscript();
+    //            }
+    //          }
+    //        }
+    //      }
+    //    } else {
+    //      if (addCart) {
+    //        if (text.includes("thêm vào giỏ hàng")) {
+    //          // setAddCartHeader(true)
+    //          handleDoc(`thêm vào giỏ hàng`);
+    //          const setTimeNavi = setTimeout(() => {
+    //            navigate("", { state: { addCartHeader: true } });
+    //            resetTranscript();
+    //          }, 1500);
+    //          return () => clearTimeout(setTimeNavi);
+
+    //          // navigate("",{state: {addCartHeader: true}})
+    //          resetTranscript();
+    //        }
+    //      } else {
+    //        if (seeCart) {
+    //          if (text.includes("xem giỏ hàng")) {
+    //            handleDoc(`xem giỏ hàng`);
+    //            const setTimeNavi = setTimeout(() => {
+    //              navigate(`/order`);
+    //              resetTranscript();
+    //            }, 1500);
+    //            return () => clearTimeout(setTimeNavi);
+    //            // navigate(`/order`)
+    //            // resetTranscript();
+    //          }
+    //        } else {
+    //          if (suggest) {
+    //            handleDoc(`gợi ý sản phẩm`);
+    //            const setTimeNavi = setTimeout(() => {
+    //              navigate(`/productsTrending`);
+    //              resetTranscript();
+    //            }, 1500);
+    //            return () => clearTimeout(setTimeNavi);
+    //            // navigate(`/productsTrending`)
+    //            // resetTranscript();
+    //          } else {
+    //            if (contact) {
+    //              handleDoc(`liên hệ`);
+    //              const setTimeNavi = setTimeout(() => {
+    //                navigate(`/contact`);
+    //                resetTranscript();
+    //              }, 1500);
+    //              return () => clearTimeout(setTimeNavi);
+    //              // navigate(`/contact`)
+    //              // resetTranscript();
+    //            } else {
+    //              if (home) {
+    //                handleDoc(`Quay lại trang chủ`);
+    //                const setTimeNavi = setTimeout(() => {
+    //                  navigate(`/`);
+    //                  resetTranscript();
+    //                }, 1500);
+    //                return () => clearTimeout(setTimeNavi);
+    //              } else {
+    //                if (buyNow) {
+    //                  handleDoc(`chọn mua ngay`);
+    //                  const setTimeNavi = setTimeout(() => {
+    //                    navigate("", { state: { buyNowHeader: true } });
+    //                    resetTranscript();
+    //                  }, 1500);
+    //                  return () => clearTimeout(setTimeNavi);
+    //                } else {
+    //                  if (chooseProductNumber) {
+    //                    const number = text.split("số")[1].trim();
+    //                    const id = getChecked(number);
+    //                    handleDoc(`chọn sản phẩm số ${number}`);
+    //                    const setTimeNavi = setTimeout(() => {
+    //                      navigate("", { state: { numcheck: id } });
+    //                      resetTranscript();
+    //                    }, 1500);
+    //                    return () => clearTimeout(setTimeNavi);
+    //                  } else {
+    //                    if (payment) {
+    //                      handleDoc(`chọn thanh toán`);
+    //                      const setTimeNavi = setTimeout(() => {
+    //                        navigate("", { state: { buy: true } });
+    //                        resetTranscript();
+    //                      }, 1500);
+    //                      return () => clearTimeout(setTimeNavi);
+    //                    } else {
+    //                      if (paymentBy) {
+    //                        const namePay = text.split("ví")[1].trim();
+    //                        if (namePay === "momo") {
+    //                          handleDoc(`Thanh toán bằng ví mô mô`);
+    //                          const setTimeNavi = setTimeout(() => {
+    //                            navigate("", {
+    //                              state: { value: "Thanh toán bằng ví MoMo" },
+    //                            });
+    //                            resetTranscript();
+    //                          }, 1000);
+    //                          return () => clearTimeout(setTimeNavi);
+    //                        } else {
+    //                          handleDoc(`Thanh toán bằng ví bây bồ`);
+    //                          const setTimeNavi = setTimeout(() => {
+    //                            navigate("", {
+    //                              state: { value: "Thanh toán bằng ví Paypal" },
+    //                            });
+    //                            resetTranscript();
+    //                          }, 1000);
+    //                          return () => clearTimeout(setTimeNavi);
+    //                        }
+    //                      } else {
+    //                        if (paymentOnDelivery) {
+    //                          handleDoc(`Thanh toán khi nhận hàng`);
+    //                          const setTimeNavi = setTimeout(() => {
+    //                            navigate("", {
+    //                              state: { value: "Thanh toán khi nhận hàng" },
+    //                            });
+    //                            resetTranscript();
+    //                          }, 1000);
+    //                          return () => clearTimeout(setTimeNavi);
+    //                        } else {
+    //                          if (booking) {
+    //                            handleDoc(`chọn đặt hàng`);
+    //                            const setTimeNavi = setTimeout(() => {
+    //                              navigate("", { state: { buy: true } });
+    //                              resetTranscript();
+    //                            }, 1500);
+    //                            return () => clearTimeout(setTimeNavi);
+    //                          } else {
+    //                            if (order) {
+    //                              handleDoc(`Xem đơn hàng`);
+    //                              const setTimeNavi = setTimeout(() => {
+    //                                navigate("/my-order", {
+    //                                  state: {
+    //                                    id: user?.id,
+    //                                    token: user?.access_token,
+    //                                  },
+    //                                });
+    //                                resetTranscript();
+    //                              }, 1500);
+    //                              return () => clearTimeout(setTimeNavi);
+    //                            } else {
+    //                              if (increaseCount) {
+    //                                let number = text.split("lên")[1].trim();
+    //                                if (number === "một") {
+    //                                  number = 1;
+    //                                }
+    //                                if (number === "ba") {
+    //                                  number = 3;
+    //                                }
+    //                                handleDoc(`tăng số lượng lên ${number}`);
+    //                                const setTimeNavi = setTimeout(() => {
+    //                                  navigate("", {
+    //                                    state: {
+    //                                      numberIncrease: Number(number),
+    //                                    },
+    //                                  });
+    //                                  resetTranscript();
+    //                                }, 1500);
+    //                                return () => clearTimeout(setTimeNavi);
+    //                                resetTranscript();
+    //                              } else {
+    //                                if (decreaseCount) {
+    //                                  let number = text.split("xuống")[1].trim();
+    //                                  if (number === "một") {
+    //                                    number = 1;
+    //                                  }
+    //                                  if (number === "ba") {
+    //                                    number = 3;
+    //                                  }
+    //                                  handleDoc(`giảm số lượng xuống ${number}`);
+    //                                  const setTimeNavi = setTimeout(() => {
+    //                                    navigate("", {
+    //                                      state: {
+    //                                        numberDecrease: Number(number),
+    //                                      },
+    //                                    });
+    //                                    resetTranscript();
+    //                                  }, 1500);
+    //                                  return () => clearTimeout(setTimeNavi);
+    //                                  resetTranscript();
+    //                                } else {
+    //                                  if (news) {
+    //                                    handleDoc(`Xem tin tức`);
+    //                                    const setTimeNavi = setTimeout(() => {
+    //                                      navigate("/blog");
+    //                                      resetTranscript();
+    //                                    }, 1500);
+    //                                    return () => clearTimeout(setTimeNavi);
+    //                                  } else {
+    //                                    if (unCheckNumber) {
+    //                                      const number = text
+    //                                        .split("số")[1]
+    //                                        .trim();
+    //                                      const id = getChecked(number);
+    //                                      handleDoc(`Xóa sản phẩm số ${number}`);
+    //                                      const setTimeNavi = setTimeout(() => {
+    //                                        navigate("", {
+    //                                          state: { numUncheck: id },
+    //                                        });
+    //                                        resetTranscript();
+    //                                      }, 1500);
+    //                                      return () => clearTimeout(setTimeNavi);
+    //                                    } else {
+    //                                      if (checkAll) {
+    //                                        handleDoc("Chọn tất cả sản phẩm");
+    //                                        const setTimeNavi = setTimeout(
+    //                                          () => {
+    //                                            navigate("", {
+    //                                              state: { isCheckAll: true },
+    //                                            });
+    //                                            resetTranscript();
+    //                                          },
+    //                                          1500
+    //                                        );
+    //                                        return () =>
+    //                                          clearTimeout(setTimeNavi);
+    //                                      } else {
+    //                                        if (cancelCheck) {
+    //                                          handleDoc("Hủy chọn tất cả");
+    //                                          const setTimeNavi = setTimeout(
+    //                                            () => {
+    //                                              navigate("", {
+    //                                                state: {
+    //                                                  isCancelCheck: true,
+    //                                                },
+    //                                              });
+    //                                              resetTranscript();
+    //                                            },
+    //                                            1500
+    //                                          );
+    //                                          return () =>
+    //                                            clearTimeout(setTimeNavi);
+    //                                        }
+    //                                      }
+    //                                    }
+    //                                  }
+    //                                }
+    //                              }
+    //                            }
+    //                          }
+    //                        }
+    //                      }
+    //                    }
+    //                  }
+    //                }
+    //              }
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
+    //  }
   };
 
   const startListening = () => {
@@ -803,9 +1097,9 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     aria-labelledby="dropdownMenuButton1"
                   >
                     {typeProductContant?.map(
-                      (type) =>
+                      (type, index) =>
                         typeProduct.includes(type.type) && (
-                          <li>
+                          <li key={index}>
                             <div
                               style={{
                                 display: "flex",
