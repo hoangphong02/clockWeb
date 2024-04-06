@@ -215,18 +215,18 @@ const AdminDashboard = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
+      // render: (text) => <a>{text}</a>,
     },
     {
-      title: "Sales",
+      title: "Đã bán",
       dataIndex: "selled",
       key: "selled",
     },
     {
-      title: "Stock",
+      title: "Tồn kho",
       dataIndex: "countInStock",
       key: "countInStock",
     },
@@ -236,7 +236,7 @@ const AdminDashboard = () => {
     let arrProductsBestSeller = [];
     let arrProductsSlowestSeller = [];
     if (products?.data?.length) {
-      products?.data?.map((pro) => {
+      products?.data?.forEach((pro) => {
         if (pro?.selled >= pro?.countInStock) {
           arrProductsBestSeller.push({
             name: pro?.name,
@@ -345,10 +345,11 @@ const AdminDashboard = () => {
                               display: "flex",
                               flexDirection: "column",
                               lineHeight: "1",
+                              padding: "10px",
                             }}
                           >
                             <p>{user?.name}</p>
-                            <p>{user?.email}</p>
+                            <span>{user?.email}</span>
                           </div>
                         </div>
                         <div style={{ display: "flex", alignItems: "center" }}>
@@ -459,14 +460,14 @@ const AdminDashboard = () => {
             }}
           >
             <div style={{ width: "40%" }}>
-              <p>Best sellers</p>
+              <p>Sản phẩm bán chạy nhất</p>
               <WrapperTable
                 columns={columns}
                 dataSource={dataTableBestSeller}
               />
             </div>
             <div style={{ width: "40%" }}>
-              <p>Slowest sellers</p>
+              <p>Sản phẩm bán chậm nhất</p>
               <WrapperTable
                 columns={columns}
                 dataSource={dataTableSlowestSeller}
