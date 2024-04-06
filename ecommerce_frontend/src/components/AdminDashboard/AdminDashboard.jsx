@@ -3,13 +3,13 @@ import {
   DollarOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
+import { Avatar } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
@@ -26,6 +26,7 @@ import AdminHeader from "../AdminHeader/AdminHeader";
 import CustomShapeBarchart from "./CustomShapeBarchart";
 import SimpleBarChart from "./SimpleBarChart";
 import { WrapperTable } from "./style";
+import RevenueStatisticsChart from "./RevenueStatisticsChart";
 const AdminDashboard = () => {
   const user = useSelector((state) => state?.user);
   const [dataTableBestSeller, setDataTableBestSeller] = useState([]);
@@ -91,7 +92,7 @@ const AdminDashboard = () => {
     }
   }, 0);
 
-  console.log("products", products);
+  console.log("orders", orders);
   const monthlyOrders = {};
   Array.isArray(orders?.data) &&
     orders?.data?.forEach((order) => {
@@ -106,12 +107,85 @@ const AdminDashboard = () => {
     });
   const data = Object.values(monthlyOrders);
   console.log("data", data);
+  const monthMap = {
+    thang1: "Jan",
+    thang2: "Feb",
+    thang3: "Mar",
+    thang4: "Apr",
+    thang5: "May",
+    thang6: "Jun",
+    thang7: "Jul",
+    thang8: "Aug",
+    thang9: "Sep",
+    thang10: "Oct",
+    thang11: "Nov",
+    thang12: "Dec",
+  };
+  const dataNumberOrderMonth = data.map((item) => ({
+    ...item,
+    name: monthMap[item.name],
+  }));
 
-  // [
-  //   { type: "tết", total: 50, totalSell: 6 },
-  //   { type: "halloween", total: 8, totalSell: 9 },
-  //   { type: "trung thu", total: 2, totalSell: 2 },
-  // ];
+  const totalOrdersMonthly = {};
+  Array.isArray(orders?.data) &&
+    orders?.data?.forEach((order) => {
+      const orderDate = new Date(order?.createdAt);
+      const month = orderDate.getMonth() + 1;
+      const monthKey = `thang${month}`;
+      const isReceived = order?.isReceived === true;
+      if (isReceived) {
+        if (totalOrdersMonthly[monthKey]) {
+          totalOrdersMonthly[monthKey].pv += order?.totalPrice;
+        } else {
+          totalOrdersMonthly[monthKey] = {
+            name: monthKey,
+            pv: order?.totalPrice,
+          };
+        }
+      }
+    });
+  const dataTotalOrderMonth = Object.values(totalOrdersMonthly);
+  const dataToTalPriceOrderMonth = dataTotalOrderMonth.map((item) => ({
+    ...item,
+    name: monthMap[item.name],
+  }));
+
+  //Khách hàng tiềm năng
+  const userOrderTotal = {};
+  Array.isArray(orders?.data) &&
+    orders?.data?.forEach((order) => {
+      const isReceived = order?.isReceived === true;
+      if (isReceived) {
+        if (order?.user) {
+          // Nếu người dùng đã tồn tại trong userOrderTotal
+          if (userOrderTotal[order.user]) {
+            userOrderTotal[order.user].total += order.totalPrice;
+          } else {
+            // Nếu người dùng chưa tồn tại trong userOrderTotal, tạo mới
+            userOrderTotal[order.user] = {
+              name: order.user,
+              total: order.totalPrice,
+            };
+          }
+        }
+      }
+    });
+  const dataUserOrderTotal = Object.values(userOrderTotal);
+
+  const updatedDataUserOrderTotal = dataUserOrderTotal?.map((item) => {
+    const userMatch = users?.data?.find((user) => user?._id === item?.name);
+    if (userMatch) {
+      return {
+        ...item,
+        name: userMatch?.name,
+        avatar: userMatch?.avatar,
+        email: userMatch?.email,
+      };
+    }
+    return item;
+  });
+  /////
+
   const transformedDataCountInStock = products?.data?.reduce((acc, curr) => {
     const existingItem = acc.findIndex((item) => item.name === curr.type);
     if (existingItem !== -1) {
@@ -181,10 +255,7 @@ const AdminDashboard = () => {
     setDataTableBestSeller(arrProductsBestSeller);
     setDataTableSlowestSeller(arrProductsSlowestSeller);
   }, [products]);
-  console.log("dataBestSeller", dataTableBestSeller);
-  console.log("dataSlowSeller", dataTableSlowestSeller);
 
-  console.log("");
   return (
     <div>
       <AdminHeader textHeader={"Dashboard"} />
@@ -228,7 +299,69 @@ const AdminDashboard = () => {
               <h2>{contacts?.data?.length ? contacts?.data?.length : 0}</h2>
             </div>
           </div>
+          {/* Biểu đồ thống kê doanh thu 12 tháng */}
+          <div
+            style={{
+              padding: "30px 0",
+              fontSize: "17px",
+              background: "rgb(23 24 43)",
+              marginTop: "20px",
+              borderRadius: "15px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <div style={{ flex: "1" }}>
+              <p style={{ padding: "0 20px", marginBottom: "0" }}>
+                Biểu đồ doanh thu theo tháng
+              </p>
+              <div style={{ height: "300px", marginTop: "30px" }}>
+                <RevenueStatisticsChart data={dataToTalPriceOrderMonth} />
+              </div>
+            </div>
+            <div style={{ flex: "1" }}>
+              <p style={{ textAlign: "center" }}>Top khách hàng tiềm năng</p>
+              <div style={{ padding: "0 50px" }}>
+                {updatedDataUserOrderTotal?.length &&
+                  updatedDataUserOrderTotal?.slice(0, 5)?.map((user) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "10px ",
+                          }}
+                        >
+                          <Avatar src={user?.avatar} />
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              lineHeight: "1",
+                            }}
+                          >
+                            <p>{user?.name}</p>
+                            <p>{user?.email}</p>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {user?.total?.toLocaleString()} VND
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
 
+          {/* Biểu đồ thống kê số lượng đơn hàng tháng */}
           <div
             style={{
               padding: "30px 0",
@@ -244,7 +377,7 @@ const AdminDashboard = () => {
             <div className="charts" style={{ marginTop: "30px" }}>
               <ResponsiveContainer>
                 <AreaChart
-                  data={data}
+                  data={dataNumberOrderMonth}
                   margin={{
                     top: 10,
                     right: 30,
@@ -252,7 +385,7 @@ const AdminDashboard = () => {
                     bottom: 0,
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
+                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
@@ -268,7 +401,7 @@ const AdminDashboard = () => {
                 <LineChart
                   width={500}
                   height={300}
-                  data={data}
+                  data={dataNumberOrderMonth}
                   margin={{
                     top: 5,
                     right: 50,
@@ -276,7 +409,7 @@ const AdminDashboard = () => {
                     bottom: 5,
                   }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
+                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
@@ -293,6 +426,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
+          {/* Biểu đồ thống kê sản phẩm tồn kho */}
           <div
             style={{
               padding: "30px 0",
@@ -311,6 +445,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
+          {/* Bảng sản phẩm bán chạy bán chậm */}
           <div
             style={{
               padding: "30px 0",

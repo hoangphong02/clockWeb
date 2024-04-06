@@ -40,6 +40,11 @@ const ProductDetailComponent = ({
   numberIncrease,
   ratingDetail,
   numberDecrease,
+  changeAddress,
+  valueAddress,
+  updateAddress,
+  followProduct,
+  unFollowProduct,
 }) => {
   const [numberProduct, setNumberProduct] = useState(1);
   const [isFollowerProduct, setIsFollowerProduct] = useState(false);
@@ -51,12 +56,79 @@ const ProductDetailComponent = ({
   const order = useSelector((state) => state.order);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [addressChange, setAddressChange] = useState("");
+  const [cityChange, setCityChange] = useState("");
+  const [voiceChangeAddress, setVoiceChangeAddress] = useState(false);
+  const [voiceValueAddress, setVoiceValueAddress] = useState("");
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
     address: "",
     phone: "",
     city: "",
   });
+
+  const dataCity = [
+    "hà giang",
+    "cao bằng",
+    "bắc kạn",
+    "tuyên quang",
+    "lào cai",
+    "điện biên",
+    "lai châu",
+    "sơn la",
+    "yên bái",
+    "hòa bình",
+    "lạng sơn",
+    "quảng ninh",
+    "bắc giang",
+    "phú thọ",
+    "vĩnh phúc",
+    "bắc ninh",
+    "hà nam",
+    "hải dương",
+    "hưng yên",
+    "thái bình",
+    "hà tĩnh",
+    "ninh bình",
+    "thanh hóa",
+    "nghệ an",
+    "hà tĩnh",
+    "quảng bình",
+    "quảng trị",
+    "thừa thiên huế",
+    "quảng nam",
+    "quảng ngãi",
+    "bình định",
+    "phú yên",
+    "khánh hòa",
+    "ninh thuận",
+    "bình thuận",
+    "kon tum",
+    "gia lai",
+    "đắk lắk",
+    "đắk nông",
+    "lâm đồng",
+    "bình phước",
+    "tây ninh",
+    "bình dương",
+    "đồng nai",
+    "bà rịa - vũng tàu",
+    "tp. hồ chí minh",
+    "long an",
+    "tiền giang",
+    "bến tre",
+    "trà vinh",
+    "vĩnh long",
+    "đồng tháp",
+    "an giang",
+    "kiên giang",
+    "cần thơ",
+    "hậu giang",
+    "sóc trăng",
+    "bạc liêu",
+    "cà mau",
+    "đắk nông",
+  ];
+
   useEffect(() => {
     form.setFieldsValue(stateUserDetails);
   }, [form, stateUserDetails]);
@@ -66,12 +138,54 @@ const ProductDetailComponent = ({
         name: user?.name,
         address: addressChange,
         phone: user?.phone,
-        city: user?.city,
+        city: cityChange,
       });
     }
   }, [isOpenModalUpdateInfo]);
+  console.log("valueAddress", valueAddress);
+
+  useEffect(() => {
+    if (changeAddress) {
+      setVoiceChangeAddress(changeAddress);
+    }
+  }, [changeAddress]);
+
+  useEffect(() => {
+    if (voiceChangeAddress === true) {
+      setIsOpenModalUpdateInfo(true);
+    }
+  }, [voiceChangeAddress]);
+
+  useEffect(() => {
+    if (valueAddress !== "") {
+      setVoiceValueAddress(valueAddress);
+    }
+  }, [valueAddress]);
+
+  useEffect(() => {
+    if (voiceValueAddress !== "") {
+      const city = dataCity?.find((item) => voiceValueAddress?.includes(item));
+      if (city) {
+        setStateUserDetails({
+          ...stateUserDetails,
+          address: voiceValueAddress,
+          city: city,
+        });
+        setCityChange(city);
+      } else {
+        setStateUserDetails({
+          ...stateUserDetails,
+          address: voiceValueAddress,
+        });
+      }
+      setAddressChange(voiceValueAddress);
+    }
+  }, [voiceValueAddress]);
+  console.log("addressChaneg", addressChange);
+
   useEffect(() => {
     setAddressChange(user?.address);
+    setCityChange(user?.city);
   }, [user]);
   const handleOnchangeDetails = (e) => {
     if (e.target.name === "address") {
@@ -89,6 +203,7 @@ const ProductDetailComponent = ({
   const handleCancelUpdate = () => {
     setIsOpenModalUpdateInfo(false);
     setAddressChange(user?.address);
+    setCityChange(user?.city);
   };
   const mutationUpdate = useMutationHook((data) => {
     const { id, token, ...rests } = data;
@@ -111,6 +226,12 @@ const ProductDetailComponent = ({
       );
     }
   };
+  useEffect(() => {
+    if (updateAddress === true) {
+      handleUpdateInfoUser();
+    }
+    updateAddress = false;
+  }, [updateAddress]);
 
   const onChange = (value) => {
     if (value > stateProductDetails?.countInStock) {
@@ -282,6 +403,18 @@ const ProductDetailComponent = ({
       setIsFollowerProduct(false);
     }
   };
+
+  useEffect(() => {
+    if (followProduct === true && isFollowerProduct === false) {
+      onHandleFollower();
+    }
+  }, [followProduct]);
+
+  useEffect(() => {
+    if (unFollowProduct === true && isFollowerProduct === true) {
+      onHandleFollower();
+    }
+  }, [unFollowProduct]);
 
   useEffect(() => {
     if (addCart === true) {

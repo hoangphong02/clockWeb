@@ -39,6 +39,10 @@ const OrderPage = () => {
   const [currentDelivery, setCurrentDelivery] = useState(0);
   const [temporaryPrice, setTemporaryPrice] = useState(0);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [addressChange, setAddressChange] = useState("");
+  const [cityChange, setCityChange] = useState("");
+  const [voiceChangeAddress, setVoiceChangeAddress] = useState(false);
+  const [voiceValueAddress, setVoiceValueAddress] = useState("");
   const navigate = useNavigate();
   const { state } = useLocation();
   const location = useLocation();
@@ -55,8 +59,78 @@ const OrderPage = () => {
   const checkNumber = location.state?.numcheck || "";
   const isCheckAll = location.state?.isCheckAll || false;
   const isCancelCheck = location.state?.isCancelCheck || false;
+  const changeAddress = location.state?.changeAddress || false;
+  const valueAddress = location.state?.valueAddress || "";
+  const updateAddress = location.state?.update || false;
 
   const buyByMic = state?.buy || false;
+  const dataCity = [
+    "hà giang",
+    "cao bằng",
+    "bắc kạn",
+    "tuyên quang",
+    "lào cai",
+    "điện biên",
+    "lai châu",
+    "sơn la",
+    "yên bái",
+    "hòa bình",
+    "lạng sơn",
+    "quảng ninh",
+    "bắc giang",
+    "phú thọ",
+    "vĩnh phúc",
+    "bắc ninh",
+    "hà nam",
+    "hải dương",
+    "hưng yên",
+    "thái bình",
+    "hà tĩnh",
+    "ninh bình",
+    "thanh hóa",
+    "nghệ an",
+    "hà tĩnh",
+    "quảng bình",
+    "quảng trị",
+    "thừa thiên huế",
+    "quảng nam",
+    "quảng ngãi",
+    "bình định",
+    "phú yên",
+    "khánh hòa",
+    "ninh thuận",
+    "bình thuận",
+    "kon tum",
+    "gia lai",
+    "đắk lắk",
+    "đắk nông",
+    "lâm đồng",
+    "bình phước",
+    "tây ninh",
+    "bình dương",
+    "đồng nai",
+    "bà rịa - vũng tàu",
+    "tp. hồ chí minh",
+    "long an",
+    "tiền giang",
+    "bến tre",
+    "trà vinh",
+    "vĩnh long",
+    "đồng tháp",
+    "an giang",
+    "kiên giang",
+    "cần thơ",
+    "hậu giang",
+    "sóc trăng",
+    "bạc liêu",
+    "cà mau",
+    "đắk nông",
+  ];
+
+  useEffect(() => {
+    setAddressChange(user?.address);
+    setCityChange(user?.city);
+  }, [user]);
 
   console.log("buyByMic", buyByMic);
   useEffect(() => {
@@ -176,12 +250,50 @@ const OrderPage = () => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
         name: user?.name,
-        address: user?.address,
+        address: addressChange,
         phone: user?.phone,
-        city: user?.city,
+        city: cityChange,
       });
     }
   }, [isOpenModalUpdateInfo]);
+
+  useEffect(() => {
+    if (changeAddress) {
+      setVoiceChangeAddress(changeAddress);
+    }
+  }, [changeAddress]);
+
+  useEffect(() => {
+    if (voiceChangeAddress === true) {
+      setIsOpenModalUpdateInfo(true);
+    }
+  }, [voiceChangeAddress]);
+
+  useEffect(() => {
+    if (valueAddress !== "") {
+      setVoiceValueAddress(valueAddress);
+    }
+  }, [valueAddress]);
+
+  useEffect(() => {
+    if (voiceValueAddress !== "") {
+      const city = dataCity?.find((item) => voiceValueAddress?.includes(item));
+      if (city) {
+        setStateUserDetails({
+          ...stateUserDetails,
+          address: voiceValueAddress,
+          city: city,
+        });
+        setCityChange(city);
+      } else {
+        setStateUserDetails({
+          ...stateUserDetails,
+          address: voiceValueAddress,
+        });
+      }
+      setAddressChange(voiceValueAddress);
+    }
+  }, [voiceValueAddress]);
 
   // order?.orderItems.forEach((item)=>{
   //     arrPrice.push({
@@ -234,6 +346,8 @@ const OrderPage = () => {
 
   const handleCancelUpdate = () => {
     setIsOpenModalUpdateInfo(false);
+    setAddressChange(user?.address);
+    setCityChange(user?.city);
   };
 
   const mutationUpdate = useMutationHook((data) => {
@@ -250,13 +364,20 @@ const OrderPage = () => {
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, city, phone }));
+            // dispatch(updateUser({ name, address, city, phone }));
             setIsOpenModalUpdateInfo(false);
           },
         }
       );
     }
   };
+
+  useEffect(() => {
+    if (updateAddress === true) {
+      handleUpdateInfoUser();
+    }
+  }, [updateAddress]);
+
   const addCart = () => {
     if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
@@ -478,13 +599,13 @@ const OrderPage = () => {
               <span>Địa chỉ:</span>
               <span style={{ fontWeight: "600" }}>
                 {" "}
-                {`${user?.address} - ${user?.city}`}{" "}
+                {`${addressChange} - ${cityChange}`}{" "}
                 <span
                   style={{ color: "blue", cursor: "pointer" }}
                   onClick={handleChangeAddress}
                 >
                   {" "}
-                  Thay đổi
+                  Đổi địa chỉ
                 </span>
               </span>
             </WrapperInfo>

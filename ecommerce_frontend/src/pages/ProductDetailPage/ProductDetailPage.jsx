@@ -30,6 +30,11 @@ const ProductDetailPage = () => {
   const buyNowHeader = location.state?.buyNowHeader || false;
   const numberIncreaseFromState = location.state?.numberIncrease || 0;
   const numberDecreaseFromState = location.state?.numberDecrease || 0;
+  const changeAddress = location.state?.changeAddress || false;
+  const valueAddress = location.state?.valueAddress || "";
+  const updateAddress = location.state?.update || false;
+  const followProduct = location.state?.follow || false;
+  const unFollowProduct = location.state?.unFollow || false;
 
   console.log("numberIncrease", numberIncreaseFromState);
 
@@ -182,6 +187,11 @@ const ProductDetailPage = () => {
         numberIncrease={numberIncrease}
         numberDecrease={numberDecrease}
         ratingDetail={ratingDetail > 0 ? ratingDetail : 5}
+        changeAddress={changeAddress}
+        valueAddress={valueAddress}
+        updateAddress={updateAddress}
+        followProduct={followProduct}
+        unFollowProduct={unFollowProduct}
       />
       <div
         style={{ padding: "30px 0 0 0", fontSize: "25px", fontWeight: "bold" }}

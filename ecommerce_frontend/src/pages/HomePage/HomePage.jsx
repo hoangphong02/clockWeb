@@ -103,56 +103,6 @@ const HomePage = () => {
 
   const { isLoading: isLoadingProducts, data: productCart } =
     queryProductSliderCart;
-  // const fetchAllProductType = async(type,page,limit)=>{
-  //     setLoading(true);
-  //      const res = await ProductService.getProductType(type,page,limit)
-  //     if(res?.status === 'OK'){
-  //         setLoading(false);
-  //         if(type ==="tết"){
-  //             setProductTypeTet(res?.data)
-  //         }
-  //         else{
-  //             if(type ==="giáng sinh"){
-  //                 setProductTypeNoel(res?.data)
-  //             }
-  //             else{
-  //                 if(type ==="trung thu"){
-  //             setProductTypeTrungThu(res?.data)
-  //             }
-  //             else{
-  //                 if(type ==="halloween"){
-  //             setProductTypeHalloween(res?.data)
-  //                  }
-  //                  else{
-  //                     if(type ==="tình nhân"){
-  //             setProductTypeValentine(res?.data)
-  //         }
-  //                  }
-  //             }
-  //             }
-  //         }
-  //     }
-  //     else{
-  //         setLoading(false)
-  //     }
-  // }
-
-  // useEffect(()=>{
-  // fetchAllProductType("tết",0,100)
-  // },[])
-  // useEffect(()=>{
-  // fetchAllProductType("giáng sinh",0,100)
-  // },[])
-  // useEffect(()=>{
-  // fetchAllProductType("trung thu",0,100)
-  // },[])
-  // useEffect(()=>{
-  // fetchAllProductType("halloween",0,100)
-  // },[])
-  // useEffect(()=>{
-  //  fetchAllProductType("tình nhân",0,100)
-  // },[])
-
   const fetchAllProductTypes = async () => {
     setLoading(true);
     const tetPromise = ProductService.getProductType("tết", 0, 100);
