@@ -11,9 +11,10 @@ const createSlider = async (req, res) => {
         status: "ERR",
         message: "The input is required",
       });
+    } else {
+      const response = await SliderService.createSlider(req.body);
+      return res.status(200).json(response);
     }
-    const response = await SliderService.createSlider(req.body);
-    return res.status(200).json(response);
   } catch (e) {
     return res.status(404).json({
       message: e,

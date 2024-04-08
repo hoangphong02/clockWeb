@@ -11,20 +11,20 @@ const createDiscount = (newDiscount) => {
           status: "OK",
           message: "The image slider is already",
         });
-      }
-
-      const createDiscount = await Discount.create({
-        product,
-        value,
-        startDiscount,
-        endDiscount,
-      });
-      if (createDiscount) {
-        resolve({
-          status: "OK",
-          message: "success",
-          data: createDiscount,
+      } else {
+        const createDiscount = await Discount.create({
+          product,
+          value,
+          startDiscount,
+          endDiscount,
         });
+        if (createDiscount) {
+          resolve({
+            status: "OK",
+            message: "success",
+            data: createDiscount,
+          });
+        }
       }
     } catch (e) {
       reject(e);

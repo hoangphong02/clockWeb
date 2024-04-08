@@ -5,7 +5,7 @@ const createDiscount = async (req, res) => {
   try {
     const { product, value, startDiscount, endDiscount } = req.body;
     if (!value || !startDiscount || !endDiscount || !product) {
-      return res.status(200).json({
+      return res.status(404).json({
         status: "ERR",
         message: "The input is required",
       });

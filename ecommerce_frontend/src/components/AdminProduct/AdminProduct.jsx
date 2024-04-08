@@ -1,119 +1,122 @@
-
-import React, { useEffect, useRef, useState } from 'react'
-import { ButtonAddUser, WrapperAvatar, WrapperHeader } from './style'
-import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons'
-import TableComponent from '../TableComponent/TableComponent'
-import { Button, Checkbox, Form, Input, Modal, Select, Space } from 'antd'
-import * as message from '../../components/Message/Message'
-import InputComponent from '../InputComponent/InputComponent'
-import { getBase64, renderOptions } from '../../utils';
-import * as ProductService from '../../services/ProductService'
-import { useMutationHook } from '../../hooks/useMutationHook';
-import Loading from '../../components/Loading/Loading';
-import { useQuery } from '@tanstack/react-query'
-import DrawerComponent from '../DrawerComponent/DrawerComponent'
-import { useSelector } from 'react-redux'
-import ModalComponent from '../ModalComponent/ModalComponent'
-import PieChartComponent from './PieChartComponent'
-import AdminHeader from '../AdminHeader/AdminHeader'
+import React, { useEffect, useRef, useState } from "react";
+import { ButtonAddUser, WrapperAvatar, WrapperHeader } from "./style";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  TagOutlined,
+} from "@ant-design/icons";
+import moment from "moment";
+import TableComponent from "../TableComponent/TableComponent";
+import { Button, Checkbox, Form, Input, Modal, Select, Space } from "antd";
+import * as message from "../../components/Message/Message";
+import InputComponent from "../InputComponent/InputComponent";
+import { getBase64, renderOptions } from "../../utils";
+import * as ProductService from "../../services/ProductService";
+import * as DiscountService from "../../services/DiscountService";
+import { useMutationHook } from "../../hooks/useMutationHook";
+import Loading from "../../components/Loading/Loading";
+import { useQuery } from "@tanstack/react-query";
+import DrawerComponent from "../DrawerComponent/DrawerComponent";
+import { useSelector } from "react-redux";
+import ModalComponent from "../ModalComponent/ModalComponent";
+import PieChartComponent from "./PieChartComponent";
+import AdminHeader from "../AdminHeader/AdminHeader";
 
 const AdminProduct = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [rowSelected, setRowSelected] = useState('')
-  const [isOpenDrawer, setIsOpenDrawer] = useState(false)
-  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false)
-  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false)
-  const user = useSelector((state) => state?.user)
+  const [rowSelected, setRowSelected] = useState("");
+  const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+  const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isOpenModalDiscount, setIsOpenModalDiscount] = useState(false);
+  const [valueDiscount, setValueDiscount] = useState(0);
+  const [dateStart, setDateStart] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
+  const user = useSelector((state) => state?.user);
   const searchInput = useRef(null);
   const inittial = () => ({
-    name: '',
-    price: '',
-    description: '',
-    rating: '',
-    image: '',
-    type: '',
-    countInStock: '',
-    newType: '',
-    discount:'',
-    followers:[]
-  })
-  const [stateProduct, setStateProduct] = useState(inittial())
-  const [stateProductDetails, setStateProductDetails] = useState(inittial())
+    name: "",
+    price: "",
+    description: "",
+    rating: "",
+    image: "",
+    type: "",
+    countInStock: "",
+    newType: "",
+    discount: "",
+    followers: [],
+  });
+  const [stateProduct, setStateProduct] = useState(inittial());
+  const [stateProductDetails, setStateProductDetails] = useState(inittial());
 
   const [form] = Form.useForm();
+  console.log("dateStart , dateEnd", valueDiscount, dateStart, dateEnd);
 
-  const mutation = useMutationHook(
-    (data) => {
-      const { name,
-        price,
-        description,
-        rating,
-        image,
-        type,
-        countInStock,discount } = data
-      const res = ProductService.createProduct({
-        name,
-        price,
-        description,
-        rating,
-        image,
-        type,
-        countInStock,
-        discount     
-      })
-      return res
-    }
-  )
-  const mutationUpdate = useMutationHook(
-    (data) => {
-      const { id,
-        token,
-        ...rests } = data
-      const res = ProductService.updateProduct(
-        id,
-        token,
-        { ...rests })
-      return res
-    },
-  )
+  const mutation = useMutationHook((data) => {
+    const {
+      name,
+      price,
+      description,
+      rating,
+      image,
+      type,
+      countInStock,
+      discount,
+    } = data;
+    const res = ProductService.createProduct({
+      name,
+      price,
+      description,
+      rating,
+      image,
+      type,
+      countInStock,
+      discount,
+    });
+    return res;
+  });
 
-  const mutationDeleted = useMutationHook(
-    (data) => {
-      const { id,
-        token,
-      } = data
-      const res = ProductService.deleteProduct(
-        id,
-        token)
-      return res
-    },
-  )
+  const mutationCreateDiscount = useMutationHook((data) => {
+    const { token, ...rests } = data;
+    const res = DiscountService.createDiscount(token, { ...rests });
+    return res;
+  });
+  const mutationUpdate = useMutationHook((data) => {
+    const { id, token, ...rests } = data;
+    const res = ProductService.updateProduct(id, token, { ...rests });
+    return res;
+  });
 
-   const mutationDeletedMany = useMutationHook(
-    (data) => {
-      const { 
-        token,...ids
-      } = data
-      const res = ProductService.deleteManyProduct(
-        ids,
-        token)
-      return res
-    },
-  )
+  const mutationDeleted = useMutationHook((data) => {
+    const { id, token } = data;
+    const res = ProductService.deleteProduct(id, token);
+    return res;
+  });
 
-    console.log("mutationDeletedMany",mutationDeletedMany)
+  const mutationDeletedMany = useMutationHook((data) => {
+    const { token, ...ids } = data;
+    const res = ProductService.deleteManyProduct(ids, token);
+    return res;
+  });
 
-  const getAllProducts = async (context) => {
-    const res = await ProductService.getAllProduct("",1000)
-    return res
-  }
-    const fetchAllTypeProduct = async () => {
-    const res = await ProductService.getAllTypeProduct()
-    return res
-  }
+
+  const getAllProducts = async () => {
+    const res = await ProductService.getAllProduct("", 1000);
+    return res;
+  };
+  const getAllDiscounts = async () => {
+    const res = await DiscountService.getAllDiscount();
+    return res;
+  };
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    return res;
+  };
 
   const fetchGetDetailsProduct = async (rowSelected) => {
-    const res = await ProductService.getDetailProduct(rowSelected)
+    const res = await ProductService.getDetailProduct(rowSelected);
     if (res?.data) {
       setStateProductDetails({
         name: res?.data?.name,
@@ -124,73 +127,129 @@ const AdminProduct = () => {
         type: res?.data?.type,
         countInStock: res?.data?.countInStock,
         discount: res?.data?.discount,
-        followers:res?.data?.followers
-      })
+        followers: res?.data?.followers,
+      });
     }
-    setIsLoadingUpdate(false)
-  }
+    setIsLoadingUpdate(false);
+  };
 
   useEffect(() => {
-    if(!isModalOpen) {
-      form.setFieldsValue(stateProductDetails)
-    }else {
-      form.setFieldsValue(inittial())
+    if (!isModalOpen) {
+      form.setFieldsValue(stateProductDetails);
+    } else {
+      form.setFieldsValue(inittial());
     }
-  }, [form, stateProductDetails, isModalOpen])
+  }, [form, stateProductDetails, isModalOpen]);
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
-      setIsLoadingUpdate(true)
-      fetchGetDetailsProduct(rowSelected)
+      setIsLoadingUpdate(true);
+      fetchGetDetailsProduct(rowSelected);
     }
-  }, [rowSelected, isOpenDrawer])
+  }, [rowSelected, isOpenDrawer]);
 
   const handleDetailsProduct = () => {
-    setIsOpenDrawer(true)
-  }
+    setIsOpenDrawer(true);
+  };
 
-  const handleDeleteManyProduct =(ids)=>{
-    mutationDeletedMany.mutate({ ids: ids, token: user?.access_token }, {
-      onSettled: () => {
-        queryProduct.refetch()
+  const handleDeleteManyProduct = (ids) => {
+    mutationDeletedMany.mutate(
+      { ids: ids, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
       }
-    })
-  }
+    );
+  };
 
+  const { data, isLoading, isSuccess, isError } = mutation;
+  const {
+    data: dataCreateDiscount,
+    isLoading: isLoadingCreateDiscount,
+    isSuccess: isSuccessCreateDiscount,
+    isError: isErrorCreateDiscount,
+  } = mutationCreateDiscount;
+  useEffect(() => {
+    if (isSuccessCreateDiscount) {
+      message.success("Tạo giảm giá thành công");
+      handleCancelDiscount();
+    }
+  }, [isSuccessCreateDiscount]);
+  const {
+    data: dataUpdated,
+    isLoading: isLoadingUpdated,
+    isSuccess: isSuccessUpdated,
+    isError: isErrorUpdated,
+  } = mutationUpdate;
+  const {
+    data: dataDeleted,
+    isLoading: isLoadingDeleted,
+    isSuccess: isSuccessDelected,
+    isError: isErrorDeleted,
+  } = mutationDeleted;
+  const {
+    data: dataDeletedMany,
+    isLoading: isLoadingDeletedMany,
+    isSuccess: isSuccessDelectedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeletedMany;
 
+  const typeProduct = useQuery({
+    queryKey: ["type-product"],
+    queryFn: fetchAllTypeProduct,
+  });
+  const queryProduct = useQuery({
+    queryKey: ["products"],
+    queryFn: getAllProducts,
+  });
 
-  const { data, isLoading, isSuccess, isError } = mutation
-  const { data: dataUpdated, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
-  const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDelected, isError: isErrorDeleted } = mutationDeleted
-  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
+  const { isLoading: isLoadingProducts, data: products } = queryProduct;
+  const queryDiscount = useQuery({
+    queryKey: ["discounts"],
+    queryFn: getAllDiscounts,
+  });
 
-  const typeProduct = useQuery({ queryKey: ['type-product'], queryFn: fetchAllTypeProduct })
-  const queryProduct = useQuery({ queryKey: ['products'], queryFn: getAllProducts })
-
-  const { isLoading: isLoadingProducts, data: products } = queryProduct
+  const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
+  console.log("discounts", discounts);
   const renderAction = () => {
     return (
       <div>
-        <DeleteOutlined style={{ color: 'red', fontSize: '30px', cursor: 'pointer' }} onClick={() => setIsModalOpenDelete(true)} />
-        <EditOutlined style={{ color: 'orange', fontSize: '30px', cursor: 'pointer' }} onClick={handleDetailsProduct} />
+        <DeleteOutlined
+          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          onClick={() => setIsModalOpenDelete(true)}
+        />
+        <EditOutlined
+          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+          onClick={handleDetailsProduct}
+        />
+        <TagOutlined
+          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+          onClick={() => setIsOpenModalDiscount(true)}
+        />
       </div>
-    )
-  }
+    );
+  };
 
-      //Search filter antd https://ant.design/components/table#components-table-demo-custom-filter-panel
+  //Search filter antd https://ant.design/components/table#components-table-demo-custom-filter-panel
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     // setSearchText(selectedKeys[0]);
     // setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters,confirm) => {
+  const handleReset = (clearFilters, confirm) => {
     clearFilters();
     // setSearchText('');
-    confirm()
+    confirm();
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -201,11 +260,13 @@ const AdminProduct = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: 'block',
+            display: "block",
           }}
         />
         <Space>
@@ -221,7 +282,7 @@ const AdminProduct = () => {
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters,confirm)}
+            onClick={() => clearFilters && handleReset(clearFilters, confirm)}
             size="small"
             style={{
               width: 90,
@@ -235,7 +296,7 @@ const AdminProduct = () => {
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
-          color: filtered ? '#1890ff' : undefined,
+          color: filtered ? "#1890ff" : undefined,
         }}
       />
     ),
@@ -246,162 +307,170 @@ const AdminProduct = () => {
         setTimeout(() => searchInput.current?.select(), 100);
       }
     },
-    
   });
-
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
+      title: "Name",
+      dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps('name')
-    },
-     {
-      title: 'image',
-      dataIndex: 'image',
-      render: (text, record) => (
-      <img src={record.image} alt="Product Image" style={{ width: '50px', height: '50px' }} />
-    ),
+      ...getColumnSearchProps("name"),
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
+      title: "image",
+      dataIndex: "image",
+      render: (text, record) => (
+        <img
+          src={record.image}
+          alt="Product Image"
+          style={{ width: "50px", height: "50px" }}
+        />
+      ),
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
       filters: [
         {
-          text: '>= 50.000',
-          value: '>=',
+          text: ">= 50.000",
+          value: ">=",
         },
         {
-          text: '<= 50.000',
-          value: '<=',
-        }
+          text: "<= 50.000",
+          value: "<=",
+        },
       ],
       onFilter: (value, record) => {
-        if (value === '>=') {
-          return record.price >= 50000
+        if (value === ">=") {
+          return record.price >= 50000;
         }
-        return record.price <= 50000
+        return record.price <= 50000;
       },
     },
     {
-      title: 'Rating',
-      dataIndex: 'rating',
+      title: "Rating",
+      dataIndex: "rating",
       sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
-          text: '>= 3',
-          value: '>=',
+          text: ">= 3",
+          value: ">=",
         },
         {
-          text: '<= 3',
-          value: '<=',
-        }
+          text: "<= 3",
+          value: "<=",
+        },
       ],
       onFilter: (value, record) => {
-        if (value === '>=') {
-          return Number(record.rating) >= 3
+        if (value === ">=") {
+          return Number(record.rating) >= 3;
         }
-        return Number(record.rating) <= 3
+        return Number(record.rating) <= 3;
       },
     },
     {
-      title: 'Type',
-      dataIndex: 'type',
+      title: "Type",
+      dataIndex: "type",
       sorter: (a, b) => a.type.length - b.type.length,
-      ...getColumnSearchProps('type')
+      ...getColumnSearchProps("type"),
     },
     {
-      title: 'Action',
-      dataIndex: 'action',
-      render: renderAction
+      title: "Action",
+      dataIndex: "action",
+      render: renderAction,
     },
   ];
-  const dataTable = products?.data?.length && products?.data?.reverse().map((product) => {
-    return { ...product, key: product._id }
-  })
+  const dataTable =
+    products?.data?.length &&
+    products?.data?.reverse().map((product) => {
+      return { ...product, key: product._id };
+    });
 
   useEffect(() => {
-    if (isSuccess && data?.status === 'OK') {
-      message.success()
-      handleCancel()
+    if (isSuccess && data?.status === "OK") {
+      message.success();
+      handleCancel();
     } else if (isError) {
-      message.error()
+      message.error();
     }
-  }, [isSuccess])
-
+  }, [isSuccess]);
 
   useEffect(() => {
-    if (isSuccessDelected && dataDeleted?.status === 'OK') {
-      message.success()
-      handleCancelDelete()
+    if (isSuccessDelected && dataDeleted?.status === "OK") {
+      message.success();
+      handleCancelDelete();
     } else if (isErrorDeleted) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessDelected])
+  }, [isSuccessDelected]);
 
   useEffect(() => {
-    if (isSuccessDelectedMany && dataDeletedMany?.status === 'OK') {
-      message.success()
-      handleCancelDelete()
+    if (isSuccessDelectedMany && dataDeletedMany?.status === "OK") {
+      message.success();
+      handleCancelDelete();
     } else if (isErrorDeletedMany) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessDelectedMany])
+  }, [isSuccessDelectedMany]);
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);
     setStateProductDetails({
-      name: '',
-      price: '',
-      description: '',
-      rating: '',
-      image: '',
-      type: '',
-      countInStock: '',
-      discount: ''
-    })
-    form.resetFields()
+      name: "",
+      price: "",
+      description: "",
+      rating: "",
+      image: "",
+      type: "",
+      countInStock: "",
+      discount: "",
+    });
+    form.resetFields();
   };
 
   useEffect(() => {
-    if (isSuccessUpdated && dataUpdated?.status === 'OK') {
-      message.success()
-      handleCloseDrawer()
+    if (isSuccessUpdated && dataUpdated?.status === "OK") {
+      message.success();
+      handleCloseDrawer();
     } else if (isErrorUpdated) {
-      message.error()
+      message.error();
     }
-  }, [isSuccessUpdated])
+  }, [isSuccessUpdated]);
 
   const handleCancelDelete = () => {
-    setIsModalOpenDelete(false)
-  }
-
-
+    setIsModalOpenDelete(false);
+  };
+  const handleCancelDiscount = () => {
+    setIsOpenModalDiscount(false);
+    setDateStart(new Date());
+    setDateEnd(new Date());
+    setValueDiscount(0);
+  };
   const handleDeleteProduct = () => {
-    mutationDeleted.mutate({ id: rowSelected, token: user?.access_token }, {
-      onSettled: () => {
-        queryProduct.refetch()
+    mutationDeleted.mutate(
+      { id: rowSelected, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
       }
-    })
-  }
-
-  
+    );
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
     setStateProduct({
-      name: '',
-      price: '',
-      description: '',
-      rating: '',
-      image: '',
-      type: '',
-      countInStock: '',
-      discount:''
-    })
-    form.resetFields()
+      name: "",
+      price: "",
+      description: "",
+      rating: "",
+      image: "",
+      type: "",
+      countInStock: "",
+      discount: "",
+    });
+    form.resetFields();
   };
 
   const onFinish = () => {
@@ -411,91 +480,144 @@ const AdminProduct = () => {
       description: stateProduct.description,
       rating: stateProduct.rating,
       image: stateProduct.image,
-      type: stateProduct.type === 'add_type' ? stateProduct.newType : stateProduct.type,
+      type:
+        stateProduct.type === "add_type"
+          ? stateProduct.newType
+          : stateProduct.type,
       countInStock: stateProduct.countInStock,
-      discount:stateProduct.discount
-    }
+      discount: stateProduct.discount,
+    };
     mutation.mutate(params, {
       onSettled: () => {
-        queryProduct.refetch()
-      }
-    })
-  }
+        queryProduct.refetch();
+      },
+    });
+  };
+  const onFinishDiscount = () => {
+    mutationCreateDiscount.mutate({
+      token: user?.access_token,
+      product: rowSelected,
+      value: valueDiscount,
+      startDiscount: dateStart,
+      endDiscount: dateEnd,
+    });
+  };
 
   const handleOnchange = (e) => {
     setStateProduct({
       ...stateProduct,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleOnchangeDetails = (e) => {
     setStateProductDetails({
       ...stateProductDetails,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleOnchangeAvatar = async ({ fileList }) => {
-    const file = fileList[0]
+    const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
     setStateProduct({
       ...stateProduct,
-      image: file.preview
-    })
-  }
+      image: file.preview,
+    });
+  };
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
-    const file = fileList[0]
+    const file = fileList[0];
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
     setStateProductDetails({
       ...stateProductDetails,
-      image: file.preview
-    })
-  }
+      image: file.preview,
+    });
+  };
   const onUpdateProduct = () => {
-    mutationUpdate.mutate({ id: rowSelected, token: user?.access_token, ...stateProductDetails }, {
-      onSettled: () => {
-        queryProduct.refetch()
+    mutationUpdate.mutate(
+      { id: rowSelected, token: user?.access_token, ...stateProductDetails },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
       }
-    })
-  }
+    );
+  };
 
   const handleChangeSelect = (value) => {
-      setStateProduct({
-        ...stateProduct,
-        type: value
-      })
-  }
-
+    setStateProduct({
+      ...stateProduct,
+      type: value,
+    });
+  };
+  useEffect(() => {
+    if (isOpenModalDiscount === true) {
+      if (discounts?.data?.find((pro) => pro?.product === rowSelected)) {
+        const startDiscount = discounts?.data?.find(
+          (pro) => pro?.product === rowSelected
+        )?.startDiscount;
+        const endDiscount = discounts?.data?.find(
+          (pro) => pro?.product === rowSelected
+        )?.endDiscount;
+        setValueDiscount(
+          discounts?.data?.find((pro) => pro?.product === rowSelected)?.value
+        );
+        setDateStart(moment(startDiscount).format("YYYY-MM-DD"));
+        setDateEnd(moment(endDiscount).format("YYYY-MM-DD"));
+      }
+    }
+  }, [isOpenModalDiscount, discounts]);
   return (
     <div>
-      <AdminHeader textHeader={"Quản lý sản phẩm"}/>
+      <AdminHeader textHeader={"Quản lý sản phẩm"} />
       {/* <WrapperHeader>Quản lý sản phẩm</WrapperHeader> */}
-      <div style={{width:"200px", height:"200px", textAlign:"center", marginBottom:"30px"}}>
-      <PieChartComponent data = {products?.data}/>
-      <p style={{fontSize:"15px", fontWeight:"bold", color:"#fff"}}>Số lượng sản phẩm</p>
+      <div
+        style={{
+          width: "200px",
+          height: "200px",
+          textAlign: "center",
+          marginBottom: "30px",
+        }}
+      >
+        <PieChartComponent data={products?.data} />
+        <p style={{ fontSize: "15px", fontWeight: "bold", color: "#fff" }}>
+          Số lượng sản phẩm
+        </p>
       </div>
-      <div style={{ marginTop: '10px' }}>
+      <div style={{ marginTop: "10px" }}>
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}
-        <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
+        <ButtonAddUser onClick={() => setIsModalOpen(true)}>
+          <PlusOutlined />
+        </ButtonAddUser>
       </div>
-      <div style={{ marginTop: '20px' }}>
-        <TableComponent handleDeleteMany={handleDeleteManyProduct} columns={columns} isLoading={isLoadingProducts} data={dataTable} onRow={(record, rowIndex) => {
-          return {
-            onClick: event => {
-              setRowSelected(record._id)
-            }
-          };
-        }} />
+      <div style={{ marginTop: "20px" }}>
+        <TableComponent
+          handleDeleteMany={handleDeleteManyProduct}
+          columns={columns}
+          isLoading={isLoadingProducts}
+          data={dataTable}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                setRowSelected(record._id);
+              },
+            };
+          }}
+        />
       </div>
-      <ModalComponent forceRender title="Tạo sản phẩm" open={isModalOpen} onCancel={handleCancel} footer={null}>
+      <ModalComponent
+        forceRender
+        title="Tạo sản phẩm"
+        open={isModalOpen}
+        onCancel={handleCancel}
+        footer={null}
+      >
         <Loading isLoading={isLoading}>
-
           <Form
             name="basic"
             labelCol={{ span: 6 }}
@@ -507,15 +629,19 @@ const AdminProduct = () => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your name!' }]}
+              rules={[{ required: true, message: "Please input your name!" }]}
             >
-              <InputComponent value={stateProduct['name']} onChange={handleOnchange} name="name" />
+              <InputComponent
+                value={stateProduct["name"]}
+                onChange={handleOnchange}
+                name="name"
+              />
             </Form.Item>
 
             <Form.Item
               label="Type"
               name="type"
-              rules={[{ required: true, message: 'Please input your type!' }]}
+              rules={[{ required: true, message: "Please input your type!" }]}
             >
               <Select
                 name="type"
@@ -523,68 +649,114 @@ const AdminProduct = () => {
                 // style={{ width: 120 }}
                 value={stateProduct.type}
                 onChange={handleChangeSelect}
-               options={renderOptions(typeProduct?.data?.data)}
-                />
+                options={renderOptions(typeProduct?.data?.data)}
+              />
             </Form.Item>
-            {stateProduct.type === 'add_type' && (
+            {stateProduct.type === "add_type" && (
               <Form.Item
-                label='New type'
+                label="New type"
                 name="newType"
-                rules={[{ required: true, message: 'Please input your type!' }]}
+                rules={[{ required: true, message: "Please input your type!" }]}
               >
-                <InputComponent value={stateProduct.newType} onChange={handleOnchange} name="newType" />
+                <InputComponent
+                  value={stateProduct.newType}
+                  onChange={handleOnchange}
+                  name="newType"
+                />
               </Form.Item>
             )}
             <Form.Item
               label="Count inStock"
               name="countInStock"
-              rules={[{ required: true, message: 'Please input your count inStock!' }]}
+              rules={[
+                { required: true, message: "Please input your count inStock!" },
+              ]}
             >
-              <InputComponent value={stateProduct.countInStock} onChange={handleOnchange} name="countInStock" />
+              <InputComponent
+                value={stateProduct.countInStock}
+                onChange={handleOnchange}
+                name="countInStock"
+              />
             </Form.Item>
             <Form.Item
               label="Price"
               name="price"
-              rules={[{ required: true, message: 'Please input your count price!' }]}
+              rules={[
+                { required: true, message: "Please input your count price!" },
+              ]}
             >
-              <InputComponent value={stateProduct.price} onChange={handleOnchange} name="price" />
+              <InputComponent
+                value={stateProduct.price}
+                onChange={handleOnchange}
+                name="price"
+              />
             </Form.Item>
             <Form.Item
               label="Description"
               name="description"
-              rules={[{ required: true, message: 'Please input your count description!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your count description!",
+                },
+              ]}
             >
-              <InputComponent value={stateProduct.description} onChange={handleOnchange} name="description" />
+              <InputComponent
+                value={stateProduct.description}
+                onChange={handleOnchange}
+                name="description"
+              />
             </Form.Item>
             <Form.Item
               label="Rating"
               name="rating"
-              rules={[{ required: true, message: 'Please input your count rating!' }]}
+              rules={[
+                { required: true, message: "Please input your count rating!" },
+              ]}
             >
-              <InputComponent value={stateProduct.rating} onChange={handleOnchange} name="rating" />
+              <InputComponent
+                value={stateProduct.rating}
+                onChange={handleOnchange}
+                name="rating"
+              />
             </Form.Item>
             <Form.Item
               label="Discount"
               name="discount"
-              rules={[{ required: true, message: 'Please input your discount of product!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your discount of product!",
+                },
+              ]}
             >
-              <InputComponent value={stateProduct.discount} onChange={handleOnchange} name="discount" />
+              <InputComponent
+                value={stateProduct.discount}
+                onChange={handleOnchange}
+                name="discount"
+              />
             </Form.Item>
             <Form.Item
               label="Image"
               name="image"
-              rules={[{ required: true, message: 'Please input your count image!' }]}
+              rules={[
+                { required: true, message: "Please input your count image!" },
+              ]}
             >
               <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
-                <Button >Select File</Button>
+                <Button>Select File</Button>
                 {stateProduct?.image && (
-                  <img src={stateProduct?.image} style={{
-                    height: '60px',
-                    width: '60px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginLeft: '10px'
-                  }} alt="avatar" />
+                  <img
+                    src={stateProduct?.image}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "10px",
+                    }}
+                    alt="avatar"
+                  />
                 )}
               </WrapperAvatar>
             </Form.Item>
@@ -596,9 +768,13 @@ const AdminProduct = () => {
           </Form>
         </Loading>
       </ModalComponent>
-      <DrawerComponent title='Chi tiết sản phẩm' isOpen={isOpenDrawer} onClose={() => setIsOpenDrawer(false)} width="90%">
+      <DrawerComponent
+        title="Chi tiết sản phẩm"
+        isOpen={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
+        width="90%"
+      >
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
-
           <Form
             name="basic"
             labelCol={{ span: 2 }}
@@ -610,68 +786,121 @@ const AdminProduct = () => {
             <Form.Item
               label="Name"
               name="name"
-              rules={[{ required: true, message: 'Please input your name!' }]}
+              rules={[{ required: true, message: "Please input your name!" }]}
             >
-              <InputComponent value={stateProductDetails['name']} onChange={handleOnchangeDetails} name="name" />
+              <InputComponent
+                value={stateProductDetails["name"]}
+                onChange={handleOnchangeDetails}
+                name="name"
+              />
             </Form.Item>
 
             <Form.Item
               label="Type"
               name="type"
-              rules={[{ required: true, message: 'Please input your type!' }]}
+              rules={[{ required: true, message: "Please input your type!" }]}
             >
-              <InputComponent value={stateProductDetails['type']} onChange={handleOnchangeDetails} name="type" />
+              <InputComponent
+                value={stateProductDetails["type"]}
+                onChange={handleOnchangeDetails}
+                name="type"
+              />
             </Form.Item>
             <Form.Item
               label="Count inStock"
               name="countInStock"
-              rules={[{ required: true, message: 'Please input your count inStock!' }]}
+              rules={[
+                { required: true, message: "Please input your count inStock!" },
+              ]}
             >
-              <InputComponent value={stateProductDetails.countInStock} onChange={handleOnchangeDetails} name="countInStock" />
+              <InputComponent
+                value={stateProductDetails.countInStock}
+                onChange={handleOnchangeDetails}
+                name="countInStock"
+              />
             </Form.Item>
             <Form.Item
               label="Price"
               name="price"
-              rules={[{ required: true, message: 'Please input your count price!' }]}
+              rules={[
+                { required: true, message: "Please input your count price!" },
+              ]}
             >
-              <InputComponent value={stateProductDetails.price} onChange={handleOnchangeDetails} name="price" />
+              <InputComponent
+                value={stateProductDetails.price}
+                onChange={handleOnchangeDetails}
+                name="price"
+              />
             </Form.Item>
             <Form.Item
               label="Description"
               name="description"
-              rules={[{ required: true, message: 'Please input your count description!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your count description!",
+                },
+              ]}
             >
-              <InputComponent value={stateProductDetails.description} onChange={handleOnchangeDetails} name="description" />
+              <InputComponent
+                value={stateProductDetails.description}
+                onChange={handleOnchangeDetails}
+                name="description"
+              />
             </Form.Item>
             <Form.Item
               label="Rating"
               name="rating"
-              rules={[{ required: true, message: 'Please input your count rating!' }]}
+              rules={[
+                { required: true, message: "Please input your count rating!" },
+              ]}
             >
-              <InputComponent value={stateProductDetails.rating} onChange={handleOnchangeDetails} name="rating" />
+              <InputComponent
+                value={stateProductDetails.rating}
+                onChange={handleOnchangeDetails}
+                name="rating"
+              />
             </Form.Item>
             <Form.Item
               label="Discount"
               name="discount"
-              rules={[{ required: true, message: 'Please input your discount of product!' }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your discount of product!",
+                },
+              ]}
             >
-              <InputComponent value={stateProductDetails.discount} onChange={handleOnchangeDetails} name="discount" />
+              <InputComponent
+                value={stateProductDetails.discount}
+                onChange={handleOnchangeDetails}
+                name="discount"
+              />
             </Form.Item>
             <Form.Item
               label="Image"
               name="image"
-              rules={[{ required: true, message: 'Please input your count image!' }]}
+              rules={[
+                { required: true, message: "Please input your count image!" },
+              ]}
             >
-              <WrapperAvatar onChange={handleOnchangeAvatarDetails} maxCount={1}>
-                <Button >Select File</Button>
+              <WrapperAvatar
+                onChange={handleOnchangeAvatarDetails}
+                maxCount={1}
+              >
+                <Button>Select File</Button>
                 {stateProductDetails?.image && (
-                  <img src={stateProductDetails?.image} style={{
-                    height: '60px',
-                    width: '60px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginLeft: '10px'
-                  }} alt="avatar" />
+                  <img
+                    src={stateProductDetails?.image}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "10px",
+                    }}
+                    alt="avatar"
+                  />
                 )}
               </WrapperAvatar>
             </Form.Item>
@@ -683,13 +912,57 @@ const AdminProduct = () => {
           </Form>
         </Loading>
       </DrawerComponent>
-      <ModalComponent title="Xóa sản phẩm" open={isModalOpenDelete} onCancel={handleCancelDelete} onOk={handleDeleteProduct}>
+      <ModalComponent
+        title="Xóa sản phẩm"
+        open={isModalOpenDelete}
+        onCancel={handleCancelDelete}
+        onOk={handleDeleteProduct}
+      >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa sản phẩm này không?</div>
         </Loading>
       </ModalComponent>
-    </div>
-  )
-}
 
-export default AdminProduct
+      <ModalComponent
+        title="Tạo giảm giá"
+        open={isOpenModalDiscount}
+        onCancel={handleCancelDiscount}
+        onOk={onFinishDiscount}
+      >
+        {/* <Loading > */}
+        <div style={{ display: "flex", gap: "10px" }}>
+          <label htmlFor="">Phần trăm giảm giá:</label>
+          <input
+            type="number"
+            min={0}
+            max={100}
+            value={valueDiscount}
+            onChange={(e) => setValueDiscount(e.target.value)}
+          />
+        </div>
+        <div style={{ display: "flex", gap: "30px", padding: " 30px 0" }}>
+          <div style={{ display: "flex", gap: "5px" }}>
+            <label htmlFor="">Ngày bắt đầu:</label>
+            <input
+              type="date"
+              value={dateStart}
+              onChange={(e) => setDateStart(e?.target?.value)}
+            />
+          </div>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <label htmlFor="">Ngày kết thúc:</label>
+            <input
+              type="date"
+              value={dateEnd}
+              onChange={(e) => setDateEnd(e?.target?.value)}
+            />
+          </div>
+        </div>
+
+        {/* </Loading> */}
+      </ModalComponent>
+    </div>
+  );
+};
+
+export default AdminProduct;
