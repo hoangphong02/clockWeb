@@ -120,10 +120,28 @@ const updateDiscount = (id, data) => {
     }
   });
 };
+
+const deleteManyDiscount = (ids) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await Discount.deleteMany({ _id: ids });
+
+      resolve({
+        status: "OK",
+        message: "Delete discount success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+
 module.exports = {
   createDiscount,
   getAllDiscount,
   deleteDiscount,
   getDetailsDiscount,
   updateDiscount,
+  deleteManyDiscount
 };

@@ -1,5 +1,4 @@
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-import Icon from "@ant-design/icons/lib/components/Icon";
 import { Checkbox, Form, message } from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -18,6 +17,8 @@ import {
   removeAllOrderProduct,
   removeOrderProduct,
 } from "../../redux/slides/oderSlide";
+import { useQuery } from "@tanstack/react-query";
+import * as DiscountService from "../../services/DiscountService";
 import ModalComponent from "../../components/ModalComponent/ModalComponent";
 import Loading from "../../components/Loading/Loading";
 import InputComponent from "../../components/InputComponent/InputComponent";
@@ -31,13 +32,7 @@ const OrderPage = () => {
   const order = useSelector((state) => state.order);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  console.log("oder", order);
-  console.log("user", user);
-  console.log("orderItem", order?.orderItems);
-  const arrPrice = [];
-  const [countNotName, setCountNotName] = useState(0);
   const [currentDelivery, setCurrentDelivery] = useState(0);
-  const [temporaryPrice, setTemporaryPrice] = useState(0);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
   const [addressChange, setAddressChange] = useState("");
   const [cityChange, setCityChange] = useState("");
@@ -127,12 +122,21 @@ const OrderPage = () => {
     "đắk nông",
   ];
 
+  const getAllDiscounts = async () => {
+    const res = await DiscountService.getAllDiscount();
+    return res;
+  };
+  const queryDiscount = useQuery({
+    queryKey: ["discounts"],
+    queryFn: getAllDiscounts,
+  });
+  const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
+
   useEffect(() => {
     setAddressChange(user?.address);
     setCityChange(user?.city);
   }, [user]);
 
-  console.log("buyByMic", buyByMic);
   useEffect(() => {
     if (checkNumber !== "") {
       setNumCheckList(checkNumber);
@@ -244,7 +248,6 @@ const OrderPage = () => {
   useEffect(() => {
     form.setFieldsValue(stateUserDetails);
   }, [form, stateUserDetails]);
-  console.log("state", stateUserDetails);
 
   useEffect(() => {
     if (isOpenModalUpdateInfo) {
@@ -313,9 +316,6 @@ const OrderPage = () => {
   //     setTemporaryPrice(totalPrice())
   // },[arrPrice])
 
-  console.log("ArrPrice", arrPrice);
-  console.log("price", temporaryPrice);
-
   const priceMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
       return total + cur.price * cur.amount;
@@ -324,10 +324,21 @@ const OrderPage = () => {
   }, [order]);
   const priceMemoDiscount = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, cur) => {
-      return total + (cur.price * cur.amount * cur.discount) / 100;
+      if (discounts?.data?.find((item) => item?.product === cur?.product)) {
+        return (
+          total +
+          (cur.price *
+            cur.amount *
+            discounts?.data?.find((item) => item?.product === cur?.product)
+              ?.value) /
+            100
+        );
+      } else {
+        return total + (cur.price * cur.amount * cur.discount) / 100;
+      }
     }, 0);
     return result;
-  }, [order]);
+  }, [order, discounts]);
 
   const priceMemoDelivery = useMemo(() => {
     if (priceMemo > 100000 && priceMemo <= 500000) {
@@ -351,7 +362,6 @@ const OrderPage = () => {
   };
 
   const mutationUpdate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
@@ -401,8 +411,6 @@ const OrderPage = () => {
   const handleChangeAddress = () => {
     setIsOpenModalUpdateInfo(true);
   };
-
-  console.log("listcheck", listChecked);
 
   const itemsDelivery = [
     {

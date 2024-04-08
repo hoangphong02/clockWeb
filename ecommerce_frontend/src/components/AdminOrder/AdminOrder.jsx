@@ -1,24 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { WrapperAvatar, WrapperHeader } from "./style";
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
-  PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Modal,
-  Radio,
-  Select,
-  Space,
-} from "antd";
+import { Button, Form, Radio, Space } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { useMutationHook } from "../../hooks/useMutationHook";
@@ -64,7 +53,6 @@ const AdminOrder = () => {
   const [form] = Form.useForm();
 
   const mutationUpdate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { id, token, ...rests } = data;
     const res = OrderService.updateOrder(id, token, { ...rests });
     return res;
@@ -76,10 +64,7 @@ const AdminOrder = () => {
     return res;
   });
 
-  console.log("rowSe", rowSelected);
-
   const getItems = (rowSelected) => {
-    console.log("orderData", orders?.data);
     let orderItems = [];
     orders?.data?.forEach((order) => {
       if (order?._id === rowSelected) {
@@ -93,7 +78,6 @@ const AdminOrder = () => {
   };
 
   const handleCancelOrder = async (rowSelected) => {
-    console.log("getItem", getItems(rowSelected));
     mutationDeleted.mutate(
       {
         id: rowSelected,
@@ -109,27 +93,13 @@ const AdminOrder = () => {
     );
   };
 
-  // const mutationDeletedMany = useMutationHook(
-  //   (data) => {
-  //     const {
-  //       token, ...ids
-  //     } = data
-  //     const res = UserService.deleteManyUser(
-  //       ids,
-  //       token)
-  //     return res
-  //   },
-  // )
-
   const getAllOrder = async () => {
     const res = await OrderService.getAllOrder(user?.access_token);
     return res;
   };
-  console.log("Order", getAllOrder());
 
   const fetchGetDetailsOrder = async (rowSelected) => {
     const res = await OrderService.getDetailOrder(rowSelected);
-    console.log("resta", res.data);
     if (res?.data) {
       setStateOrdersDetails({
         _id: res?.data?._id,
@@ -152,7 +122,6 @@ const AdminOrder = () => {
     }
     setIsLoadingUpdate(false);
   };
-  console.log("stateOrderdetailse", stateOrdersDetails);
 
   useEffect(() => {
     if (!isModalOpen) {
@@ -196,7 +165,6 @@ const AdminOrder = () => {
 
   const { isLoading: isLoadingOrder, data: orders } = queryOrder;
 
-  console.log("orders", orders?.data);
   const renderAction = () => {
     return (
       <div>
@@ -292,33 +260,33 @@ const AdminOrder = () => {
   //columns and data truyền vào tablecomponent
   const columns = [
     {
-      title: "Id",
+      title: "Mã đơn hàng",
       dataIndex: "key",
       // render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.key.length - b.key.length,
       ...getColumnSearchProps("key"),
     },
     {
-      title: "User Name",
+      title: "Tên khách hàng",
       dataIndex: "userName",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.userName.length - b.userName.length,
       ...getColumnSearchProps("userName"),
     },
     {
-      title: "phone",
+      title: "Điện thoại",
       dataIndex: "phone",
       sorter: (a, b) => a.phone.length - b.phone.length,
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       sorter: (a, b) => a.address.length - b.address.length,
       ...getColumnSearchProps("address"),
     },
     {
-      title: "Confirm",
+      title: "Đã xác nhận",
       dataIndex: "isConfirm",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isConfirm"),
@@ -342,7 +310,7 @@ const AdminOrder = () => {
       },
     },
     {
-      title: "Received",
+      title: "Đã nhận hàng",
       dataIndex: "isReceived",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isReceived"),
@@ -366,7 +334,7 @@ const AdminOrder = () => {
       },
     },
     {
-      title: "Paid",
+      title: "Đã thanh toán",
       dataIndex: "isPaid",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isPaid"),
@@ -390,7 +358,7 @@ const AdminOrder = () => {
       },
     },
     {
-      title: "Delivered",
+      title: "Đã vận chuyển",
       dataIndex: "isDelivered",
       // sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
       // ...getColumnSearchProps("isDelivered"),
@@ -420,13 +388,13 @@ const AdminOrder = () => {
     //   ...getColumnSearchProps("paymentMethod"),
     // },
     {
-      title: "Total price",
+      title: "Giá",
       dataIndex: "totalPrice",
       sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
       ...getColumnSearchProps("totalPrice"),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderAction,
     },
@@ -689,7 +657,7 @@ const AdminOrder = () => {
             autoComplete="on"
           >
             <Form.Item
-              label="Id"
+              label="Mã đơn hàng"
               name="_id"
               rules={[
                 {
@@ -702,7 +670,7 @@ const AdminOrder = () => {
               <span>{stateOrdersDetails._id}</span>
             </Form.Item>
             <Form.Item
-              label="Name"
+              label="Tên khách hàng"
               name="name"
               rules={[
                 {
@@ -716,7 +684,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
@@ -730,7 +698,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Phone"
+              label="Điện thoại"
               name="phone"
               rules={[
                 {
@@ -743,7 +711,7 @@ const AdminOrder = () => {
               <span>{stateOrdersDetails.phone}</span>
             </Form.Item>
 
-            <Form.Item label="Products">
+            <Form.Item label="Sản phẩm">
               {stateOrdersDetails?.orderItems.map((order) => {
                 return (
                   <div>
@@ -773,7 +741,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="TotalPrice"
+              label="Giá"
               name="totalPrice"
               rules={[
                 {
@@ -787,7 +755,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Confirm"
+              label="Xác nhận"
               name="isConfirm"
               rules={[
                 {
@@ -812,7 +780,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Paid"
+              label="Thanh toán"
               name="isPaid"
               rules={[
                 {
@@ -836,7 +804,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="IsDelivered"
+              label="Vận chuyển"
               name="isDelivered"
               rules={[
                 {
@@ -855,7 +823,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="Received"
+              label="Nhận hàng"
               name="isReceived"
               rules={[
                 {
@@ -874,7 +842,7 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item
-              label="PaymentMethod"
+              label="Phương thức thanh toán"
               name="paymentMethod"
               rules={[
                 {
@@ -887,7 +855,7 @@ const AdminOrder = () => {
               <span>{stateOrdersDetails.paymentMethod}</span>
             </Form.Item>
             <Form.Item
-              label="Created At"
+              label="Ngày tạo"
               name="createdAt"
               rules={[
                 {

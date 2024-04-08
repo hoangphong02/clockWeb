@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ButtonAddUser, WrapperAvatar, WrapperHeader } from "./style";
+import { ButtonAddUser, WrapperAvatar } from "./style";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -9,7 +9,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Checkbox, Form, Input, Modal, Select, Space } from "antd";
+import { Button, Form, Select, Space, Badge } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64, renderOptions } from "../../utils";
@@ -52,7 +52,6 @@ const AdminProduct = () => {
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
 
   const [form] = Form.useForm();
-  console.log("dateStart , dateEnd", valueDiscount, dateStart, dateEnd);
 
   const mutation = useMutationHook((data) => {
     const {
@@ -88,6 +87,11 @@ const AdminProduct = () => {
     const res = ProductService.updateProduct(id, token, { ...rests });
     return res;
   });
+  const mutationUpdateDiscount = useMutationHook((data) => {
+    const { id, token, ...rests } = data;
+    const res = DiscountService.updateDiscount(id, token, { ...rests });
+    return res;
+  });
 
   const mutationDeleted = useMutationHook((data) => {
     const { id, token } = data;
@@ -101,6 +105,11 @@ const AdminProduct = () => {
     return res;
   });
 
+  const mutationDeleteDiscount = useMutationHook((data) => {
+    const { ...ids } = data;
+    const res = DiscountService.deleteManyDiscount(ids);
+    return res;
+  });
 
   const getAllProducts = async () => {
     const res = await ProductService.getAllProduct("", 1000);
@@ -162,6 +171,16 @@ const AdminProduct = () => {
       }
     );
   };
+  const autoDeleteManyDiscount = (ids) => {
+    mutationDeleteDiscount.mutate(
+      { ids: ids },
+      {
+        onSettled: () => {
+          queryDiscount.refetch();
+        },
+      }
+    );
+  };
 
   const { data, isLoading, isSuccess, isError } = mutation;
   const {
@@ -170,18 +189,19 @@ const AdminProduct = () => {
     isSuccess: isSuccessCreateDiscount,
     isError: isErrorCreateDiscount,
   } = mutationCreateDiscount;
-  useEffect(() => {
-    if (isSuccessCreateDiscount) {
-      message.success("Tạo giảm giá thành công");
-      handleCancelDiscount();
-    }
-  }, [isSuccessCreateDiscount]);
+
   const {
     data: dataUpdated,
     isLoading: isLoadingUpdated,
     isSuccess: isSuccessUpdated,
     isError: isErrorUpdated,
   } = mutationUpdate;
+  const {
+    data: dataUpdateDiscount,
+    isLoading: isLoadingUpdateDiscount,
+    isSuccess: isSuccessUpdateDiscount,
+    isError: isErrorUpdateDiscount,
+  } = mutationUpdateDiscount;
   const {
     data: dataDeleted,
     isLoading: isLoadingDeleted,
@@ -211,8 +231,24 @@ const AdminProduct = () => {
   });
 
   const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
-  console.log("discounts", discounts);
-  const renderAction = () => {
+
+  useEffect(() => {
+    let arrDiscount = [];
+    const currentDate = new Date();
+    if (discounts?.data?.length) {
+      discounts?.data?.forEach((item) => {
+        const endDiscountDate = new Date(item.endDiscount);
+        if (currentDate > endDiscountDate) {
+          arrDiscount.push(item._id);
+        }
+      });
+    }
+    if (arrDiscount?.length) {
+      autoDeleteManyDiscount(arrDiscount);
+    }
+  }, [discounts?.data]);
+
+  const renderAction = (id) => {
     return (
       <div>
         <DeleteOutlined
@@ -223,10 +259,22 @@ const AdminProduct = () => {
           style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
           onClick={handleDetailsProduct}
         />
-        <TagOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
-          onClick={() => setIsOpenModalDiscount(true)}
-        />
+        {discounts?.data?.length &&
+        discounts?.data?.find((item) => item?.product === id) ? (
+          <Badge
+            count={discounts?.data?.find((item) => item?.product === id)?.value}
+          >
+            <TagOutlined
+              style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+              onClick={() => setIsOpenModalDiscount(true)}
+            />
+          </Badge>
+        ) : (
+          <TagOutlined
+            style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+            onClick={() => setIsOpenModalDiscount(true)}
+          />
+        )}
       </div>
     );
   };
@@ -311,13 +359,13 @@ const AdminProduct = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
-      title: "image",
+      title: "Hình ảnh",
       dataIndex: "image",
       render: (text, record) => (
         <img
@@ -328,7 +376,7 @@ const AdminProduct = () => {
       ),
     },
     {
-      title: "Price",
+      title: "Giá",
       dataIndex: "price",
       sorter: (a, b) => a.price - b.price,
       filters: [
@@ -349,7 +397,7 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Rating",
+      title: "Sao",
       dataIndex: "rating",
       sorter: (a, b) => a.rating - b.rating,
       filters: [
@@ -370,15 +418,15 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Type",
+      title: "Loại",
       dataIndex: "type",
       sorter: (a, b) => a.type.length - b.type.length,
       ...getColumnSearchProps("type"),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
-      render: renderAction,
+      render: (text, record) => renderAction(record?._id),
     },
   ];
   const dataTable =
@@ -494,14 +542,66 @@ const AdminProduct = () => {
     });
   };
   const onFinishDiscount = () => {
-    mutationCreateDiscount.mutate({
-      token: user?.access_token,
-      product: rowSelected,
-      value: valueDiscount,
-      startDiscount: dateStart,
-      endDiscount: dateEnd,
-    });
+    if (discounts?.data?.find((pro) => pro?.product === rowSelected)) {
+      if (valueDiscount <= 0) {
+        message.error("Phần trăm phải lớn hơn 0");
+      } else {
+        mutationUpdateDiscount.mutate(
+          {
+            id: discounts?.data?.find((pro) => pro?.product === rowSelected)
+              ?._id,
+            token: user?.access_token,
+            value: valueDiscount,
+            startDiscount: dateStart,
+            endDiscount: dateEnd,
+          },
+          {
+            onSettled: () => {
+              queryDiscount.refetch();
+            },
+          }
+        );
+      }
+    } else {
+      mutationCreateDiscount.mutate(
+        {
+          token: user?.access_token,
+          product: rowSelected,
+          value: valueDiscount,
+          startDiscount: dateStart,
+          endDiscount: dateEnd,
+        },
+        {
+          onSettled: () => {
+            queryDiscount.refetch();
+          },
+        }
+      );
+    }
   };
+  useEffect(() => {
+    if (isSuccessUpdateDiscount) {
+      message.success("Cập nhật giảm giá thành công");
+      handleCancelDiscount();
+    }
+  }, [isSuccessUpdateDiscount]);
+  useEffect(() => {
+    if (isSuccessCreateDiscount) {
+      message.success("Tạo giảm giá thành công");
+      handleCancelDiscount();
+    }
+  }, [isSuccessCreateDiscount]);
+  useEffect(() => {
+    if (isErrorCreateDiscount) {
+      message.error("Tạo giảm giá thất bại");
+    }
+  }, [isErrorCreateDiscount]);
+
+  useEffect(() => {
+    if (isErrorUpdateDiscount) {
+      message.error("Cập nhật thất bại");
+    }
+  }, [isErrorUpdateDiscount]);
 
   const handleOnchange = (e) => {
     setStateProduct({
@@ -627,7 +727,7 @@ const AdminProduct = () => {
             form={form}
           >
             <Form.Item
-              label="Name"
+              label="Tên sản phẩm"
               name="name"
               rules={[{ required: true, message: "Please input your name!" }]}
             >
@@ -639,7 +739,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Type"
+              label="Loại sản phẩm"
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
@@ -666,7 +766,7 @@ const AdminProduct = () => {
               </Form.Item>
             )}
             <Form.Item
-              label="Count inStock"
+              label="Số lượng "
               name="countInStock"
               rules={[
                 { required: true, message: "Please input your count inStock!" },
@@ -679,7 +779,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Price"
+              label="Giá"
               name="price"
               rules={[
                 { required: true, message: "Please input your count price!" },
@@ -692,7 +792,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Description"
+              label="Mô tả"
               name="description"
               rules={[
                 {
@@ -708,7 +808,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Rating"
+              label="Sao"
               name="rating"
               rules={[
                 { required: true, message: "Please input your count rating!" },
@@ -721,7 +821,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Discount"
+              label="Giảm giá"
               name="discount"
               rules={[
                 {
@@ -737,7 +837,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Image"
+              label="Hình ảnh"
               name="image"
               rules={[
                 { required: true, message: "Please input your count image!" },
@@ -777,14 +877,14 @@ const AdminProduct = () => {
         <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
           <Form
             name="basic"
-            labelCol={{ span: 2 }}
-            wrapperCol={{ span: 22 }}
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 21 }}
             onFinish={onUpdateProduct}
             autoComplete="on"
             form={form}
           >
             <Form.Item
-              label="Name"
+              label="Tên sản phẩm"
               name="name"
               rules={[{ required: true, message: "Please input your name!" }]}
             >
@@ -796,7 +896,7 @@ const AdminProduct = () => {
             </Form.Item>
 
             <Form.Item
-              label="Type"
+              label="Loại sản phẩm"
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
@@ -807,7 +907,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Count inStock"
+              label="Số lượng trong kho"
               name="countInStock"
               rules={[
                 { required: true, message: "Please input your count inStock!" },
@@ -820,7 +920,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Price"
+              label="Giá"
               name="price"
               rules={[
                 { required: true, message: "Please input your count price!" },
@@ -833,7 +933,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Description"
+              label="Mô tả"
               name="description"
               rules={[
                 {
@@ -849,7 +949,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Rating"
+              label="Sao đánh giá"
               name="rating"
               rules={[
                 { required: true, message: "Please input your count rating!" },
@@ -862,7 +962,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Discount"
+              label="Giảm giá"
               name="discount"
               rules={[
                 {
@@ -878,7 +978,7 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Image"
+              label="Hình ảnh"
               name="image"
               rules={[
                 { required: true, message: "Please input your count image!" },

@@ -3,7 +3,6 @@ import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
 
 const CustomShapeBarchart = (props) => {
   const { data } = props;
-  console.log("Dtaa", data);
   const colors = ["#d5d5d5", "#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
 
   const getPath = (x, y, width, height) => {

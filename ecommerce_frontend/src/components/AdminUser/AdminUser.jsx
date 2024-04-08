@@ -8,20 +8,10 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Modal,
-  Popover,
-  Radio,
-  Select,
-  Space,
-} from "antd";
+import { Button, Form, Radio, Space } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
-import { getBase64, renderOptions } from "../../utils";
+import { getBase64 } from "../../utils";
 import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../components/Loading/Loading";
@@ -54,7 +44,6 @@ const AdminUser = () => {
   const [form] = Form.useForm();
 
   const mutationUpdate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { id, token, ...rests } = data;
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
@@ -144,7 +133,6 @@ const AdminUser = () => {
   const queryUser = useQuery({ queryKey: ["users"], queryFn: getAllUsers });
 
   const { isLoading: isLoadingUser, data: users } = queryUser;
-  console.log("user", users);
   const renderAction = () => {
     return (
       <div>
@@ -240,7 +228,7 @@ const AdminUser = () => {
   //columns and data truyền vào tablecomponent
   const columns = [
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.name.length - b.name.length,
@@ -253,19 +241,19 @@ const AdminUser = () => {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("address"),
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
       sorter: (a, b) => a.name - b.name,
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "IsAdmin",
+      title: "Admin",
       dataIndex: "isAdmin",
       filters: [
         {
@@ -279,14 +267,13 @@ const AdminUser = () => {
       ],
       onFilter: (value, record) => {
         if (value === true) {
-          console.log("record", record);
           return record.isAdmin.type.render.name === "CheckCircleOutlined";
         }
         return record.isAdmin.type.render.name === "CloseCircleOutlined";
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderAction,
     },
@@ -294,7 +281,6 @@ const AdminUser = () => {
   const dataTable =
     users?.data?.length &&
     users?.data?.reverse().map((user) => {
-      console.log("user", user);
       return {
         ...user,
         key: user._id,

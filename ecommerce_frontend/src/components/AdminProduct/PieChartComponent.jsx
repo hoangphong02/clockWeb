@@ -3,9 +3,7 @@ import { PieChart, Pie, Sector,Tooltip, Cell, ResponsiveContainer } from 'rechar
 import { converDataChart } from '../../utils';
 
 const PieChartComponent = (props) => {
-  console.log("props",props?.data)
 const data = converDataChart(props?.data,"type")
-console.log("data2",data)
 
 const COLORS = [ '#0088FE', '#00C49F', '#FFBB28', '#FF8042','#ff3333', '#47d147'];
 const RADIAN = Math.PI / 180;

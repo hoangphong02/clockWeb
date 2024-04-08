@@ -249,26 +249,26 @@ const AdminContact = () => {
   //columns and data truyền vào tablecomponent
   const columns = [
     {
-      title: "Name",
+      title: "Tên ",
       dataIndex: "name",
       render: (text) => <a>{text}</a>,
       sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
-      title: "phone",
+      title: "Điện thoại",
       dataIndex: "phone",
       sorter: (a, b) => a.phone.length - b.phone.length,
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Message",
+      title: "Nội dung",
       dataIndex: "message",
       sorter: (a, b) => a.message.length - b.message.length,
       ...getColumnSearchProps("message"),
     },
     {
-      title: "isExplain",
+      title: "Đã giải quyết",
       dataIndex: "isExplain",
       // sorter: (a, b) => a.isExplain - b.isExplain,
       // ...getColumnSearchProps("isExplain"),
@@ -292,7 +292,7 @@ const AdminContact = () => {
       },
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderAction,
     },
@@ -424,7 +424,7 @@ const AdminContact = () => {
             autoComplete="on"
           >
             <Form.Item
-              label="Id"
+              label="Mã liên hệ"
               name="_id"
               rules={[
                 {
@@ -437,7 +437,7 @@ const AdminContact = () => {
               <span>{stateContactsDetails._id}</span>
             </Form.Item>
             <Form.Item
-              label="Name"
+              label="Tên người gửi"
               name="name"
               rules={[
                 {
@@ -465,7 +465,7 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Phone"
+              label="Điện thoại"
               name="phone"
               rules={[
                 {
@@ -479,7 +479,7 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Message"
+              label="Nội dung"
               name="message"
               rules={[
                 {
@@ -493,7 +493,7 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Explain"
+              label="Giải quyết"
               name="isExplain"
               rules={[
                 {
@@ -514,7 +514,7 @@ const AdminContact = () => {
             </Form.Item>
 
             <Form.Item
-              label="Created At"
+              label="Ngày gửi"
               name="createdAt"
               rules={[
                 {

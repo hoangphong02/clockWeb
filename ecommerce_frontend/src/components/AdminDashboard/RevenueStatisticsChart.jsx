@@ -12,7 +12,6 @@ import {
 
 const RevenueStatisticsChart = (props) => {
   const { data } = props;
-  console.log("data", data);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {

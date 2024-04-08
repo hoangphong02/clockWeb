@@ -1,5 +1,3 @@
-// import { Card } from 'antd'
-// import Meta from 'antd/es/card/Meta'
 import React from "react";
 import {
   StyleNameProduct,
@@ -13,24 +11,26 @@ import {
 import { StarFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router";
 import imagebg from "../../assets/images/culture_price.png";
+import * as DiscountService from "../../services/DiscountService";
+import { useQuery } from "@tanstack/react-query";
+
 const CartSliderComponent = (props) => {
-  const {
-    countInStock,
-    description,
-    image,
-    name,
-    price,
-    rating,
-    type,
-    discount,
-    selled,
-    id,
-  } = props;
+  const { countInStock, image, name, price, rating, discount, selled, id } =
+    props;
   const navigate = useNavigate();
   const handleDetailsProduct = (id) => {
     navigate(`/product-detail/${id}`);
   };
 
+  const getAllDiscounts = async () => {
+    const res = await DiscountService.getAllDiscount();
+    return res;
+  };
+  const queryDiscount = useQuery({
+    queryKey: ["discounts"],
+    queryFn: getAllDiscounts,
+  });
+  const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
   return (
     <WrapperStyleCard
       hoverable
@@ -78,7 +78,14 @@ const CartSliderComponent = (props) => {
         <span style={{ marginRight: "8px" }}>
           {price.toLocaleString()} vnd{" "}
         </span>
-        <WrapperDiscountText> - {discount}%</WrapperDiscountText>
+        <WrapperDiscountText>
+          -{" "}
+          {discounts?.data?.length &&
+          discounts?.data?.find((item) => item?.product === id)?.value
+            ? discounts?.data?.find((item) => item?.product === id)?.value
+            : discount}
+          %
+        </WrapperDiscountText>
       </WrapperPriceText>
     </WrapperStyleCard>
   );

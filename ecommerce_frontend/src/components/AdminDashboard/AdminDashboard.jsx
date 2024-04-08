@@ -92,7 +92,6 @@ const AdminDashboard = () => {
     }
   }, 0);
 
-  console.log("orders", orders);
   const monthlyOrders = {};
   Array.isArray(orders?.data) &&
     orders?.data?.forEach((order) => {
@@ -106,7 +105,6 @@ const AdminDashboard = () => {
       }
     });
   const data = Object.values(monthlyOrders);
-  console.log("data", data);
   const monthMap = {
     thang1: "Jan",
     thang2: "Feb",

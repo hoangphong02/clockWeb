@@ -9,7 +9,16 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Checkbox, Form, Input, Modal, Select, Space, Upload } from "antd";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Space,
+  Upload,
+} from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64, renderOptions } from "../../utils";
@@ -259,18 +268,18 @@ const AdminPost = () => {
 
   const columns = [
     {
-      title: "Title",
+      title: "Tiêu đề",
       dataIndex: "title",
     },
 
     {
-      title: "Content",
+      title: "Nội dung",
       dataIndex: "content",
       sorter: (a, b) => a.content.length - b.content.length,
       ...getColumnSearchProps("content"),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderAction,
     },
@@ -386,7 +395,7 @@ const AdminPost = () => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
-      images.push({urlImage: file.preview});
+      images.push({ urlImage: file.preview });
     }
     setImageUpload(images);
   };
@@ -397,7 +406,7 @@ const AdminPost = () => {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
-      images.push({urlImage: file.preview});
+      images.push({ urlImage: file.preview });
     }
     setImageUploadDetail(images);
   };
@@ -523,8 +532,7 @@ const AdminPost = () => {
                 justifyContent: "center",
                 gap: "20px",
               }}
-            >
-            </div>
+            ></div>
 
             <div style={{ padding: "0 50px" }}>
               <p>Thêm hình ảnh</p>
@@ -591,7 +599,7 @@ const AdminPost = () => {
             form={form}
           >
             <Form.Item
-              label="Id"
+              label="Mã bài đăng"
               name="_id"
               rules={[{ required: true, message: "Please input your name!" }]}
             >
@@ -600,7 +608,7 @@ const AdminPost = () => {
             </Form.Item>
 
             <Form.Item
-              label="Title"
+              label="Tiêu đề"
               name="title"
               rules={[{ required: true, message: "Please input your title!" }]}
             >
@@ -611,7 +619,7 @@ const AdminPost = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Content"
+              label="Nội dung"
               name="content"
               rules={[
                 { required: true, message: "Please input your content!" },
@@ -665,7 +673,7 @@ const AdminPost = () => {
             </div>
 
             <div style={{ padding: "0" }}>
-               <p>Thêm hình ảnh</p>
+              <p>Thêm hình ảnh</p>
               <Upload
                 action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                 listType="picture"
@@ -675,7 +683,6 @@ const AdminPost = () => {
               >
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </Upload>
-
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>

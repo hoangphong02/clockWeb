@@ -1,11 +1,7 @@
-import { CloudFilled, DownOutlined } from '@ant-design/icons';
-import { Divider, Dropdown, Radio, Space, Table } from 'antd';
 import React, { useMemo, useState } from 'react'
 import Loading from '../Loading/Loading';
 import { Excel } from "antd-table-saveas-excel";
 import { WrapperButtonExportExcel, WrapperTable } from './style';
-
-
 
 const TableComponent = (props) => {
    const { selectionType = 'checkbox', data:dataSource =[], isLoading= false , columns=[],handleDeleteMany} = props
@@ -16,7 +12,6 @@ const TableComponent = (props) => {
         const arr = columns?.filter((col)=> col.dataIndex !== 'action')
         return arr
    },)
-   console.log("newCollumnExportExcel",newColumnsExportExcel)
  
   // rowSelection object indicates the need for row selection
   const rowSelection = {

@@ -244,7 +244,7 @@ const AdminSlider = () => {
 
   const columns = [
     {
-      title: "image",
+      title: "Hình ảnh",
       dataIndex: "image",
       render: (text, record) => (
         <img
@@ -256,13 +256,13 @@ const AdminSlider = () => {
     },
 
     {
-      title: "Type",
+      title: "Loại",
       dataIndex: "type",
       sorter: (a, b) => a.type.length - b.type.length,
       ...getColumnSearchProps("type"),
     },
     {
-      title: "Action",
+      title: "Hành động",
       dataIndex: "action",
       render: renderAction,
     },
@@ -548,7 +548,7 @@ const AdminSlider = () => {
             form={form}
           >
             <Form.Item
-              label="Id"
+              label="Mã hình ảnh"
               name="_id"
               rules={[{ required: true, message: "Please input your name!" }]}
             >
@@ -560,7 +560,7 @@ const AdminSlider = () => {
             </Form.Item>
 
             <Form.Item
-              label="Type"
+              label="Loại hình ảnh"
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
@@ -571,7 +571,7 @@ const AdminSlider = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Image"
+              label="Hình ảnh"
               name="image"
               rules={[
                 { required: true, message: "Please input your count image!" },
