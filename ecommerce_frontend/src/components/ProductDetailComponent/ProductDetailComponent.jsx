@@ -142,7 +142,6 @@ const ProductDetailComponent = ({
       });
     }
   }, [isOpenModalUpdateInfo]);
-  console.log("valueAddress", valueAddress);
 
   useEffect(() => {
     if (changeAddress) {
@@ -181,7 +180,6 @@ const ProductDetailComponent = ({
       setAddressChange(voiceValueAddress);
     }
   }, [voiceValueAddress]);
-  console.log("addressChaneg", addressChange);
 
   useEffect(() => {
     setAddressChange(user?.address);

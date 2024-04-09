@@ -4,7 +4,6 @@ const JwtService = require("../services/JwtService");
 const createSlider = async (req, res) => {
   try {
     const { image, type } = req.body;
-    console.log("Req body", req.body);
 
     if (!image || !type) {
       return res.status(200).json({

@@ -204,7 +204,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     msg.rate = 0.6;
     msg.pitch = 1;
     window.speechSynthesis.speak(msg);
-    console.log("msg", msg.text);
   };
 
   const helpNavigateByVoice = async (voidValue) => {

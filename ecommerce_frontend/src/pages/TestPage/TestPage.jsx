@@ -14,7 +14,6 @@ const TestPage = () => {
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>;
   }
-  console.log("transcript", transcript);
   return (
     <div>
       <p>Microphone: {listening ? "on" : "off"}</p>

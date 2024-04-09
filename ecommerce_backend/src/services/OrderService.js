@@ -85,7 +85,7 @@ const createOrder = (newOrder) => {
           email,
         });
         if (createOrder) {
-          await EmailService.sendEmailCreateOrder(orderItems, email);
+          await EmailService.sendEmailCreateOrder(orderItems, email,totalPrice);
           resolve({
             status: "OK",
             message: "success",
@@ -183,7 +183,6 @@ const cancelOrder = (id, data) => {
 
       const results = await Promise.all(promises);
       const newData = results && results[0] && results[0].id;
-      console.log("newDtâ", newData);
       if (newData) {
         resolve({
           status: "ERR",

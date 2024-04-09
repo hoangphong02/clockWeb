@@ -67,9 +67,6 @@ const TrendingProductPage = () => {
 
     const customToday = moment('04/02', 'DD/MM');
     
-
-    console.log("today",formattedToday, startDateTimeNoel, endDateTimeNoel)
-
     useEffect(()=>{
          if (today.isBetween(startDateTimeTrungthu, endDateTimeTrungthu, null, '[]')) {
     setTypeProduct("trung thu");
@@ -87,7 +84,6 @@ const TrendingProductPage = () => {
     setTypeProduct("tình nhân");
         }
     },[today])
-    console.log("type",typeProduct)
 
       const fetchAllProductType = async(type,page,limit)=>{
         // setLoading(true);
@@ -95,7 +91,6 @@ const TrendingProductPage = () => {
         if(res?.status === 'OK'){
             // setLoading(false);
             setProducts(res?.data)
-            console.log("res",res)
             setPanigate({...panigate,total: res?.totalPage})
         }
         else{
@@ -106,7 +101,6 @@ const TrendingProductPage = () => {
     fetchAllProductType(typeProduct,panigate.page,panigate.limit)
     },[typeProduct, panigate.page,panigate.limit])
 
-    console.log("productTrend",products)
     // const getImageSlider = ()=>{
     //      const foundImage = typeProductContant.find((type) => type.type === typeProduct);
     //      if(foundImage){
@@ -142,15 +136,12 @@ const TrendingProductPage = () => {
         }
    }
 
-   console.log("slider",slider)
     useEffect(()=>{
         getSlider(typeProduct)
         returnTextCongratulation()
     },[typeProduct])
 
-    console.log("foundImage",imageSlider)
     const onChange =(current, pageSize)=>{
-    console.log({current,pageSize})
     setPanigate({...panigate, page: current -1})
    }
 

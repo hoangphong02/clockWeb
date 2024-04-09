@@ -25,10 +25,7 @@ const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const location = useLocation();
-  console.log("location", location);
   const { state } = useLocation();
-  console.log("state", state);
-  console.log("user", user);
   const navigate = useNavigate();
 
   const fetchMyDetailsOrder = async () => {
@@ -42,7 +39,6 @@ const MyOrderPage = () => {
   });
   const { isLoading, data } = queryOrder;
 
-  console.log("dataDetails", data);
   const priceMemo = useMemo(() => {
     const result = data?.orderItems?.reduce((total, cur) => {
       return total + cur.price * cur.amount;

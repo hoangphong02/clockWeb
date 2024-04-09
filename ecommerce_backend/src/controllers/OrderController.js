@@ -76,7 +76,6 @@ const cancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
     const data = req.body;
-    console.log("orderId", orderId, data);
     if (!orderId) {
       return res.status(200).json({
         status: "ERR",

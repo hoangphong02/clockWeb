@@ -1,7 +1,6 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
 export const createContact = async (data, access_token) => {
-  console.log("acccess", { data });
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL}/contact/create`,
     data,

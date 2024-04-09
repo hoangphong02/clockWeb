@@ -301,9 +301,7 @@ const AdminOrder = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log("record", record);
         if (value === true) {
-          console.log("record", record);
           return record.isConfirm.type.render.name === "CheckCircleOutlined";
         }
         return record.isConfirm.type.render.name === "CloseCircleOutlined";
@@ -325,9 +323,7 @@ const AdminOrder = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log("record", record);
         if (value === true) {
-          console.log("record", record);
           return record.isReceived.type.render.name === "CheckCircleOutlined";
         }
         return record.isReceived.type.render.name === "CloseCircleOutlined";
@@ -349,9 +345,7 @@ const AdminOrder = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log("record", record);
         if (value === true) {
-          console.log("record", record);
           return record.isPaid.type.render.name === "CheckCircleOutlined";
         }
         return record.isPaid.type.render.name === "CloseCircleOutlined";
@@ -373,9 +367,7 @@ const AdminOrder = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log("record", record);
         if (value === true) {
-          console.log("record", record);
           return record.isDelivered.type.render.name === "CheckCircleOutlined";
         }
         return record.isDelivered.type.render.name === "CloseCircleOutlined";
@@ -501,7 +493,6 @@ const AdminOrder = () => {
         [e.target.name]: e.target.value,
       });
     }
-    console.log("stateOr", stateOrdersDetails);
   };
   const handleOnchangeIsConfirmDetails = (e) => {
     if (stateOrdersDetails?.isReceived === true) {

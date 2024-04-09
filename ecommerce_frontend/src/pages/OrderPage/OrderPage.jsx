@@ -239,7 +239,6 @@ const OrderPage = () => {
       setListChecked([]);
     }
   }, [isCancelCheck]);
-  console.log("ListCheck", listChecked);
 
   useEffect(() => {
     dispatch(orderSelected({ listChecked }));

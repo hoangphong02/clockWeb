@@ -29,7 +29,6 @@ const AdminSlider = () => {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const user = useSelector((state) => state?.user);
-  console.log("user", user);
   const searchInput = useRef(null);
   const [stateProduct, setStateProduct] = useState({
     image: "",
@@ -44,7 +43,6 @@ const AdminSlider = () => {
   });
 
   const [form] = Form.useForm();
-  console.log("stateProduct", stateProduct);
 
   const mutation = useMutationHook((data) => {
     const { token, ...rests } = data;
@@ -148,7 +146,6 @@ const AdminSlider = () => {
   });
 
   const { isLoading: isLoadingProducts, data: sliders } = querySlider;
-  console.log("sliders", sliders);
   const renderAction = () => {
     return (
       <div>
@@ -412,7 +409,6 @@ const AdminSlider = () => {
     );
   };
 
-  console.log("stateSliderDetails", stateProductDetails);
 
   const handleChangeSelect = (value) => {
     setStateProduct({

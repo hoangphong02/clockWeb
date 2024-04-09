@@ -60,7 +60,6 @@ const ForgetPasswordPage = () => {
       setIsModalOpen(true)
     
   }
-  console.log("otpSent",otpSent)
   const checkOTP = ()=>{
     const data = [valueInput1,valueInput2,valueInput3,valueInput4,valueInput5,valueInput6]
     let value = data.join("")

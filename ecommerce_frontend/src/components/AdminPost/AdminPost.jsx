@@ -42,7 +42,6 @@ const AdminPost = () => {
   const [imageUpload, setImageUpload] = useState([]);
   const [imageUploadDetail, setImageUploadDetail] = useState([]);
   const user = useSelector((state) => state?.user);
-  console.log("user", user);
   const searchInput = useRef(null);
   const [statePost, setStatePost] = useState({
     title: "",
@@ -77,7 +76,6 @@ const AdminPost = () => {
   }, [statePostDetails, imageUploadDetail]);
 
   const [form] = Form.useForm();
-  console.log("statePost", statePost);
 
   const mutation = useMutationHook((data) => {
     const { token, ...rests } = data;
@@ -171,8 +169,6 @@ const AdminPost = () => {
   const queryPost = useQuery({ queryKey: ["posts"], queryFn: getAllPost });
 
   const { isLoading: isLoadingProducts, data: posts } = queryPost;
-  console.log("posts", posts);
-  console.log("stadetail", statePostDetails);
   const renderAction = () => {
     return (
       <div>
@@ -389,7 +385,6 @@ const AdminPost = () => {
   };
 
   const handleOnchangeAvatar = async ({ fileList }) => {
-    console.log("fileList", fileList);
     const images = [];
     for (const file of fileList) {
       if (!file.url && !file.preview) {
@@ -421,7 +416,6 @@ const AdminPost = () => {
     );
   };
 
-  console.log("statePostDetailsUpdate", statePostDetailsUpdate);
 
   // const handleChangeSelect = (value) => {
   //     setStatePost({
@@ -441,8 +435,6 @@ const AdminPost = () => {
     ]);
     statePostDetails.imageUL = "";
   };
-  console.log("State", statePostDetails);
-  console.log("imageUpload", imageUpload);
   const handleDeleteImageUpload = (url) => {
     let ArrImage = [];
     ArrImage = imageUpload.filter((image) => image?.urlImage !== url);
@@ -454,7 +446,6 @@ const AdminPost = () => {
     ArrImage = imageUploadDetail.filter((image) => image?.urlImage !== url);
     setImageUploadDetail(ArrImage);
   };
-  console.log("imageULDT", statePost.imageUL);
 
   return (
     <div>

@@ -36,14 +36,7 @@ const ProductDetailPage = () => {
   const followProduct = location.state?.follow || false;
   const unFollowProduct = location.state?.unFollow || false;
 
-  console.log("numberIncrease", numberIncreaseFromState);
-
-  console.log("product", product);
-  console.log("params", id);
-
-  console.log("addCartHeader", addCartHeader);
   const mutationAddEvaluate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { token, ...rests } = data;
     const res = EvaluateService.createEvaluate({ ...rests }, token);
     return res;
@@ -55,9 +48,6 @@ const ProductDetailPage = () => {
     isSuccess: isSuccsess,
     isError: isError,
   } = mutationAddEvaluate;
-  console.log("description", description);
-
-  console.log("user", user);
 
   const fetchMyEvaluate = async () => {
     const res = await EvaluateService.getEvaluateByProductId(
@@ -73,7 +63,6 @@ const ProductDetailPage = () => {
   });
   const { isLoading, data } = queryEvaluate;
 
-  console.log("dataComm", data);
   useEffect(() => {
     if (isSuccsess && dataAdd?.status === "OK") {
       message.success("Bình luận thành công");
@@ -152,8 +141,6 @@ const ProductDetailPage = () => {
   useEffect(() => {
     setNumberDecrease(numberDecreaseFromState);
   }, [numberDecreaseFromState]);
-
-  console.log("valuerATIN", valueRating);
 
   const setRatingToDetail = () => {
     let newData = [];

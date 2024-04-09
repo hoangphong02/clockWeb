@@ -56,7 +56,6 @@ const ContactPage = () => {
       });
     }
   };
-  console.log("dataS", data);
 
   useEffect(() => {
     if (isSuccsess && data?.status === "OK") {

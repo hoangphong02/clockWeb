@@ -14,7 +14,6 @@ export const productSlice = createSlice({
     },
 
     addFollowerProduct: (state, action) => {
-      console.log({ state, action });
       const { follower } = action.payload;
       const haveFollower = state?.followers?.find(
         (item) => item?.user === follower?.user

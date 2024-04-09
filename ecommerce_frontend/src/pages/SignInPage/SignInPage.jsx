@@ -27,9 +27,7 @@ const SignInPage = () => {
   const mutation = useMutationHook(
     (data) => UserService.loginUser(data)
   )
-  console.log("data",mutation.data)
   const {data, isLoading, isSuccess} = mutation
-console.log("locationlogin",location)
 
   useEffect(()=>{
     if(isSuccess && mutation.data.status==="OK" ){

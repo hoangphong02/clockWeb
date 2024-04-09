@@ -26,7 +26,6 @@ const OrderSuccessPage =()=> {
      
     const navigate = useNavigate()
     const location  = useLocation()
-    console.log("location",location)
     const [stateUserDetails, setStateUserDetails] =useState({
         name: '',
     phone: '',
@@ -51,7 +50,6 @@ const OrderSuccessPage =()=> {
     useEffect(() => {
     form.setFieldsValue(stateUserDetails)
   }, [form, stateUserDetails])
-console.log("state",stateUserDetails)
 
 
   
@@ -88,8 +86,6 @@ console.log("state",stateUserDetails)
       return priceMemo - priceMemoDiscount + priceMemoDelivery
     },[priceMemo,priceMemoDelivery,priceMemoDiscount])
 
-  console.log("order",order)   
-    console.log("Order",order?.orderItemsSelected)
     return ( 
         <div style={{width:"100%",height:"100vh",background: "rgb(239, 239, 239)"}}>
             <div style={{height:"100%", width:"1270px", margin:"0 auto"}}> 

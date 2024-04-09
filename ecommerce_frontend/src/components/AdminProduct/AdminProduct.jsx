@@ -439,7 +439,7 @@ const AdminProduct = () => {
     if (isSuccess && data?.status === "OK") {
       message.success();
       handleCancel();
-    } else if (isError) {
+    } else if (data?.status === "ERR") {
       message.error();
     }
   }, [isSuccess]);

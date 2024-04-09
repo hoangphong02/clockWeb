@@ -1,7 +1,6 @@
 import axios from "axios";
 import { axiosJWT } from "./UserService";
 export const createEvaluate = async (data, access_token) => {
-  console.log("acccess", { access_token, data });
   const res = await axiosJWT.post(
     `${process.env.REACT_APP_API_URL}/evaluate/create/${data.user}`,
     data,

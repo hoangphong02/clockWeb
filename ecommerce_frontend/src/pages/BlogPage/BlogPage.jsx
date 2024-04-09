@@ -87,7 +87,6 @@ const BlogPage = () => {
       setPostLiked(dataGet?.data);
     }
   }, [dataGet]);
-  console.log("postLiked", postLiked);
   useEffect(() => {}, [postLiked]);
 
   const mutationDeletedLike = useMutationHook((data) => {
@@ -191,7 +190,6 @@ const BlogPage = () => {
   });
   const { isLoading, data: commentQuery } = queryComment;
 
-  console.log("commentQuery", commentQuery);
   const fetchCommentByIdPost = async (id) => {
     const res = await PostService.getCommentByIdPost(id, user?.access_token);
     if (res?.data) {
@@ -219,7 +217,6 @@ const BlogPage = () => {
     isSuccess: isSuccsess,
     isError: isError,
   } = mutationCreateComment;
-  console.log("idPostByOpenModal", idPostByOpenModal);
 
   const onChangeContentComment = (e) => {
     setContent(e.target.value);

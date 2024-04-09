@@ -64,7 +64,6 @@ const TypeProductPage = () => {
   });
 
   const dispatch = useDispatch();
-  console.log("stateByVoice", state?.stateData);
   // useEffect(() => {
   //   if (stateNameProductByTextVoice !== "") {
   //     dispatch(searchProduct(stateNameProductByTextVoice));
@@ -78,7 +77,6 @@ const TypeProductPage = () => {
     if (res?.status === "OK") {
       setLoading(false);
       setProducts(res?.data);
-      console.log("res", res);
       setPanigate({ ...panigate, total: res?.totalPage });
     } else {
       setLoading(false);
@@ -88,7 +86,6 @@ const TypeProductPage = () => {
     fetchAllProductType(type, panigate.page, panigate.limit);
   }, [type, panigate.page, panigate.limit]);
 
-  console.log("type", type);
   useEffect(() => {
     setFilter(false);
     setValue1(0);

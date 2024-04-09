@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { WrapperContainerLeft, WrapperContainerRight, WrapperForm, WrapperModal, WrapperTextLight } from './style'
 import { useState } from 'react'
 import InputForm from '../../components/InputForm/InputForm'
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent'
-import { Image, Input, Modal } from 'antd'
-import imageLogo from "../../assets/images/login.png"
+import { Image, } from 'antd'
 import logotet from "../../assets/images/logotet.png"
 import {useLocation, useNavigate } from 'react-router'
 import * as OtpService from '../../services/OtpService'
@@ -12,7 +11,6 @@ import * as UserService from '../../services/UserService'
 import { useMutationHook } from '../../hooks/useMutationHook'
 import Loading from '../../components/Loading/Loading'
 import * as message from '../../components/Message/Message'
-import jwt_decode from "jwt-decode";
 import {useDispatch} from "react-redux"
 import { updateUser } from '../../redux/slides/userSlide'
 
@@ -31,9 +29,6 @@ const CreateNewPassword = () => {
    const [valueInput5, setValueInput5]= useState("")
    const [valueInput6, setValueInput6]= useState("")
    const {state} = useLocation()
-
-   console.log("stateEmail",state)
-
   const handleNavigateSignIn=()=>{
     navigate('/sign-in')
   }
@@ -49,7 +44,6 @@ const CreateNewPassword = () => {
   const handleOnchangePassword = (value)=>{
     setPassword(value)
   }
-  console.log("pass",state, password)
 
    const mutationUpdatePassword = useMutationHook(
      (data) => UserService.updatePassword(data)
@@ -79,7 +73,6 @@ const CreateNewPassword = () => {
 //     }
 //   }, [isSuccessUpdated, isErrorUpdated])
 
-  console.log("dataUpdated",dataUpdated)
 
   const handleSendOtp=()=>{
     const otp = Math.floor(100000 + Math.random() * 900000);
@@ -91,7 +84,6 @@ const CreateNewPassword = () => {
       setIsModalOpen(true)
     
   }
-  console.log("otpSent",otpSent)
   const checkOTP = ()=>{
     const data = [valueInput1,valueInput2,valueInput3,valueInput4,valueInput5,valueInput6]
     let value = data.join("")

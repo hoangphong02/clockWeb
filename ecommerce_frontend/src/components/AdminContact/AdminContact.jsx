@@ -30,7 +30,6 @@ const AdminContact = () => {
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const user = useSelector((state) => state?.user);
   const [valueIsExplain, setValueIsExplain] = useState("false");
-  console.log("valueIsExplain", valueIsExplain);
 
   const searchInput = useRef(null);
 
@@ -47,7 +46,6 @@ const AdminContact = () => {
   const [form] = Form.useForm();
 
   const mutationUpdate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { id, token, ...rests } = data;
     const res = ContactService.updateContact(id, token, { ...rests });
     return res;
@@ -59,7 +57,6 @@ const AdminContact = () => {
     return res;
   });
 
-  console.log("rowSe", rowSelected);
 
   const handleDeleteContact = async (rowSelected) => {
     mutationDeleted.mutate(
@@ -91,7 +88,6 @@ const AdminContact = () => {
 
   const fetchGetDetailsContact = async (rowSelected) => {
     const res = await ContactService.getDetailContact(rowSelected);
-    console.log("resta", res.data);
     if (res?.data) {
       setStateContactDetails({
         _id: res?.data?._id,
@@ -107,7 +103,6 @@ const AdminContact = () => {
     setIsLoadingUpdate(false);
   };
 
-  console.log("stateContact", stateContactsDetails);
   useEffect(() => {
     if (!isModalOpen) {
       form.setFieldsValue(stateContactsDetails);
@@ -153,7 +148,6 @@ const AdminContact = () => {
 
   const { isLoading: isLoadingOrder, data: contacts } = queryContact;
 
-  console.log("contacts", contacts?.data);
   const renderAction = () => {
     return (
       <div>
@@ -283,9 +277,7 @@ const AdminContact = () => {
         },
       ],
       onFilter: (value, record) => {
-        console.log("record", record);
         if (value === true) {
-          console.log("record", record);
           return record.isExplain.type.render.name === "CheckCircleOutlined";
         }
         return record.isExplain.type.render.name === "CloseCircleOutlined";
@@ -372,7 +364,6 @@ const AdminContact = () => {
     );
   };
   const onChange = (e) => {
-    console.log("radio checked", e.target.value);
     setValueIsExplain(e.target.value);
   };
 

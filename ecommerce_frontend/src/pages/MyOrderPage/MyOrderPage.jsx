@@ -1,12 +1,8 @@
 import { useLocation, useNavigate } from "react-router";
 import {
-  WrapperInfo,
-  WrapperInputNumber,
-  WrapperLeft,
   WrapperListOrder,
   WrapperOrderItem,
   WrapperProductsOrder,
-  WrapperRight,
 } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
@@ -24,10 +20,7 @@ const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const location = useLocation();
-  console.log("location", location);
   const { state } = useLocation();
-  console.log("state", state);
-  console.log("user", user);
   const navigate = useNavigate();
   const [modal2Open, setModal2Open] = useState(false);
   const [valueRating, setValueRating] = useState(0);
@@ -58,9 +51,6 @@ const MyOrderPage = () => {
     setIdOrder(res?.data?._id);
   };
 
-  console.log("idPro", idProduct);
-
-  console.log("dataOrder", data);
   const handleSeeDetailsOrder = (id) => {
     navigate(`/order-details/${id}`, { state: { id } });
   };
@@ -72,7 +62,6 @@ const MyOrderPage = () => {
   });
 
   const handleCancelOrder = async (order) => {
-    console.log("orderCancle", order?.orderItems);
     if (!order?.isConfirm && !order?.isPaid) {
       mutation.mutate(
         {
@@ -97,7 +86,6 @@ const MyOrderPage = () => {
   };
 
   const mutationUpdate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { id, token, ...rests } = data;
     const res = OrderService.updateOrder(id, token, { ...rests });
     return res;
@@ -118,7 +106,6 @@ const MyOrderPage = () => {
   };
 
   const mutationAddEvaluate = useMutationHook((data) => {
-    console.log("dataUser", data);
     const { token, ...rests } = data;
     const res = EvaluateService.createEvaluate({ ...rests }, token);
     return res;
@@ -147,7 +134,6 @@ const MyOrderPage = () => {
     // setModal2Open(false)
     onUpdateOrder(idOrder);
   };
-  console.log("dataAdd", dataAdd);
   useEffect(() => {
     if (dataAdd?.status === "OK") {
       message.success("Đánh giá thành công");
@@ -191,7 +177,6 @@ const MyOrderPage = () => {
     isError: isErrorCancel,
     data: dataCancel,
   } = mutation;
-  console.log("dataCa", dataCancel);
 
   useEffect(() => {
     if (isSuccessCancel && dataCancel?.status === "OK") {
