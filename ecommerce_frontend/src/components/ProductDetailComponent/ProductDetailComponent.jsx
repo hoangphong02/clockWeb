@@ -32,6 +32,7 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import InputComponent from "../InputComponent/InputComponent";
 import ModalComponent from "../ModalComponent/ModalComponent";
 import * as UserService from "../../services/UserService";
+import { updateUser } from "../../redux/slides/userSlide";
 
 const ProductDetailComponent = ({
   idProduct,
@@ -45,6 +46,7 @@ const ProductDetailComponent = ({
   updateAddress,
   followProduct,
   unFollowProduct,
+  cancelChangeAddress,
 }) => {
   const [numberProduct, setNumberProduct] = useState(1);
   const [isFollowerProduct, setIsFollowerProduct] = useState(false);
@@ -55,10 +57,13 @@ const ProductDetailComponent = ({
   const dispatch = useDispatch();
   const order = useSelector((state) => state.order);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  const [addressChange, setAddressChange] = useState("");
-  const [cityChange, setCityChange] = useState("");
-  const [voiceChangeAddress, setVoiceChangeAddress] = useState(false);
+  const [voiceChangeAddress, setVoiceChangeAddress] = useState(
+    changeAddress || false
+  );
   const [voiceValueAddress, setVoiceValueAddress] = useState("");
+  useEffect(() => {
+    setVoiceChangeAddress(changeAddress);
+  }, [changeAddress]);
   const [stateUserDetails, setStateUserDetails] = useState({
     name: "",
     address: "",
@@ -136,18 +141,18 @@ const ProductDetailComponent = ({
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
         name: user?.name,
-        address: addressChange,
+        address: user?.address,
         phone: user?.phone,
-        city: cityChange,
+        city: user?.city,
       });
     }
   }, [isOpenModalUpdateInfo]);
 
-  useEffect(() => {
-    if (changeAddress) {
-      setVoiceChangeAddress(changeAddress);
-    }
-  }, [changeAddress]);
+  // useEffect(() => {
+  //   if (changeAddress) {
+  //     setVoiceChangeAddress(changeAddress);
+  //   }
+  // }, [changeAddress]);
 
   useEffect(() => {
     if (voiceChangeAddress === true) {
@@ -170,25 +175,16 @@ const ProductDetailComponent = ({
           address: voiceValueAddress,
           city: city,
         });
-        setCityChange(city);
       } else {
         setStateUserDetails({
           ...stateUserDetails,
           address: voiceValueAddress,
         });
       }
-      setAddressChange(voiceValueAddress);
     }
   }, [voiceValueAddress]);
 
-  useEffect(() => {
-    setAddressChange(user?.address);
-    setCityChange(user?.city);
-  }, [user]);
   const handleOnchangeDetails = (e) => {
-    if (e.target.name === "address") {
-      setAddressChange(e.target.value);
-    }
     setStateUserDetails({
       ...stateUserDetails,
       [e.target.name]: e.target.value,
@@ -200,8 +196,6 @@ const ProductDetailComponent = ({
 
   const handleCancelUpdate = () => {
     setIsOpenModalUpdateInfo(false);
-    setAddressChange(user?.address);
-    setCityChange(user?.city);
   };
   const mutationUpdate = useMutationHook((data) => {
     const { id, token, ...rests } = data;
@@ -210,15 +204,16 @@ const ProductDetailComponent = ({
   });
 
   const handleUpdateInfoUser = () => {
-    const { name, address = addressChange, phone, city } = stateUserDetails;
+    const { name, address, phone, city } = stateUserDetails;
     if (name && address && phone && city) {
       mutationUpdate.mutate(
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
             message.success("Đổi địa chỉ thành công");
-            // dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, city, phone }));
             setIsOpenModalUpdateInfo(false);
+            window.location.reload();
           },
         }
       );
@@ -227,9 +222,19 @@ const ProductDetailComponent = ({
   useEffect(() => {
     if (updateAddress === true) {
       handleUpdateInfoUser();
+      navigate("", {
+        state: {
+          openMic: true,
+        },
+      });
     }
-    updateAddress = false;
   }, [updateAddress]);
+  useEffect(() => {
+    if (cancelChangeAddress === true) {
+      handleCancelUpdate();
+      setVoiceChangeAddress(false);
+    }
+  }, [cancelChangeAddress]);
 
   const onChange = (value) => {
     if (value > stateProductDetails?.countInStock) {
@@ -502,7 +507,7 @@ const ProductDetailComponent = ({
           </WrapperPriceProduct>
           <WrapperAddress style={{ marginTop: "20px" }}>
             <span>Giao đến</span>
-            <span className="address"> {addressChange}</span> -
+            <span className="address"> {user?.address}</span> -
             <span className="changeAddress" onClick={handleChangeAddress}>
               {" "}
               Đổi địa chỉ{" "}

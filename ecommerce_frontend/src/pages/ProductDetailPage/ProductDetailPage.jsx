@@ -35,6 +35,7 @@ const ProductDetailPage = () => {
   const updateAddress = location.state?.update || false;
   const followProduct = location.state?.follow || false;
   const unFollowProduct = location.state?.unFollow || false;
+  const cancelChangeAddress = location.state?.cancelChangeAddress || false;
 
   const mutationAddEvaluate = useMutationHook((data) => {
     const { token, ...rests } = data;
@@ -179,6 +180,7 @@ const ProductDetailPage = () => {
         updateAddress={updateAddress}
         followProduct={followProduct}
         unFollowProduct={unFollowProduct}
+        cancelChangeAddress={cancelChangeAddress}
       />
       <div
         style={{ padding: "30px 0 0 0", fontSize: "25px", fontWeight: "bold" }}

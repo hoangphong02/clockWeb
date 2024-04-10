@@ -34,8 +34,7 @@ const OrderPage = () => {
   const dispatch = useDispatch();
   const [currentDelivery, setCurrentDelivery] = useState(0);
   const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
-  const [addressChange, setAddressChange] = useState("");
-  const [cityChange, setCityChange] = useState("");
+
   const [voiceChangeAddress, setVoiceChangeAddress] = useState(false);
   const [voiceValueAddress, setVoiceValueAddress] = useState("");
   const navigate = useNavigate();
@@ -57,6 +56,7 @@ const OrderPage = () => {
   const changeAddress = location.state?.changeAddress || false;
   const valueAddress = location.state?.valueAddress || "";
   const updateAddress = location.state?.update || false;
+  const cancelChangeAddress = location.state?.cancelChangeAddress || false;
 
   const buyByMic = state?.buy || false;
   const dataCity = [
@@ -131,11 +131,6 @@ const OrderPage = () => {
     queryFn: getAllDiscounts,
   });
   const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
-
-  useEffect(() => {
-    setAddressChange(user?.address);
-    setCityChange(user?.city);
-  }, [user]);
 
   useEffect(() => {
     if (checkNumber !== "") {
@@ -252,9 +247,9 @@ const OrderPage = () => {
     if (isOpenModalUpdateInfo) {
       setStateUserDetails({
         name: user?.name,
-        address: addressChange,
+        address: user?.address,
         phone: user?.phone,
-        city: cityChange,
+        city: user?.city,
       });
     }
   }, [isOpenModalUpdateInfo]);
@@ -286,14 +281,12 @@ const OrderPage = () => {
           address: voiceValueAddress,
           city: city,
         });
-        setCityChange(city);
       } else {
         setStateUserDetails({
           ...stateUserDetails,
           address: voiceValueAddress,
         });
       }
-      setAddressChange(voiceValueAddress);
     }
   }, [voiceValueAddress]);
 
@@ -356,8 +349,6 @@ const OrderPage = () => {
 
   const handleCancelUpdate = () => {
     setIsOpenModalUpdateInfo(false);
-    setAddressChange(user?.address);
-    setCityChange(user?.city);
   };
 
   const mutationUpdate = useMutationHook((data) => {
@@ -365,6 +356,7 @@ const OrderPage = () => {
     const res = UserService.updateUser(id, { ...rests }, token);
     return res;
   });
+  const { data, isLoading } = mutationUpdate;
 
   const handleUpdateInfoUser = () => {
     const { name, address, phone, city } = stateUserDetails;
@@ -373,8 +365,9 @@ const OrderPage = () => {
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            // dispatch(updateUser({ name, address, city, phone }));
+            dispatch(updateUser({ name, address, city, phone }));
             setIsOpenModalUpdateInfo(false);
+            window.location.reload();
           },
         }
       );
@@ -384,8 +377,20 @@ const OrderPage = () => {
   useEffect(() => {
     if (updateAddress === true) {
       handleUpdateInfoUser();
+      navigate("", {
+        state: {
+          openMic: true,
+        },
+      });
     }
   }, [updateAddress]);
+
+  useEffect(() => {
+    if (cancelChangeAddress === true) {
+      handleCancelUpdate();
+      setVoiceChangeAddress(false);
+    }
+  }, [cancelChangeAddress]);
 
   const addCart = () => {
     if (!user?.id) {
@@ -606,7 +611,7 @@ const OrderPage = () => {
               <span>Địa chỉ:</span>
               <span style={{ fontWeight: "600" }}>
                 {" "}
-                {`${addressChange} - ${cityChange}`}{" "}
+                {`${user?.address} - ${user?.city}`}{" "}
                 <span
                   style={{ color: "blue", cursor: "pointer" }}
                   onClick={handleChangeAddress}

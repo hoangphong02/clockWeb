@@ -51,6 +51,9 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [productOfType, setProductOfType] = useState([]);
   const [addCartHeader, setAddCartHeader] = useState(false);
   const { state } = useLocation();
+  const location = useLocation();
+  const openMic = location.state?.openMic || false;
+console.log("openMic",openMic);
 
   const path = window.location.pathname;
   const segments = path.split("/");
@@ -67,6 +70,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   });
 
   const { isLoading: isLoadingProducts, data: products } = queryProduct;
+
 
   const fetchAllProductType = async (type, page, limit) => {
     setLoading(true);
@@ -234,6 +238,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     let updateAddress = false;
     let followProduct = false;
     let unFollowProduct = false;
+    let cancelChangeAddress = false;
 
     if (text.includes("vật phẩm")) {
       hasVatPham = true;
@@ -309,6 +314,9 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     }
     if (text.includes("bỏ theo dõi") || text.includes("hủy theo dõi")) {
       unFollowProduct = true;
+    }
+    if (text.includes("hủy thay đổi")) {
+      cancelChangeAddress = true;
     }
     if (hasVatPham) {
       if (text.includes("vật phẩm trang trí")) {
@@ -608,16 +616,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       }, 1500);
       return () => clearTimeout(setTimeNavi);
     }
-    if (changeAddress) {
-      handleDoc("Đổi địa chỉ");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { changeAddress: true },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
     if (addressIs) {
       const address = text.split("là")[1].trim();
       handleDoc(`địa chỉ là ${address}`);
@@ -637,6 +635,16 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
         });
         resetTranscript();
       }, 1000);
+      return () => clearTimeout(setTimeNavi);
+    }
+     if (cancelChangeAddress) {
+      handleDoc("Hủy thay đổi");
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: { cancelChangeAddress: true },
+        });
+        resetTranscript();
+      }, 1500);
       return () => clearTimeout(setTimeNavi);
     }
     if (followProduct) {
@@ -707,6 +715,13 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const stopListening = () => {
     SpeechRecognition.stopListening();
   };
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(()=>{
+    if(openMic ===true){
+      startListening()
+    }
+  },[openMic])
 
   //  eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
