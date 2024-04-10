@@ -53,7 +53,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const { state } = useLocation();
   const location = useLocation();
   const openMic = location.state?.openMic || false;
-console.log("openMic",openMic);
+  console.log("openMic", openMic);
 
   const path = window.location.pathname;
   const segments = path.split("/");
@@ -70,7 +70,6 @@ console.log("openMic",openMic);
   });
 
   const { isLoading: isLoadingProducts, data: products } = queryProduct;
-
 
   const fetchAllProductType = async (type, page, limit) => {
     setLoading(true);
@@ -239,6 +238,7 @@ console.log("openMic",openMic);
     let followProduct = false;
     let unFollowProduct = false;
     let cancelChangeAddress = false;
+    let deleteProductTocart = false;
 
     if (text.includes("vật phẩm")) {
       hasVatPham = true;
@@ -294,10 +294,10 @@ console.log("openMic",openMic);
     if (text.includes("xóa sản phẩm số")) {
       unCheckNumber = true;
     }
-    if (text.includes("chọn tất cả")) {
+    if (text.includes("chọn tất cả sản phẩm")) {
       checkAll = true;
     }
-    if (text.includes("hủy chọn")) {
+    if (text.includes("hủy chọn tất cả")) {
       cancelCheck = true;
     }
     if (text.includes("đổi địa chỉ")) {
@@ -317,6 +317,9 @@ console.log("openMic",openMic);
     }
     if (text.includes("hủy thay đổi")) {
       cancelChangeAddress = true;
+    }
+    if (text.includes("loại bỏ sản phẩm số")) {
+      deleteProductTocart = true;
     }
     if (hasVatPham) {
       if (text.includes("vật phẩm trang trí")) {
@@ -468,7 +471,7 @@ console.log("openMic",openMic);
       const id = getChecked(number);
       handleDoc(`chọn sản phẩm số ${number}`);
       const setTimeNavi = setTimeout(() => {
-        navigate("", { state: { numcheck: id } });
+        navigate("", { state: { idProductCheck: id } });
         resetTranscript();
       }, 1500);
       return () => clearTimeout(setTimeNavi);
@@ -590,7 +593,19 @@ console.log("openMic",openMic);
       handleDoc(`Xóa sản phẩm số ${number}`);
       const setTimeNavi = setTimeout(() => {
         navigate("", {
-          state: { numUncheck: id },
+          state: { idProductDeleteCheck: id },
+        });
+        resetTranscript();
+      }, 1500);
+      return () => clearTimeout(setTimeNavi);
+    }
+    if (deleteProductTocart) {
+      const number = text.split("số")[1].trim();
+      const id = getChecked(number);
+      handleDoc(`Loại bỏ sản phẩm số ${number}`);
+      const setTimeNavi = setTimeout(() => {
+        navigate("", {
+          state: { idProductDeleteToCart: id },
         });
         resetTranscript();
       }, 1500);
@@ -637,7 +652,7 @@ console.log("openMic",openMic);
       }, 1000);
       return () => clearTimeout(setTimeNavi);
     }
-     if (cancelChangeAddress) {
+    if (cancelChangeAddress) {
       handleDoc("Hủy thay đổi");
       const setTimeNavi = setTimeout(() => {
         navigate("", {
@@ -717,11 +732,11 @@ console.log("openMic",openMic);
   };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(()=>{
-    if(openMic ===true){
-      startListening()
+  useEffect(() => {
+    if (openMic === true) {
+      startListening();
     }
-  },[openMic])
+  }, [openMic]);
 
   //  eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {

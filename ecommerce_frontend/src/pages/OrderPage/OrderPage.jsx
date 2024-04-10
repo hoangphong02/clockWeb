@@ -48,15 +48,17 @@ const OrderPage = () => {
   });
   const [numCheckList, setNumCheckList] = useState("");
   const [numUnCheckList, setNumUnCheckList] = useState("");
+  const [numDeleteToCart, setNumDeleteToCart] = useState("");
 
-  const unCheckNumber = location.state?.numUncheck || "";
-  const checkNumber = location.state?.numcheck || "";
+  const idProductDeleteCheck = location.state?.idProductDeleteCheck || "";
+  const idProductCheck = location.state?.idProductCheck || "";
   const isCheckAll = location.state?.isCheckAll || false;
   const isCancelCheck = location.state?.isCancelCheck || false;
   const changeAddress = location.state?.changeAddress || false;
   const valueAddress = location.state?.valueAddress || "";
   const updateAddress = location.state?.update || false;
   const cancelChangeAddress = location.state?.cancelChangeAddress || false;
+  const idProductDeleteToCart = location.state?.idProductDeleteToCart || "";
 
   const buyByMic = state?.buy || false;
   const dataCity = [
@@ -133,15 +135,20 @@ const OrderPage = () => {
   const { isLoading: isLoadingDiscount, data: discounts } = queryDiscount;
 
   useEffect(() => {
-    if (checkNumber !== "") {
-      setNumCheckList(checkNumber);
+    if (idProductCheck !== "") {
+      setNumCheckList(idProductCheck);
     }
-  }, [checkNumber]);
+  }, [idProductCheck]);
   useEffect(() => {
-    if (unCheckNumber !== "") {
-      setNumUnCheckList(unCheckNumber);
+    if (idProductDeleteCheck !== "") {
+      setNumUnCheckList(idProductDeleteCheck);
     }
-  }, [unCheckNumber]);
+  }, [idProductDeleteCheck]);
+  useEffect(() => {
+    if (idProductDeleteToCart !== "") {
+      setNumDeleteToCart(idProductDeleteToCart);
+    }
+  }, [idProductDeleteToCart]);
 
   const [form] = Form.useForm();
 
@@ -198,14 +205,23 @@ const OrderPage = () => {
     let arrListCheckNew = [];
     if (numUnCheckList !== "") {
       if (listChecked.includes(numUnCheckList)) {
-        arrListCheckNew = listChecked?.filter(
-          (item) => item !== numUnCheckList
-        );
+        listChecked
+          ?.filter((item) => item !== numUnCheckList)
+          .map((pro) => {
+            arrListCheckNew.push(pro);
+          });
       }
+      setListChecked(arrListCheckNew);
+      setNumUnCheckList("");
     }
-    setListChecked(arrListCheckNew);
-    setNumUnCheckList("");
   }, [numUnCheckList]);
+
+  useEffect(() => {
+    if (numDeleteToCart !== "") {
+      handleRemoveOrder(numDeleteToCart);
+      setNumDeleteToCart("");
+    }
+  }, [numDeleteToCart]);
 
   const handleCheckAll = (e) => {
     if (e.target?.checked) {
