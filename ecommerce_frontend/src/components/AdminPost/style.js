@@ -14,6 +14,9 @@ export const ButtonAddUser = styled.button`
   height: 45px;
   padding: 4px 15px;
   border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   &:hover {
     background: #61a3dc;
     cursor: pointer;

@@ -13,6 +13,9 @@ export const ButtonAddUser = styled.button`
   font-size: 23px;
   height: 45px;
   padding: 4px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 6px;
   &:hover {
     background: #61a3dc;

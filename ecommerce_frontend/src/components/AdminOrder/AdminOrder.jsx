@@ -5,6 +5,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   SearchOutlined,
+  PrinterOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Radio, Space } from "antd";
@@ -19,6 +20,9 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import * as OrderService from "../../services/OrderService";
 import PieChartComponent from "./PieChartComponent";
 import AdminHeader from "../AdminHeader/AdminHeader";
+import ReactToPrintComponent from "../ReactToPrintComponent/ReactToPrintComponent";
+import { ButtonPrint } from "./style";
+import { useReactToPrint } from "react-to-print";
 
 const AdminOrder = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,10 +34,18 @@ const AdminOrder = () => {
   const [paid, setPaid] = useState(false);
   const [delivery, setDelivery] = useState(false);
   const [received, setReceived] = useState(false);
-
+  const [dataOrderToPrint, setDataOrderToPrint] = useState([]);
   const user = useSelector((state) => state?.user);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const searchInput = useRef(null);
+  const printRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    onBeforeGetContent: async () => {
+      setIsPrinting(true);
+    },
+  });
 
   const [stateOrdersDetails, setStateOrdersDetails] = useState({
     id: "",
@@ -165,6 +177,19 @@ const AdminOrder = () => {
 
   const { isLoading: isLoadingOrder, data: orders } = queryOrder;
 
+  useEffect(() => {
+    let arrOrderToPrint = [];
+    if (orders?.data?.length) {
+      orders?.data
+        ?.filter(
+          (item) => item?.isConfirm === true && item?.isDelivered === false
+        )
+        .map((order) => {
+          arrOrderToPrint.push(order);
+        });
+      setDataOrderToPrint(arrOrderToPrint);
+    }
+  }, [orders]);
   const renderAction = () => {
     return (
       <div>
@@ -610,6 +635,15 @@ const AdminOrder = () => {
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
       </div> */}
+      {isPrinting && (
+        <div className="d-none">
+          <ReactToPrintComponent data={dataOrderToPrint} ref={printRef} />
+        </div>
+      )}
+
+      <ButtonPrint onClick={handlePrint}>
+        <PrinterOutlined />
+      </ButtonPrint>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
           handleDeleteMany={handleDeleteManyUser}
