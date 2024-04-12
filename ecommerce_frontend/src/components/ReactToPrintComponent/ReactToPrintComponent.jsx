@@ -3,6 +3,7 @@ import logoGHTK from "../../assets/images/logo_GHTK.png";
 import logoExpress from "../../assets/images/express_logo.webp";
 import logoWarning from "../../assets/images/logoWarning.jpg";
 import moment from "moment";
+import QRCode from "react-qr-code";
 
 const ReactToPrintComponent = React.forwardRef((props, ref) => {
   const { data } = props;
@@ -116,11 +117,16 @@ const ReactToPrintComponent = React.forwardRef((props, ref) => {
                       </div>
                     </div>
                   </div>
-                  <div style={{ width: "40%" }}>
-                    <img
-                      src={logoWarning}
-                      alt=""
-                      style={{ height: "auto", width: "100%" }}
+                  <div style={{ width: "40%", textAlign: "center" }}>
+                    <QRCode
+                      size={256}
+                      style={{
+                        height: "100%",
+                        maxWidth: "100%",
+                        width: "auto",
+                      }}
+                      value={item?._id}
+                      viewBox={`0 0 256 256`}
                     />
                   </div>
                 </div>

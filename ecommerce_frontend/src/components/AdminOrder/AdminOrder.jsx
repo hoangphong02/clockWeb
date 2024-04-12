@@ -30,6 +30,7 @@ const AdminOrder = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [isModalOpenPrint, setIsModalOpenPrint] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [paid, setPaid] = useState(false);
   const [delivery, setDelivery] = useState(false);
@@ -44,6 +45,36 @@ const AdminOrder = () => {
     content: () => printRef.current,
     onBeforeGetContent: async () => {
       setIsPrinting(true);
+      let arrOrderToPrint = [];
+      if (orders?.data?.length) {
+        orders?.data
+          ?.filter(
+            (item) => item?.isConfirm === true && item?.isDelivered === false
+          )
+          .map((order) => {
+            arrOrderToPrint.push(order);
+          });
+        setDataOrderToPrint(arrOrderToPrint);
+      }
+    },
+  });
+
+  const handlePrintOneOrder = useReactToPrint({
+    content: () => printRef.current,
+    onBeforeGetContent: async () => {
+      setIsPrinting(true);
+      if (orders?.data?.length && rowSelected) {
+        const dataOrder = [];
+        orders?.data?.map((item) => {
+          if (item?._id === rowSelected) {
+            dataOrder.push(item);
+          }
+        });
+        setDataOrderToPrint(dataOrder);
+      }
+    },
+    onAfterPrint: () => {
+      setIsModalOpenPrint(false);
     },
   });
 
@@ -174,8 +205,8 @@ const AdminOrder = () => {
   //  const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDelectedMany, isError: isErrorDeletedMany } = mutationDeletedMany
 
   const queryOrder = useQuery({ queryKey: ["orders"], queryFn: getAllOrder });
-
   const { isLoading: isLoadingOrder, data: orders } = queryOrder;
+  console.log("orders", orders);
 
   useEffect(() => {
     let arrOrderToPrint = [];
@@ -194,12 +225,20 @@ const AdminOrder = () => {
     return (
       <div>
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ color: "red", fontSize: "2em", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
         <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+          style={{ color: "orange", fontSize: "2em", cursor: "pointer" }}
           onClick={handleDetailsOrder}
+        />
+        <PrinterOutlined
+          style={{
+            color: "rgb(42 173 103)",
+            fontSize: "2em",
+            cursor: "pointer",
+          }}
+          onClick={() => setIsModalOpenPrint(true)}
         />
       </div>
     );
@@ -501,6 +540,10 @@ const AdminOrder = () => {
     setIsModalOpenDelete(false);
   };
 
+  const handleCancelPrint = () => {
+    setIsModalOpenPrint(false);
+  };
+
   const handleOnchangeDetails = (e) => {
     if (e.target.name === "isReceived") {
       if (e.target.value === "true") {
@@ -642,7 +685,8 @@ const AdminOrder = () => {
       )}
 
       <ButtonPrint onClick={handlePrint}>
-        <PrinterOutlined />
+        <PrinterOutlined />{" "}
+        <span style={{ padding: "0 5px", fontSize: "15px" }}>In đồng loạt</span>
       </ButtonPrint>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
@@ -916,6 +960,15 @@ const AdminOrder = () => {
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc hủy đơn hàng này không?</div>
         </Loading>
+      </ModalComponent>
+
+      <ModalComponent
+        title="In đơn hàng"
+        open={isModalOpenPrint}
+        onCancel={handleCancelPrint}
+        onOk={handlePrintOneOrder}
+      >
+        <div>Bạn có chắc in đơn hàng này không?</div>
       </ModalComponent>
     </div>
   );
