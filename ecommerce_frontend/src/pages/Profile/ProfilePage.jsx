@@ -3,15 +3,12 @@ import {
   WrapperAllProfile,
   WrapperAvatar,
   WrapperContentProfile,
-  WrapperHeader,
   WrapperInfo,
   WrapperInput,
   WrapperInputForm,
   WrapperLabel,
   WrapperSidenav,
 } from "./style";
-import InputForm from "../../components/InputForm/InputForm";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
 import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationHook";

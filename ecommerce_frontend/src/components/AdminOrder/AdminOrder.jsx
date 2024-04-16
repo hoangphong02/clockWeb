@@ -206,7 +206,6 @@ const AdminOrder = () => {
 
   const queryOrder = useQuery({ queryKey: ["orders"], queryFn: getAllOrder });
   const { isLoading: isLoadingOrder, data: orders } = queryOrder;
-  console.log("orders", orders);
 
   useEffect(() => {
     let arrOrderToPrint = [];
@@ -511,7 +510,7 @@ const AdminOrder = () => {
     } else if (isErrorDeleted) {
       message.error();
     }
-  }, [isSuccessDelected]);
+  }, [isSuccessDelected, dataDeleted]);
 
   const handleCloseDrawer = () => {
     setIsOpenDrawer(false);

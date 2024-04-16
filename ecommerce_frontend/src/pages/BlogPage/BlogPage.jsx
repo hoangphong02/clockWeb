@@ -1,26 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import * as PostService from "../../services/PostService";
-import slidergiangsinh1 from "../../assets/images/noel1.png";
-import { Button, Image, Input, Modal, message } from "antd";
+import { Button, Image, Input, message } from "antd";
 import {
-  CloudFilled,
   CommentOutlined,
   HeartFilled,
   HeartOutlined,
   MessageFilled,
   SendOutlined,
 } from "@ant-design/icons";
-import {
-  WrapperBlogItem,
-  WrapperContentComment,
-  WrapperH1,
-  WrapperModal,
-} from "./style";
+import { WrapperBlogItem, WrapperContentComment, WrapperModal } from "./style";
 import logo from "../../assets/images/logo-decoration.png";
 import { useMutationHook } from "../../hooks/useMutationHook";
 import { useSelector } from "react-redux";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import { useLocation, useNavigate } from "react-router";
 
 const BlogPage = () => {
   const user = useSelector((state) => state?.user);
@@ -31,6 +25,8 @@ const BlogPage = () => {
   const [content, setContent] = useState("");
   const [idPostByOpenModal, setIdPostByOpenModal] = useState("");
   const [numberComments, setNumberComments] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getAllPost = async () => {
     const res = await PostService.getAllPost();
@@ -136,7 +132,7 @@ const BlogPage = () => {
   };
   const likePost = (postId) => {
     setLikeCount((prev) => {
-      const updatedLikeCount = prev.map((item) => {
+      const updatedLikeCount = prev?.map((item) => {
         if (item.id === postId) {
           return { ...item, like: item.like + 1 };
         }
@@ -147,9 +143,9 @@ const BlogPage = () => {
   };
   const deleteLikePost = (postId) => {
     setLikeCount((prev) => {
-      const updatedLikeCount = prev.map((item) => {
+      const updatedLikeCount = prev?.map((item) => {
         if (item.id === postId) {
-          return { ...item, like: item?.like > 0 ? item.like - 1 : 0 };
+          return { ...item, like: item?.like > 0 ? item?.like - 1 : 0 };
         }
         return item;
       });
@@ -158,12 +154,17 @@ const BlogPage = () => {
   };
 
   const onHandleLike = (idPost) => {
-    if (isPostLike(idPost) === false) {
-      onAddLike(idPost);
-      likePost(idPost);
-    } else {
-      onDeleteLike();
-      deleteLikePost(idPost);
+     if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    }
+    else{
+      if (isPostLike(idPost) === false) {
+        onAddLike(idPost);
+        likePost(idPost);
+      } else {
+        onDeleteLike();
+        deleteLikePost(idPost);
+      }
     }
   };
 
@@ -222,15 +223,19 @@ const BlogPage = () => {
     setContent(e.target.value);
   };
   const handleCreateComment = () => {
-    if (user?.access_token) {
-      mutationCreateComment.mutate({
-        token: user?.access_token,
-        name: user?.name,
-        avatar: user?.avatar,
-        content: content,
-        user: user?.id,
-        post: idPostByOpenModal,
-      });
+     if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    }else{
+      if (user?.access_token) {
+        mutationCreateComment.mutate({
+          token: user?.access_token,
+          name: user?.name,
+          avatar: user?.avatar,
+          content: content,
+          user: user?.id,
+          post: idPostByOpenModal,
+        });
+      }
     }
   };
 
@@ -354,55 +359,59 @@ const BlogPage = () => {
                         </div>
                         <div>{post?.content}</div>
                       </div>
-                      <div
-                        style={{
-                          height: "500px",
-                          display: "flex",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {post?.image && post?.image.length === 1 ? (
-                          <Image
-                            src={post.image[0].urlImage}
-                            style={{ width: "100%", height: "100%" }}
-                            preview={true}
-                          />
-                        ) : (
-                          post?.image && (
-                            <>
-                              <Image
-                                key={post.image[0].id}
-                                src={post.image[0].urlImage}
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                }}
-                              />
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                }}
-                              >
-                                {post.image.slice(1).map((image, index) => (
-                                  <Image
-                                    key={image.id}
-                                    src={image.urlImage}
-                                    style={{
-                                      width: "100%",
-                                      height: `calc(500px / ${
-                                        post.image.length - 1
-                                      })`,
-                                      objectFit: "cover",
-                                    }}
-                                  />
-                                ))}
-                              </div>
-                            </>
-                          )
-                        )}
-                      </div>
+                      {post?.image?.length ? (
+                        <div
+                          style={{
+                            height: "500px",
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {post?.image && post?.image?.length === 1 ? (
+                            <Image
+                              src={post.image[0]?.urlImage}
+                              style={{ width: "100%", height: "100%" }}
+                              preview={true}
+                            />
+                          ) : (
+                            post?.image && (
+                              <>
+                                <Image
+                                  key={post.image[0]?.id}
+                                  src={post.image[0]?.urlImage}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover",
+                                  }}
+                                />
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                  }}
+                                >
+                                  {post?.image
+                                    ?.slice(1)
+                                    ?.map((image, index) => (
+                                      <Image
+                                        key={image?.id}
+                                        src={image?.urlImage}
+                                        style={{
+                                          width: "100%",
+                                          height: `calc(500px / ${
+                                            post?.image?.length - 1
+                                          })`,
+                                          objectFit: "cover",
+                                        }}
+                                      />
+                                    ))}
+                                </div>
+                              </>
+                            )
+                          )}
+                        </div>
+                      ) : null}
 
                       <div style={{ padding: "30px" }}>
                         <div>
@@ -423,7 +432,7 @@ const BlogPage = () => {
                               {likeCount?.length
                                 ? likeCount?.find(
                                     (item) => item?.id === post?._id
-                                  ).like
+                                  )?.like
                                 : post?.likeCount?.length}{" "}
                               <HeartFilled
                                 style={{ padding: "0 4px", color: "#d60055" }}

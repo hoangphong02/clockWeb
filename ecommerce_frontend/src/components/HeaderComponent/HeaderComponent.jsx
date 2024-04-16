@@ -1,4 +1,4 @@
-import { Badge, Col, Popover, message } from "antd";
+import { Badge, Col, Dropdown, Menu, Popover, Space, message } from "antd";
 import {
   WrapperHeader,
   WrapperHeaderAccount,
@@ -10,6 +10,7 @@ import {
   WrapperButtonDropdown,
   WrapperMenuItem,
   WrapperColMenu,
+  WrapperHeaderMobile,
 } from "./style";
 import React, { useEffect, useState } from "react";
 import {
@@ -19,6 +20,9 @@ import {
   AudioOutlined,
   AudioMutedOutlined,
   SearchOutlined,
+  DownOutlined,
+  MenuOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -750,254 +754,553 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }, [transcript, addCartHeader]);
 
   console.log("listening", listening);
+
+  const items = [
+    {
+      label: (
+        <WrapperMenuItem
+          className="news"
+          style={{ color: "black" }}
+          onClick={() => navigate("/")}
+        >
+          Trang chủ
+        </WrapperMenuItem>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <WrapperMenuItem
+          className="news"
+          style={{ color: "black" }}
+          onClick={() => navigate("/order")}
+        >
+          Giỏ hàng
+        </WrapperMenuItem>
+      ),
+      key: "1",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <WrapperButtonDropdown className="dropdown">
+          <button
+            style={{
+              background: "none",
+              color: "black",
+              border: "none",
+              fontFamily: "math",
+              fontWeight: "bold",
+            }}
+          >
+            Danh mục
+          </button>
+          <div>
+            {typeProductContant?.map(
+              (type, index) =>
+                typeProduct.includes(type.type) && (
+                  <div key={index}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "0 20px",
+                        color: "#000",
+                      }}
+                    >
+                      <img
+                        style={{ width: "20px", height: "20px" }}
+                        src={type.image}
+                      />
+                      <TypeProduct
+                        name={type.type}
+                        key={type.type}
+                        style={{ color: "#000" }}
+                      />
+                    </div>
+                  </div>
+                )
+            )}
+            {typeProduct.map((type) => {
+              if (!typeProductContant.some((item) => item.type === type)) {
+                return (
+                  <div key={type}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        padding: "0 20px",
+                        color: "#000",
+                      }}
+                    >
+                      <TypeProduct
+                        name={type}
+                        key={type}
+                        style={{ color: "#000" }}
+                      />
+                    </div>
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </WrapperButtonDropdown>
+      ),
+      key: "2",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <WrapperMenuItem
+          className="news"
+          style={{ color: "black" }}
+          onClick={() => navigate("/blog")}
+        >
+          Tin tức
+        </WrapperMenuItem>
+      ),
+      key: "3",
+    },
+
+    {
+      label: (
+        <WrapperMenuItem
+          className="trendingProducts"
+          style={{ color: "black" }}
+          onClick={() => navigate("/productsTrending")}
+        >
+          Gợi ý sản phẩm
+        </WrapperMenuItem>
+      ),
+      key: "4",
+    },
+    {
+      label: (
+        <WrapperMenuItem
+          className=""
+          style={{ color: "black" }}
+          onClick={() => navigate("/contact")}
+        >
+          Liên hệ
+        </WrapperMenuItem>
+      ),
+      key: "5",
+    },
+  ];
   return (
-    <div
-      style={{
-        width: "100%",
-        background: isScrolled
-          ? "rgb(255,255,255,0.6)"
-          : adminPath === "admin"
-          ? "none"
-          : "rgb(32, 33, 38)",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-        padding: isScrolled ? "10px 30px" : "20px 30px",
-        position: isScrolled ? "fixed" : "",
-        zIndex: "10",
-        transition: "all 0.5s",
-      }}
-    >
-      <WrapperHeader
-        gutter={16}
+    <>
+      <div
         style={{
-          justifyContent:
-            isHiddenSearch && isHiddenCart ? "space-between" : "unset",
-          marginRight: "0",
-          marginLeft: "0",
+          width: "100%",
+          background: isScrolled
+            ? "rgb(255,255,255,0.6)"
+            : adminPath === "admin"
+            ? "none"
+            : "rgb(32, 33, 38)",
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+          padding: isScrolled ? "10px 30px" : "20px 30px",
+          position: isScrolled ? "fixed" : "",
+          zIndex: "10",
+          transition: "all 0.5s",
         }}
       >
-        <Col
-          span={5}
+        <WrapperHeader
+          gutter={16}
           style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            padding: "0",
+            justifyContent:
+              isHiddenSearch && isHiddenCart ? "space-between" : "unset",
+            marginRight: "0",
+            marginLeft: "0",
           }}
         >
-          <WrapperTextHeader
+          <Col
+            span={5}
             style={{
-              cursor: "pointer",
-              color: isScrolled ? "black" : "#fff",
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              padding: "0",
             }}
-            onClick={() => navigate("/")}
           >
-            <img
-              style={{
-                height: "65px",
-                position: "absolute",
-                top: "-23px",
-              }}
-              src={logo}
-            />
-          </WrapperTextHeader>
-
-          <div style={{ position: "relative" }}>
-            <span
+            <WrapperTextHeader
               style={{
                 cursor: "pointer",
-                fontSize: "20px",
-                color: isScrolled
-                  ? "black"
-                  : adminPath === "admin"
-                  ? "#000"
-                  : "#fff",
-                display: "flex",
+                color: isScrolled ? "black" : "#fff",
               }}
-              onClick={listening === false ? startListening : stopListening}
+              onClick={() => navigate("/")}
             >
-              {listening === false ? <AudioMutedOutlined /> : <AudioOutlined />}
-            </span>
-            <div
-              style={{
-                width: "400px",
-                height: "30px",
-                overflow: "auto",
-                display: listening === true ? "block" : "none",
-                position: "absolute",
-                zIndex: "5",
-                background: "#fff",
-                top: isScrolled ? "40px" : "52px",
-                textAlign: "center",
-                left: "-100px",
-                borderRadius: "15px",
-              }}
-            >
-              <span>{transcript}</span>
-            </div>
-          </div>
-          {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
-        </Col>
-        {!isHiddenSearch && (
-          <WrapperColMenu span={13}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <img
+                style={{
+                  height: "65px",
+                  position: "absolute",
+                  top: "-23px",
+                }}
+                src={logo}
+              />
+            </WrapperTextHeader>
+
+            <div style={{ position: "relative" }}>
+              <span
+                style={{
+                  cursor: "pointer",
+                  fontSize: "20px",
+                  color: isScrolled
+                    ? "black"
+                    : adminPath === "admin"
+                    ? "#000"
+                    : "#fff",
+                  display: "flex",
+                }}
+                onClick={listening === false ? startListening : stopListening}
+              >
+                {listening === false ? (
+                  <AudioMutedOutlined />
+                ) : (
+                  <AudioOutlined />
+                )}
+              </span>
               <div
                 style={{
-                  display: "flex",
-                  gap: "50px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: "#fff",
-                  padding: "10px 0",
-                  fontWeight: "bold",
-                  fontFamily: "math",
+                  width: "400px",
+                  height: "30px",
+                  overflow: "auto",
+                  display: listening === true ? "block" : "none",
+                  position: "absolute",
+                  zIndex: "5",
+                  background: "#fff",
+                  top: isScrolled ? "40px" : "52px",
+                  textAlign: "center",
+                  left: "-100px",
+                  borderRadius: "15px",
                 }}
               >
-                <WrapperButtonDropdown className="dropdown">
-                  <button
-                    className="buttonmenu"
-                    type="button"
-                    id="dropdownMenuButton1"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    style={{
-                      background: "none",
-                      color: isScrolled ? "black" : "#fff",
-                      border: "none",
-                      fontFamily: "math",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Danh mục
-                  </button>
-                  <ul
-                    className="dropdown-menu menu"
-                    aria-labelledby="dropdownMenuButton1"
-                  >
-                    {typeProductContant?.map(
-                      (type, index) =>
-                        typeProduct.includes(type.type) && (
-                          <li key={index}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                padding: "0 20px",
-                                color: "#000",
-                              }}
-                            >
-                              <img
-                                style={{ width: "20px", height: "20px" }}
-                                src={type.image}
-                              />
-                              <TypeProduct
-                                name={type.type}
-                                key={type.type}
-                                style={{ color: "#000" }}
-                              />
-                            </div>
-                          </li>
-                        )
-                    )}
-                    {typeProduct.map((type) => {
-                      if (
-                        !typeProductContant.some((item) => item.type === type)
-                      ) {
-                        return (
-                          <li key={type}>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                padding: "0 20px",
-                                color: "#000",
-                              }}
-                            >
-                              <TypeProduct
-                                name={type}
-                                key={type}
-                                style={{ color: "#000" }}
-                              />
-                            </div>
-                          </li>
-                        );
-                      }
-                    })}
-                  </ul>
-                </WrapperButtonDropdown>
-                <WrapperMenuItem
-                  className="news"
-                  style={{ color: isScrolled ? "black" : "#fff" }}
-                  onClick={() => navigate("/blog")}
-                >
-                  Tin tức
-                </WrapperMenuItem>
-                <WrapperMenuItem
-                  className="trendingProducts"
-                  style={{ color: isScrolled ? "black" : "#fff" }}
-                  onClick={() => navigate("/productsTrending")}
-                >
-                  Gợi ý sản phẩm
-                </WrapperMenuItem>
-                <WrapperMenuItem
-                  className=""
-                  style={{ color: isScrolled ? "black" : "#fff" }}
-                  onClick={() => navigate("/contact")}
-                >
-                  Liên hệ
-                </WrapperMenuItem>
-              </div>
-
-              <div className="dropdown">
-                <button
-                  className="btn btn-secondary "
-                  style={{ background: "none", border: "none" }}
-                  type="button"
-                  id="dropdownMenu2"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <SearchOutlined
-                    style={{ color: isScrolled ? "black" : "#fff" }}
-                  />
-                </button>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenu2"
-                  style={{ transform: "translate(0px, 50px)" }}
-                >
-                  <ButtonInputSearch
-                    placeholder="input search text"
-                    size="large"
-                    // textButton ="Tìm kiếm"
-                    // bordered={false}
-                    backgroundColorInput="#fff"
-                    borderRadius="0px"
-                    border="none"
-                    backgroundColorButton="none"
-                    width="300px"
-                    colorButton="#000"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    onChange={onSearch}
-                  />
-                </ul>
+                <span>{transcript}</span>
               </div>
             </div>
-          </WrapperColMenu>
-        )}
-        <Col
-          span={6}
-          style={{
-            display: "flex",
-            gap: "54px",
-            alignItems: "center",
-            flex: "0 0 20%",
-          }}
-        >
-          <Loading isLoading={loading}>
+            {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
+          </Col>
+          {!isHiddenSearch && (
+            <WrapperColMenu span={13}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "50px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "#fff",
+                    padding: "10px 0",
+                    fontWeight: "bold",
+                    fontFamily: "math",
+                  }}
+                >
+                  <WrapperButtonDropdown className="dropdown">
+                    <button
+                      className="buttonmenu"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      style={{
+                        background: "none",
+                        color: isScrolled ? "black" : "#fff",
+                        border: "none",
+                        fontFamily: "math",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Danh mục
+                    </button>
+                    <ul
+                      className="dropdown-menu menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      {typeProductContant?.map(
+                        (type, index) =>
+                          typeProduct.includes(type.type) && (
+                            <li key={index}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  padding: "0 20px",
+                                  color: "#000",
+                                }}
+                              >
+                                <img
+                                  style={{ width: "20px", height: "20px" }}
+                                  src={type.image}
+                                />
+                                <TypeProduct
+                                  name={type.type}
+                                  key={type.type}
+                                  style={{ color: "#000" }}
+                                />
+                              </div>
+                            </li>
+                          )
+                      )}
+                      {typeProduct.map((type) => {
+                        if (
+                          !typeProductContant.some((item) => item.type === type)
+                        ) {
+                          return (
+                            <li key={type}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  padding: "0 20px",
+                                  color: "#000",
+                                }}
+                              >
+                                <TypeProduct
+                                  name={type}
+                                  key={type}
+                                  style={{ color: "#000" }}
+                                />
+                              </div>
+                            </li>
+                          );
+                        }
+                      })}
+                    </ul>
+                  </WrapperButtonDropdown>
+                  <WrapperMenuItem
+                    className="news"
+                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    onClick={() => navigate("/blog")}
+                  >
+                    Tin tức
+                  </WrapperMenuItem>
+                  <WrapperMenuItem
+                    className="trendingProducts"
+                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    onClick={() => navigate("/productsTrending")}
+                  >
+                    Gợi ý sản phẩm
+                  </WrapperMenuItem>
+                  <WrapperMenuItem
+                    className=""
+                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    onClick={() => navigate("/contact")}
+                  >
+                    Liên hệ
+                  </WrapperMenuItem>
+                </div>
+
+                <div className="dropdown">
+                  <button
+                    className="btn btn-secondary "
+                    style={{ background: "none", border: "none" }}
+                    type="button"
+                    id="dropdownMenu2"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <SearchOutlined
+                      style={{ color: isScrolled ? "black" : "#fff" }}
+                    />
+                  </button>
+                  <ul
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenu2"
+                    style={{ transform: "translate(0px, 50px)" }}
+                  >
+                    <ButtonInputSearch
+                      placeholder="input search text"
+                      size="large"
+                      // textButton ="Tìm kiếm"
+                      // bordered={false}
+                      backgroundColorInput="#fff"
+                      borderRadius="0px"
+                      border="none"
+                      backgroundColorButton="none"
+                      width="300px"
+                      colorButton="#000"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      onChange={onSearch}
+                    />
+                  </ul>
+                </div>
+              </div>
+            </WrapperColMenu>
+          )}
+          <Col
+            span={6}
+            style={{
+              display: "flex",
+              gap: "54px",
+              alignItems: "center",
+              flex: "0 0 20%",
+            }}
+          >
+            <Loading isLoading={loading}>
+              <WrapperHeaderAccount>
+                {user?.avatar ? (
+                  <WrapperImgAvatar src={userAvatar} alt="avatar" />
+                ) : (
+                  <UserOutlined style={{ fontSize: "30px" }} />
+                )}
+                {user?.access_token ? (
+                  <>
+                    <Popover content={content} trigger="click">
+                      <div
+                        style={{
+                          cursor: "pointer",
+                          color: isScrolled
+                            ? "black"
+                            : adminPath === "admin"
+                            ? "#000"
+                            : "#fff",
+                        }}
+                      >
+                        {username?.length ? username : "User"}
+                      </div>
+                    </Popover>
+                  </>
+                ) : (
+                  <div
+                    onClick={handleNavigateLogin}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <WrapperTextHeaderSmall>
+                      Đăng nhập / Đăng ký
+                    </WrapperTextHeaderSmall>
+                    <div>
+                      <WrapperTextHeaderSmall>Tài khoản</WrapperTextHeaderSmall>
+                      <CaretDownOutlined />
+                    </div>
+                  </div>
+                )}
+              </WrapperHeaderAccount>
+            </Loading>
+            {!isHiddenCart && (
+              <div>
+                <WrapperCartHeader onClick={() => navigate("/order")}>
+                  <Badge count={order?.orderItems?.length}>
+                    <ShoppingCartOutlined
+                      style={{
+                        fontSize: "30px",
+                        color: isScrolled ? "black" : "#fff",
+                      }}
+                    />
+                  </Badge>
+                  <WrapperTextHeaderSmall
+                    style={{ color: isScrolled ? "black" : "#fff" }}
+                  >
+                    Giỏ hàng
+                  </WrapperTextHeaderSmall>
+                </WrapperCartHeader>
+              </div>
+            )}
+          </Col>
+        </WrapperHeader>
+
+        {/* header mobile */}
+        <WrapperHeaderMobile>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <Dropdown
+              menu={{
+                items,
+              }}
+              trigger={["click"]}
+            >
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <MenuOutlined
+                    style={{
+                      fontSize: "20px",
+                      color: isScrolled ? "#000" : "#fff",
+                    }}
+                  />
+                </Space>
+              </a>
+            </Dropdown>
+            <div style={{ position: "relative" }}>
+              <span
+                style={{
+                  cursor: "pointer",
+                  fontSize: "20px",
+                  color: isScrolled
+                    ? "black"
+                    : adminPath === "admin"
+                    ? "#000"
+                    : "#fff",
+                  display: "flex",
+                }}
+                onClick={listening === false ? startListening : stopListening}
+              >
+                {listening === false ? (
+                  <AudioMutedOutlined />
+                ) : (
+                  <AudioOutlined />
+                )}
+              </span>
+              <div
+                style={{
+                  width: "400px",
+                  height: "30px",
+                  overflow: "auto",
+                  display: listening === true ? "block" : "none",
+                  position: "absolute",
+                  zIndex: "5",
+                  background: "#fff",
+                  top: isScrolled ? "40px" : "52px",
+                  textAlign: "center",
+                  left: "-100px",
+                  borderRadius: "15px",
+                }}
+              >
+                <span>{transcript}</span>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: "flex" }}>
+            <div className="dropdown">
+              <button
+                className="btn btn-secondary "
+                style={{ background: "none", border: "none" }}
+                type="button"
+                id="dropdownMenu2"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <SearchOutlined
+                  style={{ color: isScrolled ? "black" : "#fff" }}
+                />
+              </button>
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenu2"
+                style={{ transform: "translate(0px, 50px)" }}
+              >
+                <ButtonInputSearch
+                  placeholder="input search text"
+                  size="large"
+                  // textButton ="Tìm kiếm"
+                  // bordered={false}
+                  backgroundColorInput="#fff"
+                  borderRadius="0px"
+                  border="none"
+                  backgroundColorButton="none"
+                  width="300px"
+                  colorButton="#000"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  onChange={onSearch}
+                />
+              </ul>
+            </div>
             <WrapperHeaderAccount>
               {user?.avatar ? (
                 <WrapperImgAvatar src={userAvatar} alt="avatar" />
@@ -1036,29 +1339,10 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </div>
               )}
             </WrapperHeaderAccount>
-          </Loading>
-          {!isHiddenCart && (
-            <div>
-              <WrapperCartHeader onClick={() => navigate("/order")}>
-                <Badge count={order?.orderItems?.length}>
-                  <ShoppingCartOutlined
-                    style={{
-                      fontSize: "30px",
-                      color: isScrolled ? "black" : "#fff",
-                    }}
-                  />
-                </Badge>
-                <WrapperTextHeaderSmall
-                  style={{ color: isScrolled ? "black" : "#fff" }}
-                >
-                  Giỏ hàng
-                </WrapperTextHeaderSmall>
-              </WrapperCartHeader>
-            </div>
-          )}
-        </Col>
-      </WrapperHeader>
-    </div>
+          </div>
+        </WrapperHeaderMobile>
+      </div>
+    </>
   );
 };
 

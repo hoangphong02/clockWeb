@@ -8,10 +8,13 @@ import imageMoMo from "../../assets/images/MoMo.jpg";
 import imagePayment from "../../assets/images/payment.png";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {
+  WrapperContent,
   WrapperInfo,
   WrapperInputNumber,
   WrapperLeft,
+  WrapperListDelivery,
   WrapperRight,
+  WrapperSection,
 } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -303,29 +306,20 @@ const PaymentPage = () => {
           background: "rgb(239, 239, 239)",
         }}
       >
-        <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
+        <WrapperContent>
           <h3 style={{ margin: "0", fontSize: "15px", padding: "15px 0" }}>
             <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
               Trang chủ
             </span>{" "}
             - Phương thức thanh toán
           </h3>
-          <div style={{ display: "flex" }}>
+          <WrapperSection>
             <WrapperLeft>
               <div style={{ background: "#fff", padding: "20px" }}>
                 <span style={{ fontSize: "20px" }}>
                   Chọn hình thức giao hàng
                 </span>
-                <div
-                  style={{
-                    background: "rgb(240, 248, 255)",
-                    border: "1px solid rgb(194, 225, 255)",
-                    width: "500px",
-                    padding: "15px",
-                    borderRadius: "20px",
-                    margin: "10px 0",
-                  }}
-                >
+                <WrapperListDelivery>
                   <Radio.Group
                     onChange={onChangeRadioDelevery}
                     defaultValue={"Fast Giao hàng tiết kiệm"}
@@ -340,7 +334,7 @@ const PaymentPage = () => {
                       {/*   <Radio value={"Go_JEK Giao hàng tiết kiệm"}><span style={{color:"coral", fontWeight:"500"}}>Go_JEK</span> <span>Giao hàng tiết kiệm</span></Radio>*/}
                     </Space>
                   </Radio.Group>
-                </div>
+                </WrapperListDelivery>
               </div>
               <div
                 style={{
@@ -352,16 +346,7 @@ const PaymentPage = () => {
                 <span style={{ fontSize: "20px" }}>
                   Chọn hình thức thanh toán
                 </span>
-                <div
-                  style={{
-                    background: "rgb(240, 248, 255)",
-                    border: "1px solid rgb(194, 225, 255)",
-                    width: "500px",
-                    padding: "15px",
-                    borderRadius: "20px",
-                    margin: "10px 0",
-                  }}
-                >
+                <WrapperListDelivery>
                   <Radio.Group onChange={onChangeRadioPayment} value={payment}>
                     <Space direction="vertical">
                       <Radio value={"Thanh toán khi nhận hàng"}>
@@ -382,7 +367,7 @@ const PaymentPage = () => {
                       </Radio>
                     </Space>
                   </Radio.Group>
-                </div>
+                </WrapperListDelivery>
               </div>
             </WrapperLeft>
             <WrapperRight>
@@ -478,8 +463,8 @@ const PaymentPage = () => {
                 )}
               </div>
             </WrapperRight>
-          </div>
-        </div>
+          </WrapperSection>
+        </WrapperContent>
 
         <ModalComponent
           title="Cập nhật thông tin giao hàng"

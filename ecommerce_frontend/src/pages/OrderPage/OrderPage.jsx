@@ -4,10 +4,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {
+  WrapperContent,
   WrapperInfo,
+  WrapperInputComponent,
   WrapperInputNumber,
   WrapperLeft,
+  WrapperProductCart,
   WrapperRight,
+  WrapperSection,
+  WrapperTitleProduct,
 } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -471,14 +476,14 @@ const OrderPage = () => {
         padding: "0px 0 20px",
       }}
     >
-      <div style={{ height: "100%", width: "1270px", margin: "0 auto" }}>
+      <WrapperContent>
         <h3 style={{ margin: "0", fontSize: "15px", padding: "15px 0" }}>
           <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
             Trang chủ
           </span>{" "}
           - Giỏ hàng
         </h3>
-        <div style={{ display: "flex" }}>
+        <WrapperSection>
           <WrapperLeft>
             <div
               style={{
@@ -491,15 +496,7 @@ const OrderPage = () => {
             >
               <StepComponent current={currentDelivery} items={itemsDelivery} />
             </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "50px",
-                padding: "10px 10px",
-                background: "#fff",
-                margin: "0 0 10px 0",
-              }}
-            >
+            <WrapperTitleProduct>
               <span style={{ width: "250px" }}>
                 <Checkbox
                   onChange={handleCheckAll}
@@ -521,7 +518,7 @@ const OrderPage = () => {
                 <span>Thành tiền </span>
                 <DeleteOutlined onClick={handleRemoveAllOrder} />
               </div>
-            </div>
+            </WrapperTitleProduct>
             <div
               style={{
                 display: "flex",
@@ -536,10 +533,7 @@ const OrderPage = () => {
               {order?.orderItems.map((order) => {
                 if (order?.name) {
                   return (
-                    <div
-                      className="products"
-                      style={{ display: "flex", width: "100%", gap: "50px" }}
-                    >
+                    <WrapperProductCart className="products">
                       <span
                         style={{
                           width: "250px",
@@ -616,7 +610,7 @@ const OrderPage = () => {
                           onClick={() => handleRemoveOrder(order?.product)}
                         />
                       </div>
-                    </div>
+                    </WrapperProductCart>
                   );
                 }
               })}
@@ -704,8 +698,8 @@ const OrderPage = () => {
               />
             </div>
           </WrapperRight>
-        </div>
-      </div>
+        </WrapperSection>
+      </WrapperContent>
 
       <ModalComponent
         title="Cập nhật thông tin giao hàng"
@@ -739,7 +733,7 @@ const OrderPage = () => {
               },
             ]}
           >
-            <InputComponent
+            <WrapperInputComponent
               value={stateUserDetails.name}
               onChange={handleOnchangeDetails}
               name="name"
@@ -756,7 +750,7 @@ const OrderPage = () => {
               },
             ]}
           >
-            <InputComponent
+            <WrapperInputComponent
               value={stateUserDetails.address}
               onChange={handleOnchangeDetails}
               name="address"
@@ -772,7 +766,7 @@ const OrderPage = () => {
               },
             ]}
           >
-            <InputComponent
+            <WrapperInputComponent
               value={stateUserDetails.phone}
               onChange={handleOnchangeDetails}
               name="phone"
@@ -789,7 +783,7 @@ const OrderPage = () => {
               },
             ]}
           >
-            <InputComponent
+            <WrapperInputComponent
               value={stateUserDetails.city}
               onChange={handleOnchangeDetails}
               name="city"

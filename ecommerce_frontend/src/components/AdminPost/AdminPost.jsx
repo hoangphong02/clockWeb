@@ -129,7 +129,7 @@ const AdminPost = () => {
     if (!isModalOpen) {
       form.setFieldsValue(statePostDetails);
     } else {
-      form.setFieldsValue(statePostDetails);
+      form.setFieldsValue(statePost);
     }
   }, [form, statePostDetails, isModalOpen]);
 
@@ -416,30 +416,12 @@ const AdminPost = () => {
     );
   };
 
-
   // const handleChangeSelect = (value) => {
   //     setStatePost({
   //       ...statePost,
   //       type: value
   //     })
   // }
-
-  const handleIncreaseImage = () => {
-    setImageUpload([...imageUpload, { urlImage: statePost?.imageUL }]);
-    statePost.imageUL = "";
-  };
-  const handleIncreaseImageDetails = () => {
-    setImageUploadDetail([
-      ...imageUploadDetail,
-      { urlImage: statePostDetails?.imageUL },
-    ]);
-    statePostDetails.imageUL = "";
-  };
-  const handleDeleteImageUpload = (url) => {
-    let ArrImage = [];
-    ArrImage = imageUpload.filter((image) => image?.urlImage !== url);
-    setImageUpload(ArrImage);
-  };
 
   const handleDeleteImageUploadDetail = (url) => {
     let ArrImage = [];
@@ -492,7 +474,7 @@ const AdminPost = () => {
             form={form}
           >
             <Form.Item
-              label="Title"
+              label="Tiêu đề"
               name="title"
               rules={[{ required: true, message: "Please input your title!" }]}
             >
@@ -503,7 +485,7 @@ const AdminPost = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Content"
+              label="Nội dung"
               name="content"
               rules={[
                 { required: true, message: "Please input your content!" },
@@ -595,7 +577,7 @@ const AdminPost = () => {
               rules={[{ required: true, message: "Please input your name!" }]}
             >
               {/* <InputComponent value={statePostDetails?._id} onChange={handleOnchangeDetails} name="_id" /> */}
-              <p>{statePostDetails?._id}</p>
+              <span>{statePostDetails?._id}</span>
             </Form.Item>
 
             <Form.Item
@@ -663,8 +645,15 @@ const AdminPost = () => {
                 })}
             </div>
 
-            <div style={{ padding: "0" }}>
-              <p>Thêm hình ảnh</p>
+            <div
+              style={{
+                padding: "0",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <p>Thêm hình ảnh: </p>
               <Upload
                 action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
                 listType="picture"

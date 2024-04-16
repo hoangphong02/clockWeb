@@ -137,7 +137,7 @@ const MyOrderPage = () => {
   useEffect(() => {
     if (dataAdd?.status === "OK") {
       message.success("Đánh giá thành công");
-      if (evaluatedProducts.length == idProduct.length) {
+      if (evaluatedProducts.length === idProduct.length) {
         setModal2Open(false);
       }
     } else {

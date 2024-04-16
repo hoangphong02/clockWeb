@@ -1,7 +1,7 @@
 import Slider from "react-slick";
 import React from "react";
 import { Image } from "antd";
-import { WrapperSliderStyle } from "./style";
+import { WrapperImage, WrapperSliderStyle } from "./style";
 
 const SliderComponent = ({ arrImg }) => {
   function SampleNextArrow(props) {
@@ -40,15 +40,7 @@ const SliderComponent = ({ arrImg }) => {
     <WrapperSliderStyle {...settings}>
       {arrImg?.map((image) => {
         return (
-          <Image
-            key={image}
-            src={image}
-            alt="Slider"
-            preview={false}
-            width="100%"
-            height="600px"
-            object-fit="cover"
-          />
+          <WrapperImage key={image} src={image} alt="Slider" preview={false} />
         );
       })}
     </WrapperSliderStyle>

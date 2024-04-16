@@ -93,7 +93,7 @@ const AdminSlider = () => {
     if (!isModalOpen) {
       form.setFieldsValue(stateProductDetails);
     } else {
-      form.setFieldsValue(stateProductDetails);
+      form.setFieldsValue(stateProduct);
     }
   }, [form, stateProductDetails, isModalOpen]);
 
@@ -408,7 +408,6 @@ const AdminSlider = () => {
       }
     );
   };
-
 
   const handleChangeSelect = (value) => {
     setStateProduct({

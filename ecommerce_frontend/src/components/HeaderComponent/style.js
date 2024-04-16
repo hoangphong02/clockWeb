@@ -7,6 +7,17 @@ export const WrapperHeader = styled(Row)`
   flex-wrap: nowrap;
   // width: 1270px;
   // padding: 20px 30px;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+export const WrapperHeaderMobile = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 export const WrapperTextHeader = styled.span`
@@ -80,7 +91,7 @@ export const WrapperMenuItem = styled.div`
 `;
 
 export const WrapperColMenu = styled(Col)`
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
     align-items: flex-start;
   }

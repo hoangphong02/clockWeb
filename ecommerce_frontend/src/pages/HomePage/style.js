@@ -156,6 +156,16 @@ export const AnimatedImage = styled.div`
   align-items: center;
   animation: moveUpDown 2s ease-in-out infinite; /* Điều chỉnh thời gian và hiệu ứng ở đây */
 
+  img {
+    height: 450px;
+  }
+  @media (max-width: 768px) {
+    img {
+      height: 100%;
+      width: auto;
+      margin-left: -110px;
+    }
+  }
   @keyframes moveUpDown {
     0% {
       transform: translateY(0);
@@ -168,5 +178,70 @@ export const AnimatedImage = styled.div`
     100% {
       transform: translateY(0);
     }
+  }
+`;
+export const WrapperTitleProductTrend = styled.div`
+  color: rgb(130, 26, 32);
+  padding: 3.1rem 6.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 50px 0px;
+  text-align: center;
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 20px;
+  }
+`;
+
+export const WrapperProductTrend = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  padding: 50px;
+  flex-wrap: wrap;
+  @media (max-width: 768px) {
+    gap: 20px;
+    padding: 20px;
+  }
+`;
+
+export const WrapperTitleProductType = styled.div`
+  color: rgb(130, 26, 32);
+  padding: 3.1rem 6.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 50px 0px;
+  text-align: center;
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 40px;
+  }
+`;
+
+export const WrapperTitleProductNoel = styled.div`
+  color: rgb(130, 26, 32);
+  padding: 3.1rem 6.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  margin: 0 0 40px 0;
+  text-align: center;
+  @media (max-width: 768px) {
+    margin: 0;
+    padding: 40px;
   }
 `;

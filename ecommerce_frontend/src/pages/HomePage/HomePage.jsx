@@ -2,8 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   AnimatedImage,
   WrapperButtonComponent,
+  WrapperProductTrend,
   WrapperProductTrending,
   WrapperTextProductTrending,
+  WrapperTitleProductNoel,
+  WrapperTitleProductTrend,
+  WrapperTitleProductType,
 } from "./style";
 import SliderComponent from "../../components/SliderComponent/SliderComponent";
 import headerTet from "../../assets/images/factory_bg_1.png";
@@ -245,34 +249,15 @@ const HomePage = () => {
             <img src={headerTet} style={{ width: "100%" }} />
 
             <div>
-              <div
+              <WrapperTitleProductTrend
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "50px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>SẢN PHẨM NỔI BẬT</h2>
-              </div>
+              </WrapperTitleProductTrend>
               <ScrollAnimation animateIn="fadeIn" duration={2}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "100px",
-                    padding: "50px",
-                    flexWrap: "wrap",
-                  }}
-                >
+                <WrapperProductTrend>
                   {productsOutstanding?.map((pro) => {
                     return (
                       <WrapperProductTrending style={{ position: "relative" }}>
@@ -307,7 +292,7 @@ const HomePage = () => {
                       </WrapperProductTrending>
                     );
                   })}
-                </div>
+                </WrapperProductTrend>
               </ScrollAnimation>
               <div style={{ textAlign: "center" }}>
                 <WrapperButtonComponent
@@ -333,24 +318,13 @@ const HomePage = () => {
                 padding: "0 0 40px 0",
               }}
             >
-              <div
+              <WrapperTitleProductType
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "50px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>VẬT PHẨM TRANG TRÍ TẾT</h2>
-              </div>
+              </WrapperTitleProductType>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
                   animateIn="bounceInLeft"
@@ -371,20 +345,9 @@ const HomePage = () => {
                 padding: "20px 0 40px 0",
               }}
             >
-              <div
+              <WrapperTitleProductNoel
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "0 0 40px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>
@@ -392,7 +355,7 @@ const HomePage = () => {
                   <br></br>
                   GIÁNG SINH
                 </h2>
-              </div>
+              </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
                   animateIn="bounceInRight"
@@ -414,27 +377,16 @@ const HomePage = () => {
                 padding: "20px 0 40px 0",
               }}
             >
-              <div
+              <WrapperTitleProductNoel
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "0 0 40px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>
                   VẬT PHẨM TRANG TRÍ
                   <br></br> LỄ TÌNH NHÂN
                 </h2>
-              </div>
+              </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
                   animateIn="bounceInLeft"
@@ -457,26 +409,15 @@ const HomePage = () => {
                 padding: "0 0 40px 0",
               }}
             >
-              <div
+              <WrapperTitleProductNoel
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "0 0 40px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>
                   VẬT PHẨM TRANG TRÍ <br></br> TRUNG THU
                 </h2>
-              </div>
+              </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
                   animateIn="bounceInRight"
@@ -499,26 +440,15 @@ const HomePage = () => {
                 padding: "0 0 40px 0",
               }}
             >
-              <div
+              <WrapperTitleProductNoel
                 style={{
                   backgroundImage: `url(${backgroundTitleTet})`,
-                  color: "#821a20",
-                  padding: "3.1rem 6.1rem",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                  backgroundPosition: "center",
-                  margin: "0 0 40px 0",
-                  textAlign: "center",
                 }}
               >
                 <h2>
                   VẬT PHẨM TRANG TRÍ <br></br> HALLOWEEN
                 </h2>
-              </div>
+              </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
                   animateIn="bounceInLeft"
@@ -541,7 +471,7 @@ const HomePage = () => {
                 }}
               >
                 <AnimatedImage>
-                  <img src={ImageContact} style={{ height: "450px" }} />
+                  <img src={ImageContact} />
                 </AnimatedImage>
                 <div
                   style={{
