@@ -255,7 +255,7 @@ const AdminSlider = () => {
     {
       title: "Loại",
       dataIndex: "type",
-      sorter: (a, b) => a.type.length - b.type.length,
+      // sorter: (a, b) => a.type.length - b.type.length,
       ...getColumnSearchProps("type"),
     },
     {
@@ -415,6 +415,12 @@ const AdminSlider = () => {
       type: value,
     });
   };
+    const handleChangeSelectDetails = (value) => {
+    setStateProductDetails({
+      ...stateProductDetails,
+      type: value,
+    });
+  };
 
   return (
     <div>
@@ -559,10 +565,18 @@ const AdminSlider = () => {
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
-              <InputComponent
+              {/* <InputComponent
                 value={stateProductDetails?.type}
                 onChange={handleOnchangeDetails}
                 name="type"
+              /> */}
+              <Select
+                name="type"
+                // defaultValue="lucy"
+                // style={{ width: 120 }}
+                value={stateProductDetails.type}
+                onChange={handleChangeSelectDetails}
+                options={renderOptions(typeProduct?.data?.data)}
               />
             </Form.Item>
             <Form.Item

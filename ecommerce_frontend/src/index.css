@@ -233,7 +233,7 @@ a:hover {
 
 .footer-32892 {
   background-color: #202126;
-  padding: 7rem 0;
+  padding: 5rem 0;
   color: #888;
   font-size: 16px;
 }
@@ -380,6 +380,12 @@ a:hover {
 }
 
 @media (max-width: 767.98px) {
+  .footer-32892 {
+
+    padding: 1rem 0;
+
+  }
+
   .footer-32892 .footer-menu li a {
     display: block;
     padding-left: 0px;

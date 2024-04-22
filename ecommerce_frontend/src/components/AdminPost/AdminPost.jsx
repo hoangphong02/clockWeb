@@ -271,7 +271,7 @@ const AdminPost = () => {
     {
       title: "Nội dung",
       dataIndex: "content",
-      sorter: (a, b) => a.content.length - b.content.length,
+      // sorter: (a, b) => a.content.length - b.content.length,
       ...getColumnSearchProps("content"),
     },
     {

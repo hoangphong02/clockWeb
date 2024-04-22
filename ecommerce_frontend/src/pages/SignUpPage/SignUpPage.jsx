@@ -66,8 +66,8 @@ const SignUpPage = () => {
         <InputForm  placeholder="abc@gmail.com" style={{marginBottom: "10px"}} value={email} onChange={handleOnchangeEmail}/>
         {/* <InputForm  placeholder="password" style={{margin: "10px 0"}}/> */}
 
-        <Input.Password placeholder="password" style={{margin:" 10px 0",borderTop: "none", borderLeft: "none",borderRight: "none"}}  value={password} onChange={handleOnchangePassword}/>
-        <Input.Password placeholder="Confirm password" style={{margin:" 10px 0",borderTop: "none", borderLeft: "none",borderRight: "none"}}  value={confirmPassword} onChange={handleOnchangeConfirmPassword}/>
+        <Input.Password placeholder="Mật khẩu" style={{margin:" 10px 0",borderTop: "none", borderLeft: "none",borderRight: "none"}}  value={password} onChange={handleOnchangePassword}/>
+        <Input.Password placeholder="Xác nhận mật khẩu" style={{margin:" 10px 0",borderTop: "none", borderLeft: "none",borderRight: "none"}}  value={confirmPassword} onChange={handleOnchangeConfirmPassword}/>
         {data?.status==="ERR" && <span style={{color:"red", fontSize:"13px", padding:"10px 0"}}>{data?.message}</span>}
        <Loading isLoading={isLoading}>
         <ButtonComponent

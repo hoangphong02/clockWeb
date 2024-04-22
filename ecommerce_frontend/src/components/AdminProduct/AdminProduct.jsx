@@ -361,7 +361,7 @@ const AdminProduct = () => {
     {
       title: "Tên",
       dataIndex: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
+      // sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
@@ -378,7 +378,7 @@ const AdminProduct = () => {
     {
       title: "Giá",
       dataIndex: "price",
-      sorter: (a, b) => a.price - b.price,
+      // sorter: (a, b) => a.price - b.price,
       filters: [
         {
           text: ">= 50.000",
@@ -399,7 +399,7 @@ const AdminProduct = () => {
     {
       title: "Sao",
       dataIndex: "rating",
-      sorter: (a, b) => a.rating - b.rating,
+      // sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
           text: ">= 3",
@@ -420,7 +420,7 @@ const AdminProduct = () => {
     {
       title: "Loại",
       dataIndex: "type",
-      sorter: (a, b) => a.type.length - b.type.length,
+      // sorter: (a, b) => a.type.length - b.type.length,
       ...getColumnSearchProps("type"),
     },
     {

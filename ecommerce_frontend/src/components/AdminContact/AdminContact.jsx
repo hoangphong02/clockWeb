@@ -246,19 +246,19 @@ const AdminContact = () => {
       title: "Tên ",
       dataIndex: "name",
       render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.name.length - b.name.length,
+      // sorter: (a, b) => a.name.length - b.name.length,
       ...getColumnSearchProps("name"),
     },
     {
       title: "Điện thoại",
       dataIndex: "phone",
-      sorter: (a, b) => a.phone.length - b.phone.length,
+      // sorter: (a, b) => a.phone.length - b.phone.length,
       ...getColumnSearchProps("phone"),
     },
     {
       title: "Nội dung",
       dataIndex: "message",
-      sorter: (a, b) => a.message.length - b.message.length,
+      // sorter: (a, b) => a.message.length - b.message.length,
       ...getColumnSearchProps("message"),
     },
     {

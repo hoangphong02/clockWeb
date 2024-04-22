@@ -326,26 +326,26 @@ const AdminOrder = () => {
       title: "Mã đơn hàng",
       dataIndex: "key",
       // render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.key.length - b.key.length,
+      // sorter: (a, b) => a.key.length - b.key.length,
       ...getColumnSearchProps("key"),
     },
     {
       title: "Tên khách hàng",
       dataIndex: "userName",
       render: (text) => <a>{text}</a>,
-      sorter: (a, b) => a.userName.length - b.userName.length,
+      // sorter: (a, b) => a.userName.length - b.userName.length,
       ...getColumnSearchProps("userName"),
     },
     {
       title: "Điện thoại",
       dataIndex: "phone",
-      sorter: (a, b) => a.phone.length - b.phone.length,
+      // sorter: (a, b) => a.phone.length - b.phone.length,
       ...getColumnSearchProps("phone"),
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
-      sorter: (a, b) => a.address.length - b.address.length,
+      // sorter: (a, b) => a.address.length - b.address.length,
       ...getColumnSearchProps("address"),
     },
     {
@@ -445,7 +445,7 @@ const AdminOrder = () => {
     {
       title: "Giá",
       dataIndex: "totalPrice",
-      sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
+      // sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
       ...getColumnSearchProps("totalPrice"),
     },
     {
