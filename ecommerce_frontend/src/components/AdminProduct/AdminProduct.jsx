@@ -50,6 +50,11 @@ const AdminProduct = () => {
   });
   const [stateProduct, setStateProduct] = useState(inittial());
   const [stateProductDetails, setStateProductDetails] = useState(inittial());
+  const [dataProductDiscount, setDataProductDiscount] = useState({
+    name: "",
+    image: "",
+    followers: [],
+  });
 
   const [form] = Form.useForm();
 
@@ -142,6 +147,17 @@ const AdminProduct = () => {
     setIsLoadingUpdate(false);
   };
 
+  const fetchGetDetailsProductDiscount = async (rowSelected) => {
+    const res = await ProductService.getDetailProduct(rowSelected);
+    if (res?.data) {
+      setDataProductDiscount({
+        name: res?.data?.name,
+        image: res?.data?.image,
+        followers: res?.data?.followers,
+      });
+    }
+  };
+
   useEffect(() => {
     if (!isModalOpen) {
       form.setFieldsValue(stateProductDetails);
@@ -156,6 +172,11 @@ const AdminProduct = () => {
       fetchGetDetailsProduct(rowSelected);
     }
   }, [rowSelected, isOpenDrawer]);
+  useEffect(() => {
+    if (rowSelected && isOpenModalDiscount) {
+      fetchGetDetailsProductDiscount(rowSelected);
+    }
+  }, [rowSelected, isOpenModalDiscount]);
 
   const handleDetailsProduct = () => {
     setIsOpenDrawer(true);
@@ -397,16 +418,16 @@ const AdminProduct = () => {
       },
     },
     {
-      title: "Sao",
-      dataIndex: "rating",
+      title: "Tồn kho",
+      dataIndex: "countInStock",
       // sorter: (a, b) => a.rating - b.rating,
       filters: [
         {
-          text: ">= 3",
+          text: ">= 50",
           value: ">=",
         },
         {
-          text: "<= 3",
+          text: "<= 50",
           value: "<=",
         },
       ],
@@ -526,7 +547,7 @@ const AdminProduct = () => {
       name: stateProduct.name,
       price: stateProduct.price,
       description: stateProduct.description,
-      rating: stateProduct.rating,
+      rating: 5,
       image: stateProduct.image,
       type:
         stateProduct.type === "add_type"
@@ -552,6 +573,9 @@ const AdminProduct = () => {
               ?._id,
             token: user?.access_token,
             value: valueDiscount,
+            name: dataProductDiscount?.name,
+            image: dataProductDiscount?.image,
+            followers: dataProductDiscount?.followers,
             startDiscount: dateStart,
             endDiscount: dateEnd,
           },
@@ -567,6 +591,9 @@ const AdminProduct = () => {
         {
           token: user?.access_token,
           product: rowSelected,
+          name: dataProductDiscount?.name,
+          image: dataProductDiscount?.image,
+          followers: dataProductDiscount?.followers,
           value: valueDiscount,
           startDiscount: dateStart,
           endDiscount: dateEnd,
@@ -808,19 +835,6 @@ const AdminProduct = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Sao"
-              name="rating"
-              rules={[
-                { required: true, message: "Please input your count rating!" },
-              ]}
-            >
-              <InputComponent
-                value={stateProduct.rating}
-                onChange={handleOnchange}
-                name="rating"
-              />
-            </Form.Item>
-            <Form.Item
               label="Giảm giá"
               name="discount"
               rules={[
@@ -948,7 +962,7 @@ const AdminProduct = () => {
                 name="description"
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Sao đánh giá"
               name="rating"
               rules={[
@@ -960,7 +974,7 @@ const AdminProduct = () => {
                 onChange={handleOnchangeDetails}
                 name="rating"
               />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="Giảm giá"
               name="discount"

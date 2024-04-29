@@ -3,8 +3,8 @@ const JwtService = require("../services/JwtService");
 
 const createDiscount = async (req, res) => {
   try {
-    const { product, value, startDiscount, endDiscount } = req.body;
-    if (!value || !startDiscount || !endDiscount || !product) {
+    const { product, name,image, value, startDiscount, endDiscount } = req.body;
+    if (!value || !startDiscount || !endDiscount || !product || !name || !image) {
       return res.status(404).json({
         status: "ERR",
         message: "The input is required",

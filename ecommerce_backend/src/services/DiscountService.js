@@ -1,7 +1,16 @@
 const Discount = require("../models/DiscountProduct");
+const EmailService = require("./EmailService");
 const createDiscount = (newDiscount) => {
   return new Promise(async (resolve, reject) => {
-    const { product, value, startDiscount, endDiscount } = newDiscount;
+    const {
+      product,
+      value,
+      startDiscount,
+      endDiscount,
+      followers,
+      name,
+      image,
+    } = newDiscount;
     try {
       const checkDiscount = await Discount.findOne({
         product: product,
@@ -17,6 +26,9 @@ const createDiscount = (newDiscount) => {
           value,
           startDiscount,
           endDiscount,
+          followers,
+          name,
+          image,
         });
         if (createDiscount) {
           resolve({
@@ -24,6 +36,7 @@ const createDiscount = (newDiscount) => {
             message: "success",
             data: createDiscount,
           });
+          await EmailService.sendEmailDiscountProductToFollowers(newDiscount);
         }
       }
     } catch (e) {
@@ -115,6 +128,9 @@ const updateDiscount = (id, data) => {
         message: "success",
         data: updateDiscount,
       });
+      if (updateDiscount) {
+        await EmailService.sendEmailDiscountProductToFollowers(data);
+      }
     } catch (e) {
       reject(e);
     }
@@ -136,12 +152,11 @@ const deleteManyDiscount = (ids) => {
   });
 };
 
-
 module.exports = {
   createDiscount,
   getAllDiscount,
   deleteDiscount,
   getDetailsDiscount,
   updateDiscount,
-  deleteManyDiscount
+  deleteManyDiscount,
 };

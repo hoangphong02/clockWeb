@@ -46,6 +46,7 @@ const AdminPost = () => {
   const [statePost, setStatePost] = useState({
     title: "",
     content: "",
+    type: "",
     likeCount: [],
     image: [],
     imageUL: "",
@@ -54,6 +55,7 @@ const AdminPost = () => {
     id: "",
     title: "",
     content: "",
+    type: "",
     likeCount: [],
     image: [],
     imageUL: "",
@@ -62,6 +64,7 @@ const AdminPost = () => {
   const [statePostDetailsUpdate, setStatePostDetailsUpdate] = useState({
     title: "",
     content: "",
+    type: "",
     likeCount: [],
     image: [],
   });
@@ -70,6 +73,7 @@ const AdminPost = () => {
     setStatePostDetailsUpdate({
       title: statePostDetails?.title,
       content: statePostDetails?.content,
+      type: statePostDetails?.type,
       likeCount: statePostDetails?.likeCount,
       image: imageUploadDetail,
     });
@@ -93,7 +97,15 @@ const AdminPost = () => {
     const res = PostService.deletePost(id, token);
     return res;
   });
+  const fetchAllTypeProduct = async () => {
+    const res = await ProductService.getAllTypeProduct();
+    return res;
+  };
 
+  const typeProduct = useQuery({
+    queryKey: ["type-product"],
+    queryFn: fetchAllTypeProduct,
+  });
   //  const mutationDeletedMany = useMutationHook(
   //   (data) => {
   //     const {
@@ -118,6 +130,7 @@ const AdminPost = () => {
         _id: res?.data?._id,
         title: res?.data?.title,
         content: res?.data?.content,
+        type: res?.data?.type,
         image: res?.data?.image,
       });
       setImageUploadDetail(res?.data?.image);
@@ -274,6 +287,12 @@ const AdminPost = () => {
       // sorter: (a, b) => a.content.length - b.content.length,
       ...getColumnSearchProps("content"),
     },
+     {
+      title: "Loại bài đăng",
+      dataIndex: "type",
+      // sorter: (a, b) => a.content.length - b.content.length,
+      ...getColumnSearchProps("type"),
+    },
     {
       title: "Hành động",
       dataIndex: "action",
@@ -359,6 +378,7 @@ const AdminPost = () => {
         token: user?.access_token,
         title: statePost?.title,
         content: statePost?.content,
+        type: statePost?.type,
         likeCount: statePost?.likeCount,
         image: imageUpload,
       },
@@ -429,6 +449,18 @@ const AdminPost = () => {
     setImageUploadDetail(ArrImage);
   };
 
+  const handleChangeSelect = (value) => {
+    setStatePost({
+      ...statePost,
+      type: value,
+    });
+  };
+   const handleChangeSelectDetail = (value) => {
+    setStatePostDetails({
+      ...statePostDetails,
+      type: value,
+    });
+  };
   return (
     <div>
       <AdminHeader textHeader={"Quản lý bài đăng"} />
@@ -497,6 +529,33 @@ const AdminPost = () => {
                 name="content"
               />
             </Form.Item>
+            <Form.Item
+              label="Loại bài đăng"
+              name="type"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              <Select
+                name="type"
+                // defaultValue="lucy"
+                // style={{ width: 120 }}
+                value={statePost.type}
+                onChange={handleChangeSelect}
+                options={renderOptions(typeProduct?.data?.data)}
+              />
+            </Form.Item>
+            {statePost.type === "add_type" && (
+              <Form.Item
+                label="New type"
+                name="newType"
+                rules={[{ required: true, message: "Please input your type!" }]}
+              >
+                <InputComponent
+                  value={statePost.newType}
+                  onChange={handleOnchange}
+                  name="newType"
+                />
+              </Form.Item>
+            )}
 
             <div
               style={{
@@ -604,6 +663,35 @@ const AdminPost = () => {
                 name="content"
               />
             </Form.Item>
+
+            <Form.Item
+              label="Loại bài đăng"
+              name="type"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              <Select
+                name="type"
+                // defaultValue="lucy"
+                // style={{ width: 120 }}
+                value={statePostDetails.type}
+                onChange={handleChangeSelectDetail}
+                options={renderOptions(typeProduct?.data?.data)}
+              />
+            </Form.Item>
+            {statePostDetails.type === "add_type" && (
+              <Form.Item
+                label="New type"
+                name="newType"
+                rules={[{ required: true, message: "Please input your type!" }]}
+              >
+                <InputComponent
+                  value={statePostDetails.newType}
+                  onChange={handleOnchangeDetails}
+                  name="newType"
+                />
+              </Form.Item>
+            )}
+
             <div
               style={{
                 textAlign: "center",
@@ -674,7 +762,7 @@ const AdminPost = () => {
         </Loading>
       </DrawerComponent>
       <ModalComponent
-        title="Xóa sản phẩm"
+        title="Xóa bài đăng"
         open={isModalOpenDelete}
         onCancel={handleCancelDelete}
         onOk={handleDeleteImage}

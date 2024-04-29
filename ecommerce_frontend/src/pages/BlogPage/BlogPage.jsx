@@ -322,6 +322,16 @@ const BlogPage = () => {
     const data = numberComments?.find((item) => item?.id === id);
     return data?.count;
   };
+
+  const handleNavigateType = (type) => {
+    navigate(
+      `/product/${type
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        ?.replace(/ /g, "_")}`,
+      { state: type }
+    );
+  };
   return (
     <>
       <div style={{ background: "#fff" }}>
@@ -358,6 +368,9 @@ const BlogPage = () => {
                           </p>
                         </div>
                         <div>{post?.content}</div>
+                        <div onClick={()=> handleNavigateType(post?.type)} style={{cursor:"pointer", color:"rgb(18 103 160)"}}>
+                          Xem vật phẩm {post?.type}
+                        </div>
                       </div>
                       {post?.image?.length ? (
                         <div
