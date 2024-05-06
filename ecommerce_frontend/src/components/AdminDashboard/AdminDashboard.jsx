@@ -169,8 +169,10 @@ const AdminDashboard = () => {
       }
     });
   const dataUserOrderTotal = Object.values(userOrderTotal);
-
-  const updatedDataUserOrderTotal = dataUserOrderTotal?.map((item) => {
+  const sorterDataOrder = [...dataUserOrderTotal].sort(
+    (a, b) => b.total - a.total
+  );
+  const updatedDataUserOrderTotal = sorterDataOrder?.map((item) => {
     const userMatch = users?.data?.find((user) => user?._id === item?.name);
     if (userMatch) {
       return {

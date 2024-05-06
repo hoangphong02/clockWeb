@@ -882,7 +882,7 @@ const ContactPage = () => {
 
         <div className="text-center">
           <WrapperButtonMore
-            classNameName="btn btn-primary"
+            className="btn btn-primary"
             textButton={"Send message"}
             style={{
               fontFamily: "'Quicksand', sans-serif",

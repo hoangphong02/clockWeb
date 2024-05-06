@@ -824,7 +824,7 @@ const AdminProduct = () => {
               rules={[
                 {
                   required: true,
-                  message: "Please input your count description!",
+                  message: "Please input your description!",
                 },
               ]}
             >

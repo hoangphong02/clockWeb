@@ -154,10 +154,9 @@ const BlogPage = () => {
   };
 
   const onHandleLike = (idPost) => {
-     if (!user?.id) {
+    if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
-    }
-    else{
+    } else {
       if (isPostLike(idPost) === false) {
         onAddLike(idPost);
         likePost(idPost);
@@ -223,9 +222,9 @@ const BlogPage = () => {
     setContent(e.target.value);
   };
   const handleCreateComment = () => {
-     if (!user?.id) {
+    if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
-    }else{
+    } else {
       if (user?.access_token) {
         mutationCreateComment.mutate({
           token: user?.access_token,
@@ -345,7 +344,7 @@ const BlogPage = () => {
             {posts?.data &&
               posts?.data?.map((post) => {
                 return (
-                  <WrapperBlogItem className="container">
+                  <WrapperBlogItem key={post?.type} className="container">
                     <div>
                       <div style={{ padding: "20px" }}>
                         <div
@@ -368,7 +367,13 @@ const BlogPage = () => {
                           </p>
                         </div>
                         <div>{post?.content}</div>
-                        <div onClick={()=> handleNavigateType(post?.type)} style={{cursor:"pointer", color:"rgb(18 103 160)"}}>
+                        <div
+                          onClick={() => handleNavigateType(post?.type)}
+                          style={{
+                            cursor: "pointer",
+                            color: "rgb(18 103 160)",
+                          }}
+                        >
                           Xem vật phẩm {post?.type}
                         </div>
                       </div>

@@ -57,7 +57,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const { state } = useLocation();
   const location = useLocation();
   const openMic = location.state?.openMic || false;
-  console.log("openMic", openMic);
 
   const path = window.location.pathname;
   const segments = path.split("/");

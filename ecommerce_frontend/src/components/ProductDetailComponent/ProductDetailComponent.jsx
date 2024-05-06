@@ -398,12 +398,16 @@ const ProductDetailComponent = ({
   };
 
   const onHandleFollower = () => {
-    if (isFollowerProduct === false) {
-      onAddFollower();
-      setIsFollowerProduct(true);
+    if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
     } else {
-      onDeleteFollower();
-      setIsFollowerProduct(false);
+      if (isFollowerProduct === false) {
+        onAddFollower();
+        setIsFollowerProduct(true);
+      } else {
+        onDeleteFollower();
+        setIsFollowerProduct(false);
+      }
     }
   };
 
