@@ -27,7 +27,7 @@ const createPost = (newPost) => {
 const getAllPost = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const allPost = await Post.find();
+      const allPost = await Post.find().sort({ createdAt: -1 });
       resolve({
         status: "OK",
         message: "success",

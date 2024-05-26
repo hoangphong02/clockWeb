@@ -51,7 +51,7 @@ const createContact = (newContact) => {
 const getAllContacts = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const contact = await Contact.find();
+      const contact = await Contact.find().sort({ createdAt: -1 });
       if (contact === null) {
         resolve({
           status: "ERR",

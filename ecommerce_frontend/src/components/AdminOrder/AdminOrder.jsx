@@ -456,7 +456,7 @@ const AdminOrder = () => {
   ];
   const dataTable =
     orders?.data?.length &&
-    orders?.data?.reverse().map((order) => {
+    orders?.data?.map((order) => {
       return {
         ...order,
         key: order._id,
@@ -631,6 +631,7 @@ const AdminOrder = () => {
     );
   };
 
+  console.log("dataTable", orders);
   return (
     <div>
       <AdminHeader textHeader={"Quản lý đơn hàng"} />

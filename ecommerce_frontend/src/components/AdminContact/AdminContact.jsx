@@ -57,7 +57,6 @@ const AdminContact = () => {
     return res;
   });
 
-
   const handleDeleteContact = async (rowSelected) => {
     mutationDeleted.mutate(
       { id: rowSelected, token: user?.access_token },
@@ -291,7 +290,7 @@ const AdminContact = () => {
   ];
   const dataTable =
     contacts?.data?.length &&
-    contacts?.data?.reverse().map((contact) => {
+    contacts?.data?.map((contact) => {
       return {
         ...contact,
         key: contact._id,

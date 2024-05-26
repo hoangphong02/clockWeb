@@ -33,7 +33,7 @@ const createSlider = (newSlider) => {
 const getAllSlider = async () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const allSlider = await Slider.find();
+      const allSlider = await Slider.find().sort({ createdAt: -1 });
       resolve({
         status: "OK",
         message: "success",

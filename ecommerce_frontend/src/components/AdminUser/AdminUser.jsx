@@ -280,7 +280,7 @@ const AdminUser = () => {
   ];
   const dataTable =
     users?.data?.length &&
-    users?.data?.reverse().map((user) => {
+    users?.data?.map((user) => {
       return {
         ...user,
         key: user._id,

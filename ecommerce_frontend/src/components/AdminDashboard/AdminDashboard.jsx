@@ -316,7 +316,9 @@ const AdminDashboard = () => {
                 Biểu đồ doanh thu theo tháng
               </p>
               <div style={{ height: "300px", marginTop: "30px" }}>
-                <RevenueStatisticsChart data={dataToTalPriceOrderMonth} />
+                <RevenueStatisticsChart
+                  data={dataToTalPriceOrderMonth.reverse()}
+                />
               </div>
             </div>
             <div style={{ flex: "1" }}>

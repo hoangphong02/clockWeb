@@ -452,7 +452,7 @@ const AdminProduct = () => {
   ];
   const dataTable =
     products?.data?.length &&
-    products?.data?.reverse().map((product) => {
+    products?.data?.map((product) => {
       return { ...product, key: product._id };
     });
 

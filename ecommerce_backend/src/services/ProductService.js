@@ -23,8 +23,7 @@ const createProduct = (newProduct) => {
           status: "ERR",
           message: "The name of product is already",
         });
-      }
-      else{
+      } else {
         const createProduct = await Product.create({
           name,
           image,
@@ -44,7 +43,6 @@ const createProduct = (newProduct) => {
           });
         }
       }
-
     } catch (e) {
       reject(e);
     }
