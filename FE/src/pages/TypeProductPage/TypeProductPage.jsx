@@ -1,47 +1,22 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import {
   WrapperAll,
   WrapperBody,
-  WrapperButtonMore,
-  WrapperMic,
   WrapperPanigation,
   WrapperProducts,
   WrapperRight,
   WrapperSideBar,
   WrapperTypeProduct,
 } from "./style";
-import CardComponent from "../../components/CardComponent/CardComponent";
 import * as ProductService from "../../services/ProductService";
-import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/Loading/Loading";
 import { useDebounce } from "../../hooks/useDebounce";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { Pagination, message } from "antd";
 import { typeProductContant } from "../../contant";
-import { AudioMutedOutlined, AudioOutlined } from "@ant-design/icons";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CartSliderComponent from "../../components/CartSliderComponent/CartSliderComponent";
-
-import bgTypeGiangSinhHoaTuyet1 from "../../assets/images/bgHoaTuyet1.png";
-import bgTypeGiangSinhHoaTuyet2 from "../../assets/images/bgHoaTuyet2.png";
-import bgTypeGiangSinhHoaTuyet3 from "../../assets/images/bgHoaTuyet3.png";
-
-import bgTypeTetHoaMai2 from "../../assets/images/bgTypeTetHoaMai5.png";
-import bgTypeTetHoaMai3 from "../../assets/images/bgTypeTetHoaMai4.png";
-
-import bgTypeTrungthu1 from "../../assets/images/bgTypeTrungthu7.jpg";
-import bgTypeTrungthu5 from "../../assets/images/bgTypeTrungthu3.jpg";
-import bgTypeTrungthu3 from "../../assets/images/bgTypeTrungthu3.jpg";
-
-import bgTypeHalloween from "../../assets/images/bgTypeHalloween2.png";
-
-import bgTypeValentine from "../../assets/images/bgTypeValentine1.png";
-import { searchProduct } from "../../redux/slides/productSlide";
 
 const TypeProductPage = () => {
   const searchProduct1 = useSelector((state) => state?.product?.search);
@@ -55,8 +30,7 @@ const TypeProductPage = () => {
   const [value1, setValue1] = useState(0);
   const [value2, setValue2] = useState(3500000);
   const navigate = useNavigate();
-  const [arrImageBackgroundAmination, setArrImageBackgroundAmination] =
-    useState([]);
+  console.log("type", type);
   const [panigate, setPanigate] = useState({
     page: 0,
     limit: 6,
@@ -133,37 +107,11 @@ const TypeProductPage = () => {
     setFilter(true);
   };
 
-  const getImageBgAmination = async () => {
-    if (type === "giang_sinh") {
-      setArrImageBackgroundAmination([
-        bgTypeGiangSinhHoaTuyet1,
-        bgTypeGiangSinhHoaTuyet2,
-        bgTypeGiangSinhHoaTuyet3,
-      ]);
-    }
-
-    if (type === "tet") {
-      setArrImageBackgroundAmination([bgTypeTetHoaMai3, bgTypeTetHoaMai3]);
-    }
-
-    if (type === "trung_thu") {
-      setArrImageBackgroundAmination([bgTypeTrungthu1]);
-    }
-    if (type === "halloween") {
-      setArrImageBackgroundAmination([bgTypeHalloween, bgTypeHalloween]);
-    }
-    if (type === "tinh_nhan") {
-      setArrImageBackgroundAmination([bgTypeValentine, bgTypeValentine]);
-    }
-  };
-
-  useEffect(() => {
-    getImageBgAmination();
-  }, [type]);
+  console.log(typeProduct);
 
   return (
     <Loading isLoading={loading}>
-      <WrapperAll arrImageBackgoundAmination={arrImageBackgroundAmination}>
+      <WrapperAll>
         <WrapperBody className="all">
           <WrapperSideBar>
             <div>
@@ -178,13 +126,10 @@ const TypeProductPage = () => {
                           display: "flex",
                           justifyContent: "left",
                           alignItems: "center",
-                          background:
-                            state === type.type || state?.type === type.type
-                              ? "rgb(94 19 42)"
-                              : "",
+                          background: "#000",
                           width: "100%",
                           padding: "0 20px",
-                          color: state === type.type ? "#fff" : "",
+                          color: state === type.type ? "#000" : "#000",
                         }}
                       >
                         <img
@@ -195,21 +140,32 @@ const TypeProductPage = () => {
                       </div>
                     )
                 )}
-                {typeProduct.map((type) => {
-                  if (!typeProductContant.some((item) => item.type === type)) {
+                {typeProduct.map((typeP) => {
+                  if (!typeProductContant.some((item) => item.type === typeP)) {
                     return (
                       <div
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          padding: "0 20px",
-                          color: "#000",
+                          padding: "0 10px",
+                          color: "#fff",
+                          borderRadius: "4px",
+                          fontWeight: "600",
+                          background:
+                            customName(typeP) === type
+                              ? "#000"
+                              : "rgb(127 64 80)",
+                          width: "100%",
                         }}
                       >
                         <TypeProduct
-                          name={type}
-                          key={type}
-                          style={{ color: "#fff" }}
+                          name={typeP}
+                          key={typeP}
+                          style={{
+                            color: "#fff",
+                            background: "#000",
+                          }}
+                          param={type}
                         />
                       </div>
                     );

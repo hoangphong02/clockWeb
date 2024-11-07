@@ -35,7 +35,7 @@ export const WrapperHeaderAccount = styled.div`
 
 export const WrapperTextHeaderSmall = styled.span`
   font-size: 13px;
-  color: #fff;
+  color: #000;
   white-space: nowrap;
 `;
 

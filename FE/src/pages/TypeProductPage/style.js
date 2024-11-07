@@ -51,7 +51,7 @@ export const WrapperMic = styled.div`
 `;
 
 export const WrapperAll = styled.div`
-  background-color: #1c1a1e;
+  background-color: #fff;
   // background-color: rgb(130, 26, 32);
   height: 100%;
   padding: 30px 0;
@@ -64,21 +64,6 @@ export const WrapperAll = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    pointer-events: none;
-    // background-image: url("https://www.dropbox.com/s/bgwuzfu83pjb5s1/divi-life-snowflakes-a-2.png?dl=1"),
-    //   url("https://www.dropbox.com/s/54le1eyh01vb253/divi-life-snowflakes-b.png?dl=1"),
-    //   url("https://www.dropbox.com/s/gfm01rozxanf3ub/divi-life-snowflakes-d.png?dl=1");
-    background-image: ${(props) =>
-      props.arrImageBackgoundAmination &&
-      props.arrImageBackgoundAmination.length > 0
-        ? props.arrImageBackgoundAmination
-            .map((url) => `url(${url})`)
-            .join(", ")
-        : "none"};
-    -webkit-animation: snow 15s linear infinite;
-    -moz-animation: snow 15s linear infinite;
-    -ms-animation: snow 15s linear infinite;
-    animation: snow 15s linear infinite;
   }
   @keyframes snow {
     0% {
@@ -131,13 +116,13 @@ export const WrapperPanigation = styled(Pagination)`
     color: #000;
   }
   & .ant-pagination-prev .ant-pagination-item-link {
-    color: #fff;
+    color: #000;
   }
   & .ant-pagination-item-container span .ant-pagination-item-ellipsis {
-    color: #fff;
+    color: #000;
   }
   & .ant-pagination-next .ant-pagination-item-link {
-    color: #fff;
+    color: #000;
   }
 `;
 

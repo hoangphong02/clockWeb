@@ -631,7 +631,6 @@ const AdminOrder = () => {
     );
   };
 
-  console.log("dataTable", orders);
   return (
     <div>
       <AdminHeader textHeader={"Quản lý đơn hàng"} />

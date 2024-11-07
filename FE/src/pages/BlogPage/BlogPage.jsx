@@ -335,9 +335,9 @@ const BlogPage = () => {
     <>
       <div style={{ background: "#fff" }}>
         <div style={{ width: "100%" }}>
-          <div style={{ textAlign: "center" }}>
+          {/* <div style={{ textAlign: "center" }}>
             <img src={logo} style={{ height: "200px" }} />
-          </div>
+          </div> */}
           <div
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >

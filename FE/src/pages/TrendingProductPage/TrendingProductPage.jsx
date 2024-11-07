@@ -25,6 +25,7 @@ const TrendingProductPage = () => {
   const [typeProduct, setTypeProduct] = useState("");
   const [products, setProducts] = useState([]);
   const [imageSlider, setImageSlider] = useState([]);
+  const [productsOutstanding, setProductsOutstanding] = useState([]);
   const [slider, setSlider] = useState([]);
   const [textCongratulation, setTextCongratulation] = useState("");
   const user = useSelector((state) => state?.user);
@@ -167,7 +168,21 @@ const TrendingProductPage = () => {
     setPanigate({ ...panigate, page: current - 1 });
   };
 
-  //test mic
+  const fetchAllProductSliderCart = async () => {
+    const res = await ProductService.getAllProduct("", 100);
+    return res.data;
+  };
+  const queryProductSliderCart = useQuery({
+    queryKey: ["productCart"],
+    queryFn: fetchAllProductSliderCart,
+  });
+  const { isLoading: isLoadingProducts, data: productCart } =
+    queryProductSliderCart;
+  useEffect(() => {
+    const sortedProducts = productCart?.sort((a, b) => b.selled - a.selled);
+    const topFourProducts = sortedProducts?.slice(0, 17);
+    setProductsOutstanding(topFourProducts);
+  }, [productCart]);
 
   return (
     <div>
@@ -175,19 +190,13 @@ const TrendingProductPage = () => {
         style={{
           width: "100%",
           margin: "0 auto",
-          background: "rgb(130, 26, 32)",
+          paddingTop: "32px",
         }}
       >
         <SliderComponent arrImg={slider} />
-        <div>
-          <img src={headerTet} style={{ width: "100%" }} />
-        </div>
-        <WrappertextCongratulation>
-          <Wrappertext>{textCongratulation}</Wrappertext>
-        </WrappertextCongratulation>
 
         <WrapperProducts>
-          {products
+          {productsOutstanding
             ?.filter((pro) => {
               if (searchDebounce === "") {
                 return pro;

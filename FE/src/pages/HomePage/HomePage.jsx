@@ -41,11 +41,11 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const [productTypeTet, setProductTypeTet] = useState([]);
-  const [productTypeNoel, setProductTypeNoel] = useState([]);
-  const [productTypeTrungThu, setProductTypeTrungThu] = useState([]);
-  const [productTypeHalloween, setProductTypeHalloween] = useState([]);
-  const [productTypeValentine, setProductTypeValentine] = useState([]);
+  const [productTypeNam, setProductTypeNam] = useState([]);
+  const [productTypeNu, setProductTypeNu] = useState([]);
+  const [productTypeDoi, setProductTypeDoi] = useState([]);
+  const [productTypeCo, setProductTypeCo] = useState([]);
+  const [productTypeDientu, setProductTypeDientu] = useState([]);
   const [dataSlider, setDataSlider] = useState([]);
   const [productsOutstanding, setProductsOutstanding] = useState([]);
   const [name, setName] = useState("");
@@ -54,24 +54,6 @@ const HomePage = () => {
   const [messageInput, setMessageInput] = useState("");
   const user = useSelector((state) => state.user);
   const location = useLocation();
-  const today = moment();
-  const formattedToday = today.format("DD/MM");
-  const startDateTimeTrungthu = moment("01/3", "DD/MM").startOf("day");
-  const endDateTimeTrungthu = moment("30/9", "DD/MM").endOf("day");
-
-  const startDateTimeHalloween = moment("01/10", "DD/MM").startOf("day");
-  const endDateTimeHalloween = moment("31/10", "DD/MM").endOf("day");
-
-  const startDateTimeNoel = moment("01/11", "DD/MM").startOf("day");
-  const endDateTimeNoel = moment("31/12", "DD/MM").endOf("day");
-
-  const startDateTimeTet = moment("01/01", "DD/MM").startOf("day");
-  const endDateTimeTet = moment("31/01", "DD/MM").endOf("day");
-
-  const startDateTimeTinhnhan = moment("01/02", "DD/MM").startOf("day");
-  const endDateTimeTinhnhan = moment("28/02", "DD/MM").endOf("day");
-
-  const customToday = moment("04/02", "DD/MM");
 
   const getAllSlider = async () => {
     const res = await SliderService.getAllSlider();
@@ -109,27 +91,30 @@ const HomePage = () => {
     queryProductSliderCart;
   const fetchAllProductTypes = async () => {
     setLoading(true);
-    const tetPromise = ProductService.getProductType("tết", 0, 100);
-    const noelPromise = ProductService.getProductType("giáng sinh", 0, 100);
-    const trungThuPromise = ProductService.getProductType("trung thu", 0, 100);
-    const halloweenPromise = ProductService.getProductType("halloween", 0, 100);
-    const valentinePromise = ProductService.getProductType("tình nhân", 0, 100);
+    const namPromise = ProductService.getProductType("Đồng hồ nam", 0, 100);
+    const nuPromise = ProductService.getProductType("Đồng hồ nữ", 0, 100);
+    const doiPromise = ProductService.getProductType("Đồng hồ đôi", 0, 100);
+    const coPromise = ProductService.getProductType("Đồng hồ cơ", 0, 100);
+    const dientuPromise = ProductService.getProductType(
+      "Đồng hồ điện tử",
+      0,
+      100
+    );
 
     try {
-      const [tetRes, noelRes, trungThuRes, halloweenRes, valentineRes] =
-        await Promise.all([
-          tetPromise,
-          noelPromise,
-          trungThuPromise,
-          halloweenPromise,
-          valentinePromise,
-        ]);
+      const [namRes, nuRes, doiRes, coRes, dientuRes] = await Promise.all([
+        namPromise,
+        nuPromise,
+        doiPromise,
+        coPromise,
+        dientuPromise,
+      ]);
 
-      setProductTypeTet(tetRes?.data);
-      setProductTypeNoel(noelRes?.data);
-      setProductTypeTrungThu(trungThuRes?.data);
-      setProductTypeHalloween(halloweenRes?.data);
-      setProductTypeValentine(valentineRes?.data);
+      setProductTypeNam(namRes?.data);
+      setProductTypeNu(nuRes?.data);
+      setProductTypeDoi(doiRes?.data);
+      setProductTypeCo(coRes?.data);
+      setProductTypeDientu(dientuRes?.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching product types:", error);
@@ -137,50 +122,17 @@ const HomePage = () => {
     }
   };
 
+  console.log("productCart", productCart);
+
   useEffect(() => {
     fetchAllProductTypes();
   }, []);
 
-  const getProductsOutstanding = (dataproduct) => {
-    if (dataproduct) {
-      const sortedProducts = [...dataproduct].sort(
-        (a, b) => b.selled - a.selled
-      );
-      const topFourProducts = sortedProducts.slice(0, 4);
-      setProductsOutstanding(topFourProducts);
-    }
-  };
-
   useEffect(() => {
-    if (
-      today.isBetween(startDateTimeTrungthu, endDateTimeTrungthu, null, "[]")
-    ) {
-      getProductsOutstanding(productTypeTrungThu);
-    }
-    if (
-      today.isBetween(startDateTimeHalloween, endDateTimeHalloween, null, "[]")
-    ) {
-      getProductsOutstanding(productTypeHalloween);
-    }
-    if (today.isBetween(startDateTimeNoel, endDateTimeNoel, null, "[]")) {
-      getProductsOutstanding(productTypeNoel);
-    }
-    if (today.isBetween(startDateTimeTet, endDateTimeTet, null, "[]")) {
-      getProductsOutstanding(productTypeTet);
-    }
-    if (
-      today.isBetween(startDateTimeTinhnhan, endDateTimeTinhnhan, null, "[]")
-    ) {
-      getProductsOutstanding(productTypeValentine);
-    }
-  }, [
-    today.toDate().getDate(),
-    productTypeTrungThu,
-    productTypeHalloween,
-    productTypeNoel,
-    productTypeTet,
-    productTypeValentine,
-  ]);
+    const sortedProducts = productCart?.sort((a, b) => b.selled - a.selled);
+    const topFourProducts = sortedProducts?.slice(0, 5);
+    setProductsOutstanding(topFourProducts);
+  }, [productCart]);
 
   const onChangeName = (e) => {
     setName(e.target.value);
@@ -245,15 +197,11 @@ const HomePage = () => {
         >
           <SliderComponent arrImg={dataSlider} />
 
-          <div style={{ backgroundColor: "#821a20", width: "100%" }}>
-            <img src={headerTet} style={{ width: "100%" }} />
+          <div style={{ width: "100%" }}>
+            {/* <img src={headerTet} style={{ width: "100%" }} /> */}
 
             <div>
-              <WrapperTitleProductTrend
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
+              <WrapperTitleProductTrend>
                 <h2>SẢN PHẨM NỔI BẬT</h2>
               </WrapperTitleProductTrend>
               <ScrollAnimation animateIn="fadeIn" duration={2}>
@@ -309,21 +257,12 @@ const HomePage = () => {
 
             <div
               style={{
-                backgroundColor: "#821a20",
                 width: "100%",
-                backgroundImage: `url(${backgroundTet})`,
-                backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                backgroundPosition: "center",
-                backgroundSize: "100%",
                 padding: "0 0 40px 0",
               }}
             >
-              <WrapperTitleProductType
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
-                <h2>VẬT PHẨM TRANG TRÍ TẾT</h2>
+              <WrapperTitleProductType>
+                <h2>ĐỒNG HỒ NAM</h2>
               </WrapperTitleProductType>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
@@ -331,30 +270,17 @@ const HomePage = () => {
                   animateOut="fadeIn"
                   duration={1}
                 >
-                  <SliderCartComponent products={productTypeTet} />
+                  <SliderCartComponent products={productTypeNam} />
                 </ScrollAnimation>
               </div>
             </div>
             <div
               style={{
-                backgroundColor: "#821a20",
-                backgroundImage: `url(${backgroundgiangsinh}), url(${backgroundgiangsinhRight})`, // Lặp lại hình ảnh hai lần
-                backgroundRepeat: "no-repeat, no-repeat", // Không lặp lại hình ảnh
-                backgroundPosition: "left top, right bottom", // Đặt vị trí của từng hình ảnh
-                backgroundSize: "auto",
                 padding: "20px 0 40px 0",
               }}
             >
-              <WrapperTitleProductNoel
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
-                <h2>
-                  VẬT PHẨM TRANG TRÍ
-                  <br></br>
-                  GIÁNG SINH
-                </h2>
+              <WrapperTitleProductNoel>
+                <h2>ĐỒNG HỒ NỮ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
@@ -362,30 +288,18 @@ const HomePage = () => {
                   animateOut="fadeOut"
                   duration={1}
                 >
-                  <SliderCartComponent products={productTypeNoel} />
+                  <SliderCartComponent products={productTypeNu} />
                 </ScrollAnimation>
               </div>
             </div>
 
             <div
               style={{
-                backgroundColor: "#821a20",
-                backgroundImage: `url(${backgroundValentineRight}), url(${backgroundValentine})`, // Lặp lại hình ảnh hai lần
-                backgroundRepeat: "no-repeat, no-repeat", // Không lặp lại hình ảnh
-                backgroundPosition: "left top, right bottom", // Đặt vị trí của từng hình ảnh
-                backgroundSize: "auto",
                 padding: "20px 0 40px 0",
               }}
             >
-              <WrapperTitleProductNoel
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
-                <h2>
-                  VẬT PHẨM TRANG TRÍ
-                  <br></br> LỄ TÌNH NHÂN
-                </h2>
+              <WrapperTitleProductNoel>
+                <h2>ĐỒNG HỒ ĐÔI</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
@@ -393,30 +307,18 @@ const HomePage = () => {
                   animateOut="fadeOut"
                   duration={1}
                 >
-                  <SliderCartComponent products={productTypeValentine} />
+                  <SliderCartComponent products={productTypeDoi} />
                 </ScrollAnimation>
               </div>
             </div>
 
             <div
               style={{
-                backgroundColor: "#821a20",
-                width: "100%",
-                backgroundImage: `url(${backgroundTet})`,
-                backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                backgroundPosition: "center",
-                backgroundSize: "100%",
                 padding: "0 0 40px 0",
               }}
             >
-              <WrapperTitleProductNoel
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
-                <h2>
-                  VẬT PHẨM TRANG TRÍ <br></br> TRUNG THU
-                </h2>
+              <WrapperTitleProductNoel>
+                <h2>ĐỒNG HỒ CƠ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
@@ -424,30 +326,18 @@ const HomePage = () => {
                   animateOut="fadeOut"
                   duration={1}
                 >
-                  <SliderCartComponent products={productTypeTrungThu} />
+                  <SliderCartComponent products={productTypeCo} />
                 </ScrollAnimation>
               </div>
             </div>
 
             <div
               style={{
-                backgroundColor: "#821a20",
-                width: "100%",
-                backgroundImage: `url(${backgroundHalloween})`,
-                backgroundRepeat: "no-repeat", // Tùy chọn để tránh lặp lại hình nền
-                backgroundPosition: "center",
-                backgroundSize: "100%",
                 padding: "0 0 40px 0",
               }}
             >
-              <WrapperTitleProductNoel
-                style={{
-                  backgroundImage: `url(${backgroundTitleTet})`,
-                }}
-              >
-                <h2>
-                  VẬT PHẨM TRANG TRÍ <br></br> HALLOWEEN
-                </h2>
+              <WrapperTitleProductNoel>
+                <h2>ĐỒNG HỒ ĐIỆN TỬ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
                 <ScrollAnimation
@@ -455,7 +345,7 @@ const HomePage = () => {
                   animateOut="fadeOut"
                   duration={1}
                 >
-                  <SliderCartComponent products={productTypeHalloween} />
+                  <SliderCartComponent products={productTypeDientu} />
                 </ScrollAnimation>
               </div>
             </div>
@@ -470,22 +360,19 @@ const HomePage = () => {
                   flexWrap: "wrap",
                 }}
               >
-                <AnimatedImage>
+                {/* <AnimatedImage>
                   <img src={ImageContact} />
-                </AnimatedImage>
+                </AnimatedImage> */}
                 <div
                   style={{
                     padding: "50px",
-                    border: "0.6rem solid #d0a862",
+                    border: "0.6rem solid #621628",
                     color: "#fff",
                     margin: "0 auto",
                     borderRadius: "50px",
-                    background: "#590606",
                   }}
                 >
-                  <h3 style={{ color: "#d0a862" }}>
-                    NHẬN TƯ VẤN TRANG TRÍ LỄ HỘI
-                  </h3>
+                  <h3 style={{ color: "#621628" }}>NHẬN TƯ VẤN ĐỒNG HỒ </h3>
                   <div style={{ width: "100%", padding: "20px 0 0 0" }}>
                     <div style={{ width: "100%" }}>
                       <label
@@ -505,7 +392,7 @@ const HomePage = () => {
                           border: "none",
                           width: "100%",
                           outline: "none",
-                          borderBottom: "0.2rem solid #d0a862",
+                          borderBottom: "0.2rem solid #000",
                           color: "#d0a862",
                         }}
                         value={name}
@@ -535,7 +422,7 @@ const HomePage = () => {
                           border: "none",
                           width: "100%",
                           outline: "none",
-                          borderBottom: "0.2rem solid #d0a862",
+                          borderBottom: "0.2rem solid #000",
                           color: "#d0a862",
                         }}
                         value={email}
@@ -556,7 +443,7 @@ const HomePage = () => {
                           border: "none",
                           width: "100%",
                           outline: "none",
-                          borderBottom: "0.2rem solid #d0a862",
+                          borderBottom: "0.2rem solid #000",
                           color: "#d0a862",
                         }}
                         value={phone}
@@ -579,7 +466,7 @@ const HomePage = () => {
                           border: "none",
                           width: "100%",
                           outline: "none",
-                          borderBottom: "0.2rem solid #d0a862",
+                          borderBottom: "0.2rem solid #000",
                           color: "#d0a862",
                           minHeight: "90px",
                         }}

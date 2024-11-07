@@ -181,8 +181,8 @@ export const AnimatedImage = styled.div`
   }
 `;
 export const WrapperTitleProductTrend = styled.div`
-  color: rgb(130, 26, 32);
-  padding: 3.1rem 6.1rem;
+  color: #000;
+  padding: 1.1rem 6.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -190,7 +190,7 @@ export const WrapperTitleProductTrend = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
-  margin: 50px 0px;
+  margin: 0px;
   text-align: center;
   @media (max-width: 768px) {
     margin: 0;
@@ -211,8 +211,8 @@ export const WrapperProductTrend = styled.div`
 `;
 
 export const WrapperTitleProductType = styled.div`
-  color: rgb(130, 26, 32);
-  padding: 3.1rem 6.1rem;
+  color: #000;
+  padding: 1.1rem 6.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,8 +229,8 @@ export const WrapperTitleProductType = styled.div`
 `;
 
 export const WrapperTitleProductNoel = styled.div`
-  color: rgb(130, 26, 32);
-  padding: 3.1rem 6.1rem;
+  color: #000;
+  padding: 1.1rem 6.1rem;
   display: flex;
   align-items: center;
   justify-content: center;

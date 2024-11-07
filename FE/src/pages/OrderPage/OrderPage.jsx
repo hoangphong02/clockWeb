@@ -485,7 +485,7 @@ const OrderPage = () => {
         </h3>
         <WrapperSection>
           <WrapperLeft>
-            <div
+            {/* <div
               style={{
                 background: "rgb(240, 248, 255)",
                 border: "1px solid rgb(194, 225, 255)",
@@ -495,7 +495,7 @@ const OrderPage = () => {
               }}
             >
               <StepComponent current={currentDelivery} items={itemsDelivery} />
-            </div>
+            </div> */}
             <WrapperTitleProduct>
               <span style={{ width: "250px" }}>
                 <Checkbox

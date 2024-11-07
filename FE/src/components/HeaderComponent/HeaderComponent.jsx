@@ -38,7 +38,7 @@ import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
 import { typeProductContant } from "../../contant";
 import TypeProduct from "../TypeProduct/TypeProduct";
-import logo from "../../assets/images/logo-decoration.png";
+import logo from "../../assets/images/logo-watch.png";
 
 const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const navigate = useNavigate();
@@ -202,547 +202,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     return <span>Browser doesn't support speech recognition.</span>;
   }
 
-  const handleRead = (text) => {
-    var msg = new SpeechSynthesisUtterance();
-    msg.lang = "vi-VI";
-    msg.text = text;
-    msg.volume = 1;
-    msg.rate = 0.6;
-    msg.pitch = 1;
-    window.speechSynthesis.speak(msg);
-  };
-
-  const helpNavigateByVoice = async (voidValue) => {
-    const text = voidValue.toLowerCase();
-    let hasVatPham = false;
-    let hasMuonMua = false;
-    let foundIdProduct = false;
-    let addCart = false;
-    let seeCart = false;
-    let suggest = false;
-    let contact = false;
-    let home = false;
-    let buyNow = false;
-    let chooseProductNumber = false;
-    let payment = false;
-    let paymentBy = false;
-    let paymentOnDelivery = false;
-    let booking = false;
-    let order = false;
-    let increaseCount = false;
-    let decreaseCount = false;
-    let news = false;
-    let unCheckNumber = false;
-    let checkAll = false;
-    let cancelCheck = false;
-    let changeAddress = false;
-    let addressIs = false;
-    let updateAddress = false;
-    let followProduct = false;
-    let unFollowProduct = false;
-    let cancelChangeAddress = false;
-    let deleteProductTocart = false;
-
-    if (text.includes("vật phẩm")) {
-      hasVatPham = true;
-    }
-    if (text.includes("muốn mua") || text.includes("muốn xem")) {
-      hasMuonMua = true;
-    }
-    if (text.includes("thêm vào giỏ hàng")) {
-      addCart = true;
-    }
-    if (text.includes("xem giỏ hàng")) {
-      seeCart = true;
-    }
-    if (text.includes("gợi ý")) {
-      suggest = true;
-    }
-    if (text.includes("liên hệ")) {
-      contact = true;
-    }
-    if (text.includes("trang chủ")) {
-      home = true;
-    }
-    if (text.includes("mua ngay")) {
-      buyNow = true;
-    }
-    if (text.includes("chọn sản phẩm số")) {
-      chooseProductNumber = true;
-    }
-    if (text.includes("chọn thanh toán")) {
-      payment = true;
-    }
-    if (text.includes("ví")) {
-      paymentBy = true;
-    }
-    if (text.includes("khi nhận hàng")) {
-      paymentOnDelivery = true;
-    }
-    if (text.includes("đặt hàng")) {
-      booking = true;
-    }
-    if (text.includes("xem đơn hàng")) {
-      order = true;
-    }
-    if (text.includes("tăng số lượng lên")) {
-      increaseCount = true;
-    }
-    if (text.includes("giảm số lượng xuống")) {
-      decreaseCount = true;
-    }
-    if (text.includes("tin tức")) {
-      news = true;
-    }
-    if (text.includes("xóa sản phẩm số")) {
-      unCheckNumber = true;
-    }
-    if (text.includes("chọn tất cả sản phẩm")) {
-      checkAll = true;
-    }
-    if (text.includes("hủy chọn tất cả")) {
-      cancelCheck = true;
-    }
-    if (text.includes("đổi địa chỉ")) {
-      changeAddress = true;
-    }
-    if (text.includes("địa chỉ là")) {
-      addressIs = true;
-    }
-    if (text.includes("cập nhật")) {
-      updateAddress = true;
-    }
-    if (text.includes("theo dõi sản phẩm")) {
-      followProduct = true;
-    }
-    if (text.includes("bỏ theo dõi") || text.includes("hủy theo dõi")) {
-      unFollowProduct = true;
-    }
-    if (text.includes("hủy thay đổi")) {
-      cancelChangeAddress = true;
-    }
-    if (text.includes("loại bỏ sản phẩm số")) {
-      deleteProductTocart = true;
-    }
-    if (hasVatPham) {
-      if (text.includes("vật phẩm trang trí")) {
-        const newType = text.split("trí")[1].trim();
-        const findTypeProduct = typeProduct?.find((item) => item === newType);
-        if (findTypeProduct) {
-          handleRead(`vật phẩm trang trí ${newType}`);
-          const setTimeNavi = setTimeout(() => {
-            navigate(
-              `/product/${newType
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                ?.replace(/ /g, "_")}`,
-              { state: newType }
-            );
-            resetTranscript();
-          }, 1500);
-          return () => clearTimeout(setTimeNavi);
-        } else {
-          message.error(
-            "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
-          );
-          resetTranscript();
-        }
-        resetTranscript();
-      }
-    }
-    if (hasMuonMua) {
-      if (text.includes("muốn mua") || text.includes("muốn xem")) {
-        let newType = "";
-        if (text.includes("muốn mua")) {
-          newType = text.split("mua")[1]?.trim();
-        } else if (text.includes("muốn xem")) {
-          newType = text.split("xem")[1]?.trim();
-        }
-        let getArrTest = await getArrProductByText(newType);
-        if (getArrTest?.length === 1) {
-          const idProduct = getArrTest[0]?._id;
-          if (text.includes("muốn mua")) {
-            handleRead(`tôi muốn mua ${newType}`);
-          } else if (text.includes("muốn xem")) {
-            handleRead(`tôi muốn xem ${newType}`);
-          }
-          const setTimeNavi = setTimeout(() => {
-            navigate(`/product-detail/${idProduct}`, { state: idProduct });
-            resetTranscript();
-          }, 1500);
-          return () => clearTimeout(setTimeNavi);
-        } else {
-          if (getArrTest?.length > 1) {
-            const typeProduct = getArrTest[0]?.type;
-            if (text.includes("muốn mua")) {
-              handleRead(`tôi muốn mua ${newType}`);
-            } else if (text.includes("muốn xem")) {
-              handleRead(`tôi muốn xem ${newType}`);
-            }
-            const setTimeNavi = setTimeout(() => {
-              navigate(
-                `/product/${typeProduct
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")
-                  ?.replace(/ /g, "_")}`,
-                {
-                  state: {
-                    type: typeProduct,
-                    stateData: getArrTest,
-                  },
-                }
-              );
-              resetTranscript();
-            }, 1500);
-            return () => clearTimeout(setTimeNavi);
-          } else {
-            if (getArrTest?.length === 0) {
-              message.error(
-                "Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!"
-              );
-              resetTranscript();
-            }
-          }
-        }
-      }
-    }
-    if (addCart) {
-      if (text.includes("thêm vào giỏ hàng")) {
-        handleRead(`thêm vào giỏ hàng`);
-        const setTimeNavi = setTimeout(() => {
-          navigate("", { state: { addCartHeader: true } });
-          resetTranscript();
-        }, 1500);
-        return () => clearTimeout(setTimeNavi);
-      }
-    }
-    if (seeCart) {
-      if (text.includes("xem giỏ hàng")) {
-        handleRead(`xem giỏ hàng`);
-        const setTimeNavi = setTimeout(() => {
-          navigate(`/order`);
-          resetTranscript();
-        }, 1500);
-        return () => clearTimeout(setTimeNavi);
-      }
-    }
-    if (suggest) {
-      handleRead(`gợi ý sản phẩm`);
-      const setTimeNavi = setTimeout(() => {
-        navigate(`/productsTrending`);
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (contact) {
-      handleRead(`liên hệ`);
-      const setTimeNavi = setTimeout(() => {
-        navigate(`/contact`);
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (home) {
-      handleRead(`Quay lại trang chủ`);
-      const setTimeNavi = setTimeout(() => {
-        navigate(`/`);
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (buyNow) {
-      handleRead(`chọn mua ngay`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", { state: { buyNowHeader: true } });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (chooseProductNumber) {
-      const number = text.split("số")[1].trim();
-      const id = getChecked(number);
-      handleRead(`chọn sản phẩm số ${number}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", { state: { idProductCheck: id } });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (payment) {
-      handleRead(`chọn thanh toán`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", { state: { buy: true } });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (paymentBy) {
-      const namePay = text.split("ví")[1].trim();
-      if (namePay === "momo") {
-        handleRead(`Thanh toán bằng ví mô mô`);
-        const setTimeNavi = setTimeout(() => {
-          navigate("", {
-            state: { value: "Thanh toán bằng ví MoMo" },
-          });
-          resetTranscript();
-        }, 1000);
-        return () => clearTimeout(setTimeNavi);
-      } else {
-        handleRead(`Thanh toán bằng ví bây bồ`);
-        const setTimeNavi = setTimeout(() => {
-          navigate("", {
-            state: { value: "Thanh toán bằng ví Paypal" },
-          });
-          resetTranscript();
-        }, 1000);
-        return () => clearTimeout(setTimeNavi);
-      }
-    }
-    if (paymentOnDelivery) {
-      handleRead(`Thanh toán khi nhận hàng`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { value: "Thanh toán khi nhận hàng" },
-        });
-        resetTranscript();
-      }, 1000);
-      return () => clearTimeout(setTimeNavi);
-    }
-
-    if (booking) {
-      handleRead(`chọn đặt hàng`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", { state: { buy: true } });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-
-    if (order) {
-      handleRead(`Xem đơn hàng`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("/my-order", {
-          state: {
-            id: user?.id,
-            token: user?.access_token,
-          },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (increaseCount) {
-      let number = text.split("lên")[1].trim();
-      if (number === "một") {
-        number = 1;
-      }
-      if (number === "ba") {
-        number = 3;
-      }
-      handleRead(`tăng số lượng lên ${number}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: {
-            numberIncrease: Number(number),
-          },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-      resetTranscript();
-    }
-    if (decreaseCount) {
-      let number = text.split("xuống")[1].trim();
-      if (number === "một") {
-        number = 1;
-      }
-      if (number === "ba") {
-        number = 3;
-      }
-      handleRead(`giảm số lượng xuống ${number}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: {
-            numberDecrease: Number(number),
-          },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-      resetTranscript();
-    }
-    if (news) {
-      handleRead(`Xem tin tức`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("/blog");
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (unCheckNumber) {
-      const number = text.split("số")[1].trim();
-      const id = getChecked(number);
-      handleRead(`Xóa sản phẩm số ${number}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { idProductDeleteCheck: id },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (deleteProductTocart) {
-      const number = text.split("số")[1].trim();
-      const id = getChecked(number);
-      handleRead(`Loại bỏ sản phẩm số ${number}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { idProductDeleteToCart: id },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (checkAll) {
-      handleRead("Chọn tất cả sản phẩm");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { isCheckAll: true },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (changeAddress) {
-      handleRead("Đổi địa chỉ");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { changeAddress: true },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (addressIs) {
-      const address = text.split("là")[1].trim();
-      handleRead(`địa chỉ là ${address}`);
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { valueAddress: address },
-        });
-        resetTranscript();
-      }, 1000);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (updateAddress) {
-      handleRead("Chọn cập nhật");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { update: true },
-        });
-        resetTranscript();
-      }, 1000);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (cancelChangeAddress) {
-      handleRead("Hủy thay đổi");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { cancelChangeAddress: true },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (followProduct) {
-      handleRead("Theo dõi sản phẩm");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { follow: true },
-        });
-        resetTranscript();
-      }, 1000);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (unFollowProduct) {
-      handleRead("Hủy theo dõi");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: { unFollow: true },
-        });
-        resetTranscript();
-      }, 1000);
-      return () => clearTimeout(setTimeNavi);
-    }
-    if (cancelCheck) {
-      handleRead("Hủy chọn tất cả");
-      const setTimeNavi = setTimeout(() => {
-        navigate("", {
-          state: {
-            isCancelCheck: true,
-          },
-        });
-        resetTranscript();
-      }, 1500);
-      return () => clearTimeout(setTimeNavi);
-    } else {
-      if (
-        text &&
-        !hasVatPham &&
-        !hasMuonMua &&
-        !foundIdProduct &&
-        !addCart &&
-        !seeCart &&
-        !suggest &&
-        !contact &&
-        !home &&
-        !buyNow &&
-        !chooseProductNumber &&
-        !payment &&
-        !paymentBy &&
-        !paymentOnDelivery &&
-        !booking &&
-        !order &&
-        !increaseCount &&
-        !decreaseCount &&
-        !news &&
-        !unCheckNumber &&
-        !checkAll &&
-        !cancelCheck
-      ) {
-        message.error("Không có dữ liệu bạn yêu cầu. Yêu cầu bạn hãy nói lại!");
-      }
-    }
-  };
-
-  const startListening = () => {
-    SpeechRecognition.startListening({ continuous: true, language: "vi-VI" });
-  };
-
-  const stopListening = () => {
-    SpeechRecognition.stopListening();
-  };
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    if (openMic === true) {
-      startListening();
-    }
-  }, [openMic]);
-
-  //  eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    console.log("trans", transcript);
-    const timeoutId = setTimeout(() => {
-      helpNavigateByVoice(transcript);
-      resetTranscript();
-    }, 1500);
-    return () => clearTimeout(timeoutId);
-    resetTranscript();
-  }, [transcript, addCartHeader]);
-
-  console.log("listening", listening);
-
   const items = [
     {
       label: (
@@ -888,7 +347,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             ? "rgb(255,255,255,0.6)"
             : adminPath === "admin"
             ? "none"
-            : "rgb(32, 33, 38)",
+            : "#fff",
           display: "flex",
           justifyContent: "center",
           flexDirection: "column",
@@ -919,7 +378,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
             <WrapperTextHeader
               style={{
                 cursor: "pointer",
-                color: isScrolled ? "black" : "#fff",
+                color: isScrolled ? "#fff" : "#fff",
               }}
               onClick={() => navigate("/")}
             >
@@ -927,50 +386,12 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 style={{
                   height: "65px",
                   position: "absolute",
-                  top: "-23px",
+                  top: "-30px",
                 }}
                 src={logo}
               />
             </WrapperTextHeader>
 
-            <div style={{ position: "relative" }}>
-              <span
-                style={{
-                  cursor: "pointer",
-                  fontSize: "20px",
-                  color: isScrolled
-                    ? "black"
-                    : adminPath === "admin"
-                    ? "#000"
-                    : "#fff",
-                  display: "flex",
-                }}
-                onClick={listening === false ? startListening : stopListening}
-              >
-                {listening === false ? (
-                  <AudioMutedOutlined />
-                ) : (
-                  <AudioOutlined />
-                )}
-              </span>
-              <div
-                style={{
-                  width: "400px",
-                  height: "30px",
-                  overflow: "auto",
-                  display: listening === true ? "block" : "none",
-                  position: "absolute",
-                  zIndex: "5",
-                  background: "#fff",
-                  top: isScrolled ? "40px" : "52px",
-                  textAlign: "center",
-                  left: "-100px",
-                  borderRadius: "15px",
-                }}
-              >
-                <span>{transcript}</span>
-              </div>
-            </div>
             {/* <span style={{cursor:"pointer", fontSize:"20px", color:"#fff", display:"flex"}} onClick={stopListening}><AudioMutedOutlined /> </span> */}
           </Col>
           {!isHiddenSearch && (
@@ -997,7 +418,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                       aria-expanded="false"
                       style={{
                         background: "none",
-                        color: isScrolled ? "black" : "#fff",
+                        color: isScrolled ? "black" : "#000",
                         border: "none",
                         fontFamily: "math",
                         fontWeight: "bold",
@@ -1062,21 +483,21 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                   </WrapperButtonDropdown>
                   <WrapperMenuItem
                     className="news"
-                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    style={{ color: isScrolled ? "black" : "#000" }}
                     onClick={() => navigate("/blog")}
                   >
                     Tin tức
                   </WrapperMenuItem>
                   <WrapperMenuItem
                     className="trendingProducts"
-                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    style={{ color: isScrolled ? "black" : "#000" }}
                     onClick={() => navigate("/productsTrending")}
                   >
                     Gợi ý sản phẩm
                   </WrapperMenuItem>
                   <WrapperMenuItem
                     className=""
-                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    style={{ color: isScrolled ? "black" : "#000" }}
                     onClick={() => navigate("/contact")}
                   >
                     Liên hệ
@@ -1093,7 +514,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     aria-expanded="false"
                   >
                     <SearchOutlined
-                      style={{ color: isScrolled ? "black" : "#fff" }}
+                      style={{ color: isScrolled ? "black" : "#000" }}
                     />
                   </button>
                   <ul
@@ -1136,7 +557,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 {user?.avatar ? (
                   <WrapperImgAvatar src={userAvatar} alt="avatar" />
                 ) : (
-                  <UserOutlined style={{ fontSize: "30px" }} />
+                  <UserOutlined style={{ fontSize: "30px", color: "#000" }} />
                 )}
                 {user?.access_token ? (
                   <>
@@ -1148,7 +569,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                             ? "black"
                             : adminPath === "admin"
                             ? "#000"
-                            : "#fff",
+                            : "#000",
                         }}
                       >
                         {username?.length ? username : "User"}
@@ -1178,12 +599,12 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     <ShoppingCartOutlined
                       style={{
                         fontSize: "30px",
-                        color: isScrolled ? "black" : "#fff",
+                        color: isScrolled ? "black" : "#000",
                       }}
                     />
                   </Badge>
                   <WrapperTextHeaderSmall
-                    style={{ color: isScrolled ? "black" : "#fff" }}
+                    style={{ color: isScrolled ? "black" : "#000" }}
                   >
                     Giỏ hàng
                   </WrapperTextHeaderSmall>
@@ -1213,44 +634,6 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                 </Space>
               </a>
             </Dropdown>
-            <div style={{ position: "relative" }}>
-              <span
-                style={{
-                  cursor: "pointer",
-                  fontSize: "20px",
-                  color: isScrolled
-                    ? "black"
-                    : adminPath === "admin"
-                    ? "#000"
-                    : "#fff",
-                  display: "flex",
-                }}
-                onClick={listening === false ? startListening : stopListening}
-              >
-                {listening === false ? (
-                  <AudioMutedOutlined />
-                ) : (
-                  <AudioOutlined />
-                )}
-              </span>
-              <div
-                style={{
-                  width: "400px",
-                  height: "30px",
-                  overflow: "auto",
-                  display: listening === true ? "block" : "none",
-                  position: "absolute",
-                  zIndex: "5",
-                  background: "#fff",
-                  top: isScrolled ? "40px" : "52px",
-                  textAlign: "center",
-                  left: "-100px",
-                  borderRadius: "15px",
-                }}
-              >
-                <span>{transcript}</span>
-              </div>
-            </div>
           </div>
           <div style={{ display: "flex" }}>
             <div className="dropdown">

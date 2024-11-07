@@ -31,6 +31,7 @@ const TypeProduct = ({ name, param, style }) => {
           cursor: "pointer",
           color: style ? style.color : "",
           borderRadius: param === customName(name) ? "4px" : "",
+          width: "100%",
         }}
         onClick={() => handleNavigateType(name)}
       >
