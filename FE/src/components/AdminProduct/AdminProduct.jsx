@@ -706,15 +706,15 @@ const AdminProduct = () => {
       <div
         style={{
           width: "200px",
-          height: "200px",
+          height: "40px",
           textAlign: "center",
           marginBottom: "30px",
         }}
       >
-        <PieChartComponent data={products?.data} />
+        {/* <PieChartComponent data={products?.data} />
         <p style={{ fontSize: "15px", fontWeight: "bold", color: "#fff" }}>
           Số lượng sản phẩm
-        </p>
+        </p> */}
       </div>
       <div style={{ marginTop: "10px" }}>
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}

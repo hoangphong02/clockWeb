@@ -415,7 +415,7 @@ const AdminSlider = () => {
       type: value,
     });
   };
-    const handleChangeSelectDetails = (value) => {
+  const handleChangeSelectDetails = (value) => {
     setStateProductDetails({
       ...stateProductDetails,
       type: value,
@@ -426,8 +426,8 @@ const AdminSlider = () => {
     <div>
       <AdminHeader textHeader={"Quản lý hình ảnh"} />
       {/* <WrapperHeader>Quản lý hình ảnh Slider</WrapperHeader> */}
-      <div style={{ width: "200px", height: "200px" }}>
-        <PieChartComponent data={sliders?.data} />
+      <div style={{ width: "200px", height: "40px" }}>
+        {/* <PieChartComponent data={sliders?.data} /> */}
       </div>
       <div style={{ marginTop: "10px" }}>
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}

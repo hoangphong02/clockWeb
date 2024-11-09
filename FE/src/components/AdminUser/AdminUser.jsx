@@ -390,19 +390,8 @@ const AdminUser = () => {
     <div>
       <AdminHeader textHeader={"Quản lý người dùng"} />
       {/* <WrapperHeader>Quản lý người dùng</WrapperHeader> */}
-      <div style={{ width: "200px", height: "200px", marginBottom: "30px" }}>
-        <PieChartComponent data={users?.data} />
-        <p
-          style={{
-            fontSize: "15px",
-            fontWeight: "bold",
-            color: "#fff",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          Số lượng người dùng
-        </p>
+      <div style={{ width: "200px", height: "40px", marginBottom: "30px" }}>
+        {/* <PieChartComponent data={users?.data} /> */}
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>

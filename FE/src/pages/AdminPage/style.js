@@ -256,7 +256,7 @@ export const Wrapper = styled.div`
     "nav  main";
   grid-template-rows: 50px 1fr 30px;
   grid-template-columns: 300px 1fr;
-  background: rgb(16 13 35);
+  // background: rgb(16 13 35);
   box-shadow: 1px 1px 2px #ccc;
   > nav {
     grid-area: nav;

@@ -231,14 +231,14 @@ const AdminOrder = () => {
           style={{ color: "orange", fontSize: "2em", cursor: "pointer" }}
           onClick={handleDetailsOrder}
         />
-        <PrinterOutlined
+        {/* <PrinterOutlined
           style={{
             color: "rgb(42 173 103)",
             fontSize: "2em",
             cursor: "pointer",
           }}
           onClick={() => setIsModalOpenPrint(true)}
-        />
+        /> */}
       </div>
     );
   };
@@ -642,38 +642,7 @@ const AdminOrder = () => {
           padding: "20px",
           gap: "30px",
         }}
-      >
-        <div style={{ width: "200px", height: "200px", textAlign: "center" }}>
-          <PieChartComponent
-            data={orders?.data}
-            label={"paymentMethod"}
-            color={["#0088FE", "#00C49F"]}
-          />
-          <p style={{ fontSize: "15px", fontWeight: "bold", color: "#fff" }}>
-            Phương thức thanh toán
-          </p>
-        </div>
-        <div style={{ width: "200px", height: "200px", textAlign: "center" }}>
-          <PieChartComponent
-            data={orders?.data}
-            label={"isConfirm"}
-            color={["#FFBB28", "#FF8042"]}
-          />
-          <p style={{ fontSize: "15px", fontWeight: "bold", color: "#fff" }}>
-            Xác nhận đơn hàng
-          </p>
-        </div>
-        <div style={{ width: "200px", height: "200px", textAlign: "center" }}>
-          <PieChartComponent
-            data={orders?.data}
-            label={"isDelivered"}
-            color={["#258a3f", "#d61a2c"]}
-          />
-          <p style={{ fontSize: "15px", fontWeight: "bold", color: "#fff" }}>
-            Vận chuyển đơn hàng
-          </p>
-        </div>
-      </div>
+      ></div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>
       </div> */}
@@ -683,10 +652,10 @@ const AdminOrder = () => {
         </div>
       )}
 
-      <ButtonPrint onClick={handlePrint}>
+      {/* <ButtonPrint onClick={handlePrint}>
         <PrinterOutlined />{" "}
         <span style={{ padding: "0 5px", fontSize: "15px" }}>In đồng loạt</span>
-      </ButtonPrint>
+      </ButtonPrint> */}
       <div style={{ marginTop: "20px" }}>
         <TableComponent
           handleDeleteMany={handleDeleteManyUser}

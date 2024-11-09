@@ -11,7 +11,7 @@ const FooterComponent = () => {
     <footer className="footer-32892 pb-0" style={{}}>
       <div className="site-section">
         <div className="container" style={{ height: "60vh" }}>
-          <div className="row">
+          <div className="row d-flex gap-6">
             <div className="col-md pr-md-5 mb-4 mb-md-0">
               <h3>About Us</h3>
               <p className="mb-4">
@@ -23,16 +23,11 @@ const FooterComponent = () => {
               <ul className="list-unstyled quick-info mb-4">
                 <li>
                   <a href="#" className="d-flex align-items-center">
-                    <span className="icon mr-3 icon-phone"></span> +84 763 839
-                    456
+                    <span className="icon mr-3 icon-phone"></span> +84 123 456
+                    789
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="d-flex align-items-center">
-                    <span className="icon mr-3 icon-envelope"></span>{" "}
-                    hoangphongvl2002@gmail.com
-                  </a>
-                </li>
+
                 <li>
                   <a href="#" className="d-flex align-items-center">
                     <span className="icon mr-3 icon-envelope"></span> Khu II, Đ.
@@ -41,15 +36,16 @@ const FooterComponent = () => {
                 </li>
               </ul>
 
-              <form action="#" className="subscribe">
+              {/* <form action="#" className="subscribe">
                 <input
                   type="text"
                   className="form-control"
                   placeholder="Enter your e-mail"
                 />
                 <input type="submit" className="btn btn-submit" value="Send" />
-              </form>
+              </form> */}
             </div>
+
             <div className="col-md mb-4 mb-md-0">
               <h3>Map</h3>
               <ul className="list-unstyled tweets">
@@ -62,7 +58,6 @@ const FooterComponent = () => {
                 />
               </ul>
             </div>
-
             <div className="col-md-3 mb-4 mb-md-0">
               <h3>Instagram</h3>
               <div className="row gallery">

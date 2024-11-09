@@ -68,13 +68,13 @@ const CartSliderComponent = (props) => {
         {name}
       </StyleNameProduct>
       <WrapperReportText>
-        <span>
+        {/* <span>
           <span>{rating}</span>
           <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
-        </span>
-        <WrapperStyleTextSell> | Đã bán {selled || 0}+</WrapperStyleTextSell>
+        </span> */}
+        <WrapperStyleTextSell>Đã bán {selled || 0}+</WrapperStyleTextSell>
       </WrapperReportText>
-      <WrapperPriceText style={{ backgroundImage: `url(${imagebg})` }}>
+      <WrapperPriceText>
         <span style={{ marginRight: "8px" }}>
           {price.toLocaleString()} vnd{" "}
         </span>

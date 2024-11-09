@@ -44,7 +44,6 @@ const TypeProductPage = () => {
   //   }
   // }, [stateNameProductByTextVoice]);
 
-  // console.log("state", state, type);
   const fetchAllProductType = async (type, page, limit) => {
     setLoading(true);
     const res = await ProductService.getProductType(state, page, limit);
@@ -63,7 +62,7 @@ const TypeProductPage = () => {
   useEffect(() => {
     setFilter(false);
     setValue1(0);
-    setValue2(3500000);
+    setValue2(20000000);
   }, [type]);
 
   const fetchAllTypeProduct = async () => {
@@ -196,8 +195,8 @@ const TypeProductPage = () => {
                     name="range1"
                     value={value1}
                     min="0"
-                    max="3500000"
-                    step="100000"
+                    max="20000000"
+                    step="1000000"
                     type="range"
                     onChange={handleOnChange}
                   />
@@ -206,8 +205,8 @@ const TypeProductPage = () => {
                     name="range2"
                     value={value2}
                     min="0"
-                    max="3500000"
-                    step="100000"
+                    max="20000000"
+                    step="1000000"
                     type="range"
                     onChange={handleOnChange}
                   />

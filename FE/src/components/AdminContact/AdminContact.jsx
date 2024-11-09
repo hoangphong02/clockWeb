@@ -370,8 +370,8 @@ const AdminContact = () => {
     <div>
       <AdminHeader textHeader={"Quản lý liên hệ"} />
       {/* <WrapperHeader>Quản lý liên hệ</WrapperHeader> */}
-      <div style={{ width: "200px", height: "200px" }}>
-        <PieChartComponent data={contacts?.data} />
+      <div style={{ width: "200px", height: "40px" }}>
+        {/* <PieChartComponent data={contacts?.data} /> */}
       </div>
       {/* <div style={{ marginTop: '10px' }}>
         <ButtonAddUser onClick={() => setIsModalOpen(true)}><PlusOutlined /></ButtonAddUser>

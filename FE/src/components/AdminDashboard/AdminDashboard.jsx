@@ -264,7 +264,7 @@ const AdminDashboard = () => {
           margin: "0",
           padding: "0",
           backgroundColor: "none",
-          color: "#9e9ea4",
+          // color: "#9e9ea4",
           fontFamily: "'Montserrat', sans-serif",
         }}
       >
@@ -291,77 +291,13 @@ const AdminDashboard = () => {
               </div>
               <h2>{orders?.data?.length ? orders?.data?.length : 0}</h2>
             </div>
-            <div className="card">
+            {/* <div className="card">
               <div className="card-inner">
                 <h3>LIÊN HỆ</h3>
                 <ContactsOutlined className="card_icon" />
               </div>
               <h2>{contacts?.data?.length ? contacts?.data?.length : 0}</h2>
-            </div>
-          </div>
-          {/* Biểu đồ thống kê doanh thu 12 tháng */}
-          <div
-            style={{
-              padding: "30px 0",
-              fontSize: "17px",
-              background: "rgb(23 24 43)",
-              marginTop: "20px",
-              borderRadius: "15px",
-              display: "flex",
-              justifyContent: "flex-start",
-            }}
-          >
-            <div style={{ flex: "1" }}>
-              <p style={{ padding: "0 20px", marginBottom: "0" }}>
-                Biểu đồ doanh thu theo tháng
-              </p>
-              <div style={{ height: "300px", marginTop: "30px" }}>
-                <RevenueStatisticsChart
-                  data={dataToTalPriceOrderMonth.reverse()}
-                />
-              </div>
-            </div>
-            <div style={{ flex: "1" }}>
-              <p style={{ textAlign: "center" }}>Top khách hàng tiềm năng</p>
-              <div style={{ padding: "0 50px" }}>
-                {updatedDataUserOrderTotal?.length &&
-                  updatedDataUserOrderTotal?.slice(0, 5)?.map((user) => {
-                    return (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            gap: "10px ",
-                          }}
-                        >
-                          <Avatar src={user?.avatar} />
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              lineHeight: "1",
-                              padding: "10px",
-                            }}
-                          >
-                            <p>{user?.name}</p>
-                            <span>{user?.email}</span>
-                          </div>
-                        </div>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                          {user?.total?.toLocaleString()} VND
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Biểu đồ thống kê số lượng đơn hàng tháng */}
@@ -369,12 +305,12 @@ const AdminDashboard = () => {
             style={{
               padding: "30px 0",
               fontSize: "17px",
-              background: "rgb(23 24 43)",
+              // background: "rgb(23 24 43)",
               marginTop: "20px",
               borderRadius: "15px",
             }}
           >
-            <p style={{ padding: "0 20px", marginBottom: "0" }}>
+            <p style={{ padding: "0 20px", marginBottom: "0", color: "#000" }}>
               Biểu đồ số lượng đơn hàng theo tháng
             </p>
             <div className="charts" style={{ marginTop: "30px" }}>
@@ -428,32 +364,101 @@ const AdminDashboard = () => {
               </ResponsiveContainer>
             </div>
           </div>
+          {/* Biểu đồ thống kê doanh thu 12 tháng */}
 
-          {/* Biểu đồ thống kê sản phẩm tồn kho */}
           <div
             style={{
               padding: "30px 0",
               fontSize: "17px",
-              background: "rgb(23 24 43)",
+              // background: "rgb(23 24 43)",
+              marginTop: "20px",
+              borderRadius: "15px",
+              display: "flex",
+              justifyContent: "flex-start",
+            }}
+          >
+            <div style={{ flex: "1" }}>
+              <p
+                style={{ padding: "0 20px", marginBottom: "0", color: "#000" }}
+              >
+                Biểu đồ doanh thu theo tháng
+              </p>
+              <div style={{ height: "300px", marginTop: "30px" }}>
+                <RevenueStatisticsChart
+                  data={dataToTalPriceOrderMonth.reverse()}
+                />
+              </div>
+            </div>
+            <div style={{ flex: "1" }}>
+              <p style={{ textAlign: "center", color: "#000" }}>
+                Top khách hàng tiềm năng
+              </p>
+              <div style={{ padding: "0 50px" }}>
+                {updatedDataUserOrderTotal?.length &&
+                  updatedDataUserOrderTotal?.slice(0, 5)?.map((user) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          color: "#000",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "10px ",
+                          }}
+                        >
+                          <Avatar src={user?.avatar} />
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              lineHeight: "1",
+                              padding: "10px",
+                            }}
+                          >
+                            <p>{user?.name}</p>
+                            <span>{user?.email}</span>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          {user?.total?.toLocaleString()} VND
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+
+          {/* Biểu đồ thống kê sản phẩm tồn kho */}
+          {/* <div
+            style={{
+              padding: "30px 0",
+              fontSize: "17px",
+              // background: "rgb(23 24 43)",
               marginTop: "20px",
               borderRadius: "15px",
             }}
           >
-            <p style={{ padding: "0 20px", marginBottom: "0" }}>
+            <p style={{ padding: "0 20px", marginBottom: "0", color: "#000" }}>
               Biểu đồ số lượng sản phẩm tồn kho
             </p>
             <div className="charts" style={{ marginTop: "50px" }}>
               <CustomShapeBarchart data={transformedDataCountInStock} />
               <SimpleBarChart data={transformedDataCountInStockAndSelled} />
             </div>
-          </div>
+          </div> */}
 
           {/* Bảng sản phẩm bán chạy bán chậm */}
           <div
             style={{
               padding: "30px 0",
               fontSize: "17px",
-              background: "rgb(23 24 43)",
               marginTop: "20px",
               borderRadius: "15px",
               display: "flex",
@@ -462,14 +467,14 @@ const AdminDashboard = () => {
             }}
           >
             <div style={{ width: "40%" }}>
-              <p>Sản phẩm bán chạy nhất</p>
+              <p style={{ color: "#000" }}>Sản phẩm bán chạy nhất</p>
               <WrapperTable
                 columns={columns}
                 dataSource={dataTableBestSeller}
               />
             </div>
             <div style={{ width: "40%" }}>
-              <p>Sản phẩm bán chậm nhất</p>
+              <p style={{ color: "#000" }}>Sản phẩm bán chậm nhất</p>
               <WrapperTable
                 columns={columns}
                 dataSource={dataTableSlowestSeller}

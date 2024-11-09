@@ -211,6 +211,7 @@ const HomePage = () => {
                       <WrapperProductTrending style={{ position: "relative" }}>
                         <img
                           src={pro?.image}
+                          alt=""
                           style={{
                             width: "200px",
                             height: "200px",
@@ -265,13 +266,7 @@ const HomePage = () => {
                 <h2>ĐỒNG HỒ NAM</h2>
               </WrapperTitleProductType>
               <div style={{ width: "1207px", margin: "0 auto" }}>
-                <ScrollAnimation
-                  animateIn="bounceInLeft"
-                  animateOut="fadeIn"
-                  duration={1}
-                >
-                  <SliderCartComponent products={productTypeNam} />
-                </ScrollAnimation>
+                <SliderCartComponent products={productTypeNam} />
               </div>
             </div>
             <div
@@ -283,13 +278,7 @@ const HomePage = () => {
                 <h2>ĐỒNG HỒ NỮ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
-                <ScrollAnimation
-                  animateIn="bounceInRight"
-                  animateOut="fadeOut"
-                  duration={1}
-                >
-                  <SliderCartComponent products={productTypeNu} />
-                </ScrollAnimation>
+                <SliderCartComponent products={productTypeNu} />
               </div>
             </div>
 
@@ -302,13 +291,7 @@ const HomePage = () => {
                 <h2>ĐỒNG HỒ ĐÔI</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
-                <ScrollAnimation
-                  animateIn="bounceInLeft"
-                  animateOut="fadeOut"
-                  duration={1}
-                >
-                  <SliderCartComponent products={productTypeDoi} />
-                </ScrollAnimation>
+                <SliderCartComponent products={productTypeDoi} />
               </div>
             </div>
 
@@ -321,13 +304,7 @@ const HomePage = () => {
                 <h2>ĐỒNG HỒ CƠ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
-                <ScrollAnimation
-                  animateIn="bounceInRight"
-                  animateOut="fadeOut"
-                  duration={1}
-                >
-                  <SliderCartComponent products={productTypeCo} />
-                </ScrollAnimation>
+                <SliderCartComponent products={productTypeCo} />
               </div>
             </div>
 
@@ -340,13 +317,7 @@ const HomePage = () => {
                 <h2>ĐỒNG HỒ ĐIỆN TỬ</h2>
               </WrapperTitleProductNoel>
               <div style={{ width: "1207px", margin: "0 auto" }}>
-                <ScrollAnimation
-                  animateIn="bounceInLeft"
-                  animateOut="fadeOut"
-                  duration={1}
-                >
-                  <SliderCartComponent products={productTypeDientu} />
-                </ScrollAnimation>
+                <SliderCartComponent products={productTypeDientu} />
               </div>
             </div>
 

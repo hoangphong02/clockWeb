@@ -11,10 +11,11 @@ export const WrapperModal = styled(Modal)`
 export const WrapperBlogItem = styled.div`
   width: 900px;
   height: 100%;
-  border: 1px solid rgb(255 253 253);
   border-radius: 30px;
+  box-shadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px";
+
   background: #fff;
-  filter: drop-shadow(1px 2px 2px #333);
+  // filter: drop-shadow(1px 2px 2px #333);
   margin-bottom: 30px;
   @media (max-width: 768px) {
     width: 95%;

@@ -345,15 +345,20 @@ const BlogPage = () => {
               posts?.data?.map((post) => {
                 return (
                   <WrapperBlogItem key={post?.type} className="container">
-                    <div>
+                    <div
+                      style={{
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
                       <div style={{ padding: "20px" }}>
                         <div
                           style={{
                             display: "flex",
-                            justifyContent: "space-between",
+                            flexDirection: "column",
+                            marginBottom: "16px",
                           }}
                         >
-                          <p
+                          <span
                             style={{
                               fontSize: "25px",
                               fontWeight: "bold",
@@ -361,13 +366,11 @@ const BlogPage = () => {
                             }}
                           >
                             {post.title}
-                          </p>{" "}
-                          <p>
-                            <em>{custumDay(post?.createdAt)}</em>
-                          </p>
+                          </span>{" "}
+                          <em>{custumDay(post?.createdAt)}</em>
                         </div>
                         <div>{post?.content}</div>
-                        <div
+                        {/* <div
                           onClick={() => handleNavigateType(post?.type)}
                           style={{
                             cursor: "pointer",
@@ -375,7 +378,7 @@ const BlogPage = () => {
                           }}
                         >
                           Xem vật phẩm {post?.type}
-                        </div>
+                        </div> */}
                       </div>
                       {post?.image?.length ? (
                         <div

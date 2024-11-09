@@ -46,14 +46,13 @@ export const WrapperPriceText = styled.div`
   color: #ac2c2a;
   font-size: 1rem;
   font-family: "Reem Kufi", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   // letter-spacing: 0.096rem;
   text-transform: uppercase;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   // background-image: url(../../assets/images/culture_price.png);
-  padding: 0.6rem 6rem;
   text-align: center;
   margin-top: 1.6rem;
 `;

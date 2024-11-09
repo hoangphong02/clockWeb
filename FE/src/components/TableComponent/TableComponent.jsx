@@ -66,9 +66,9 @@ const TableComponent = (props) => {
           Xóa tất cả
         </div>
       )}
-      <WrapperButtonExportExcel onClick={handleExportExcel}>
+      {/* <WrapperButtonExportExcel onClick={handleExportExcel}>
         Export Excel
-      </WrapperButtonExportExcel>
+      </WrapperButtonExportExcel> */}
       <WrapperTable
         bordered={false}
         rowSelection={{
