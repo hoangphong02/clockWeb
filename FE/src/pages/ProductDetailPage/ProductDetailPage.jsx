@@ -185,7 +185,7 @@ const ProductDetailPage = () => {
       <div
         style={{ padding: "30px 0 0 0", fontSize: "25px", fontWeight: "bold" }}
       >
-        Bình luận và đánh giá
+        Danh sách đánh giá sản phẩm
       </div>
       {/* <div style={{margin:"30px 0", display:"flex",gap:"10px",alignItems:"center"}}>
       <img src={user?.avatar} style={{width:"40px", height:"40px", borderRadius:"50%", objectFit:"cover"}}/>

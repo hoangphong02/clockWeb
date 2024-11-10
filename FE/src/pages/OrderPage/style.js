@@ -14,8 +14,7 @@ export const WrapperContent = styled.div`
   }
 `;
 export const WrapperLeft = styled.div`
-  width: 910px;
-  padding: 0 20px 0 0;
+  width: 100%;
   @media (max-width: 768px) {
     width: 100%;
     padding: 0;
@@ -23,23 +22,38 @@ export const WrapperLeft = styled.div`
 `;
 
 export const WrapperRight = styled.div`
-  width: 320px;
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
 
   @media (max-width: 768px) {
     margin: 0 auto;
     margin-top: 20px;
   }
 `;
-export const WrapperInfo = styled.div`
+export const WrapperInfo1 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  padding: 20px;
+  line-height: 30px;
+  width: 70%;
+`;
+export const WrapperInfo2 = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
   padding: 20px;
+  gap: 16px;
   line-height: 30px;
+  width: 30%;
+  height: auto;
 `;
 export const WrapperSection = styled.div`
   display: flex;
-
+  flex-direction: column;
   @media (max-width: 768px) {
     flex-direction: column;
   }

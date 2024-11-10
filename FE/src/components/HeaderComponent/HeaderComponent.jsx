@@ -389,6 +389,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                   top: "-30px",
                 }}
                 src={logo}
+                alt=""
               />
             </WrapperTextHeader>
 
@@ -445,6 +446,7 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                                 <img
                                   style={{ width: "20px", height: "20px" }}
                                   src={type.image}
+                                  alt=""
                                 />
                                 <TypeProduct
                                   name={type.type}
@@ -482,19 +484,20 @@ const HeaderComPonent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
                     </ul>
                   </WrapperButtonDropdown>
                   <WrapperMenuItem
-                    className="news"
-                    style={{ color: isScrolled ? "black" : "#000" }}
-                    onClick={() => navigate("/blog")}
-                  >
-                    Tin tức
-                  </WrapperMenuItem>
-                  <WrapperMenuItem
                     className="trendingProducts"
                     style={{ color: isScrolled ? "black" : "#000" }}
                     onClick={() => navigate("/productsTrending")}
                   >
                     Gợi ý sản phẩm
                   </WrapperMenuItem>
+                  <WrapperMenuItem
+                    className="news"
+                    style={{ color: isScrolled ? "black" : "#000" }}
+                    onClick={() => navigate("/blog")}
+                  >
+                    Tin tức
+                  </WrapperMenuItem>
+
                   <WrapperMenuItem
                     className=""
                     style={{ color: isScrolled ? "black" : "#000" }}

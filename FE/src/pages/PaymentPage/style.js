@@ -5,8 +5,7 @@ export const WrapperInputNumber = styled(InputNumber)`
 `;
 
 export const WrapperLeft = styled.div`
-  width: 910px;
-  padding: 0 20px 0 0;
+  width: 100%;
   @media (max-width: 768px) {
     width: 100%;
     padding: 0;
@@ -14,7 +13,9 @@ export const WrapperLeft = styled.div`
 `;
 
 export const WrapperRight = styled.div`
-  width: 320px;
+  width: 100%;
+  display: flex;
+  gap: 12px;
   @media (max-width: 768px) {
     margin: 0 auto;
     margin-top: -5px;
@@ -38,12 +39,9 @@ export const WrapperContent = styled.div`
   }
 `;
 export const WrapperListDelivery = styled.div`
-  background: rgb(240, 248, 255);
-  border: 1px solid rgb(194, 225, 255);
   width: 500px;
   padding: 15px;
   border-radius: 20px;
-  margin: 10px 0px;
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -51,6 +49,7 @@ export const WrapperListDelivery = styled.div`
 
 export const WrapperSection = styled.div`
   display: flex;
+  flex-direction: column;
 
   @media (max-width: 768px) {
     flex-direction: column;

@@ -10,13 +10,13 @@ import {
   WrapperTypeProduct,
 } from "./style";
 import * as ProductService from "../../services/ProductService";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loading from "../../components/Loading/Loading";
 import { useDebounce } from "../../hooks/useDebounce";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { typeProductContant } from "../../contant";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CartSliderComponent from "../../components/CartSliderComponent/CartSliderComponent";
+import { Radio } from "antd";
 
 const TypeProductPage = () => {
   const searchProduct1 = useSelector((state) => state?.product?.search);
@@ -27,17 +27,72 @@ const TypeProductPage = () => {
   const [products, setProducts] = useState([]);
   const [typeProduct, setTypeProduct] = useState([]);
   const [filter, setFilter] = useState(false);
-  const [value1, setValue1] = useState(0);
-  const [value2, setValue2] = useState(3500000);
-  const navigate = useNavigate();
-  console.log("type", type);
+
+  const [value, setValue] = useState(1);
+
+  const onChangeFilter = (e) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
   const [panigate, setPanigate] = useState({
     page: 0,
     limit: 6,
     total: 1,
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (value > 1) {
+      setFilter(true);
+    } else {
+      setFilter(false);
+    }
+  }, [value]);
+
+  const LIST_PRICE = [
+    {
+      label: 2,
+      value: {
+        min: 0,
+        max: 1999000,
+      },
+    },
+    {
+      label: 4,
+      value: {
+        min: 2000000,
+        max: 4000000,
+      },
+    },
+    {
+      label: 6,
+      value: {
+        min: 4000000,
+        max: 6000000,
+      },
+    },
+    {
+      label: 8,
+      value: {
+        min: 6000000,
+        max: 8000000,
+      },
+    },
+    {
+      label: 10,
+      value: {
+        min: 8000000,
+        max: 10000000,
+      },
+    },
+    {
+      label: 12,
+      value: {
+        min: 10000001,
+        max: 100000000,
+      },
+    },
+  ];
+
   // useEffect(() => {
   //   if (stateNameProductByTextVoice !== "") {
   //     dispatch(searchProduct(stateNameProductByTextVoice));
@@ -59,12 +114,6 @@ const TypeProductPage = () => {
     fetchAllProductType(type, panigate.page, panigate.limit);
   }, [type, panigate.page, panigate.limit]);
 
-  useEffect(() => {
-    setFilter(false);
-    setValue1(0);
-    setValue2(20000000);
-  }, [type]);
-
   const fetchAllTypeProduct = async () => {
     const res = await ProductService.getAllTypeProduct();
     setTypeProduct(res.data);
@@ -84,29 +133,7 @@ const TypeProductPage = () => {
       ?.replace(/ /g, "_");
     return name;
   };
-
-  const handleOnChange = () => {
-    let range1 = document.getElementsByClassName("range1")[0];
-    let range2 = document.getElementsByClassName("range2")[0];
-    let slide1 = range1.value;
-    let slide2 = range2.value;
-    setValue1(slide1);
-    setValue2(slide2);
-  };
-
-  const handleFilter = () => {
-    // const filter =[]
-    // productsAll.map((pro)=>{
-    //   if(pro.price>= value1 && pro.price <= value2){
-    //     filter.push(pro)
-    //   }
-    // })
-    // setProductsFilter(filter)
-    // console.log("productsFilter",productsFilter)
-    setFilter(true);
-  };
-
-  console.log(typeProduct);
+  console.log(products);
 
   return (
     <Loading isLoading={loading}>
@@ -114,6 +141,16 @@ const TypeProductPage = () => {
         <WrapperBody className="all">
           <WrapperSideBar>
             <div>
+              <div
+                style={{
+                  padding: "0 16px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  marginBottom: "16px",
+                }}
+              >
+                Lọc theo danh mục
+              </div>
               <WrapperTypeProduct
                 style={{ flexDirection: "column", padding: "0 20px" }}
               >
@@ -134,6 +171,7 @@ const TypeProductPage = () => {
                         <img
                           style={{ width: "20px", height: "20px" }}
                           src={type.image}
+                          alt=""
                         />
                         <TypeProduct name={type.type} key={type.type} />
                       </div>
@@ -177,45 +215,36 @@ const TypeProductPage = () => {
             })} */}
               </WrapperTypeProduct>
 
-              <div
-                style={{
-                  padding: "20px",
-                  background: "#ccc",
-                  borderRadius: "10px",
-                  margin: "10px",
-                }}
-              >
-                <p>Lọc theo giá</p>
-                <div className="range-slider">
-                  <span className="rangeValues" style={{ padding: "10px 0" }}>
-                    {value1.toLocaleString()} - {value2.toLocaleString()} VND
-                  </span>
-                  <input
-                    className="range1"
-                    name="range1"
-                    value={value1}
-                    min="0"
-                    max="20000000"
-                    step="1000000"
-                    type="range"
-                    onChange={handleOnChange}
-                  />
-                  <input
-                    className="range2"
-                    name="range2"
-                    value={value2}
-                    min="0"
-                    max="20000000"
-                    step="1000000"
-                    type="range"
-                    onChange={handleOnChange}
-                  />
+              <div>
+                <div
+                  style={{
+                    padding: "0 16px",
+                    marginTop: "32px",
+                    fontSize: "14px",
+                    fontWeight: "600",
+                  }}
+                >
+                  Lọc theo giá
                 </div>
-                <div style={{ margin: "20px 0" }}>
-                  <ButtonComponent
-                    textButton={"Lọc sản phẩm"}
-                    onClick={handleFilter}
-                  />
+                <div>
+                  <Radio.Group
+                    onChange={onChangeFilter}
+                    value={value}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "12px",
+                      padding: "16px",
+                    }}
+                  >
+                    <Radio value={1}>Tất cả</Radio>
+                    <Radio value={2}>Dưới 2 triệu</Radio>
+                    <Radio value={4}>Từ 2 triệu - 4 triệu</Radio>
+                    <Radio value={6}>Từ 4 triệu - 6 triệu</Radio>
+                    <Radio value={8}>Từ 6 triệu - 8 triệu</Radio>
+                    <Radio value={10}>Từ 8 triệu - 10 triệu</Radio>
+                    <Radio value={12}>Trên 10 triệu</Radio>
+                  </Radio.Group>
                 </div>
               </div>
             </div>
@@ -259,16 +288,25 @@ const TypeProductPage = () => {
                         } else {
                           if (
                             searchDebounce === "" &&
-                            pro.price >= value1 &&
-                            pro.price <= value2
+                            value > 1 &&
+                            pro.price >=
+                              LIST_PRICE?.find((item) => item.label === value)
+                                ?.value.min &&
+                            pro.price <=
+                              LIST_PRICE?.find((item) => item.label === value)
+                                ?.value.max
                           ) {
                             return pro;
                           } else if (
                             pro?.name
                               ?.toLowerCase()
                               ?.includes(searchDebounce?.toLowerCase()) &&
-                            pro.price >= value1 &&
-                            pro.price <= value2
+                            pro.price >=
+                              LIST_PRICE?.find((item) => item.label === value)
+                                ?.value.min &&
+                            pro.price <=
+                              LIST_PRICE?.find((item) => item.label === value)
+                                ?.value.max
                           ) {
                             return pro;
                           }
@@ -291,66 +329,12 @@ const TypeProductPage = () => {
                           />
                         );
                       })}
-
-                {/* {products
-                  ?.filter((pro) => {
-                    if (filter === false) {
-                      if (searchDebounce === "") {
-                        return pro;
-                      } else if (
-                        pro?.name
-                          ?.toLowerCase()
-                          ?.includes(searchDebounce?.toLowerCase())
-                      ) {
-                        return pro;
-                      }
-                    } else {
-                      if (
-                        searchDebounce === "" &&
-                        pro.price >= value1 &&
-                        pro.price <= value2
-                      ) {
-                        return pro;
-                      } else if (
-                        pro?.name
-                          ?.toLowerCase()
-                          ?.includes(searchDebounce?.toLowerCase()) &&
-                        pro.price >= value1 &&
-                        pro.price <= value2
-                      ) {
-                        return pro;
-                      }
-                    }
-                    // if(searchDebounce === '') {
-                    //     return pro
-                    // }else if(pro?.name?.toLowerCase()?.includes(searchDebounce?.toLowerCase())) {
-                    //    return pro
-                    // }
-                  })
-                  ?.map((product) => {
-                    return (
-                      // <CardComponent key={product._id} countInStock={product.countInStock} description={product.description} image ={product.image} name ={product.name} price={product.price} rating={product.rating} type= {product.type} discount ={product.discount} selled= {product.selled} id={product._id}/>
-                      <CartSliderComponent
-                        key={product._id}
-                        countInStock={product.countInStock}
-                        description={product.description}
-                        image={product.image}
-                        name={product.name}
-                        price={product.price}
-                        rating={product.rating}
-                        type={product.type}
-                        discount={product.discount}
-                        selled={product.selled}
-                        id={product._id}
-                      />
-                    );
-                  })} */}
               </WrapperProducts>
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <WrapperPanigation
                   defaultCurrent={panigate.page + 1}
-                  total={panigate.total * 10}
-                  style={{ margin: "20px 0", color: "#fff" }}
+                  total={(products?.length / 6) * 10}
+                  style={{ margin: "20px 0" }}
                   onChange={onChange}
                 />
               </div>

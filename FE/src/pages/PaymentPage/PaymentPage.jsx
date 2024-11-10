@@ -35,6 +35,7 @@ import * as DiscountService from "../../services/DiscountService";
 import { updateUser } from "../../redux/slides/userSlide";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useQuery } from "@tanstack/react-query";
+import { WrapperInfo1, WrapperInfo2 } from "../OrderPage/style";
 
 const PaymentPage = () => {
   const order = useSelector((state) => state.order);
@@ -315,27 +316,6 @@ const PaymentPage = () => {
           </h3>
           <WrapperSection>
             <WrapperLeft>
-              <div style={{ background: "#fff", padding: "20px" }}>
-                <span style={{ fontSize: "20px" }}>
-                  Chọn hình thức giao hàng
-                </span>
-                <WrapperListDelivery>
-                  <Radio.Group
-                    onChange={onChangeRadioDelevery}
-                    defaultValue={"Fast Giao hàng tiết kiệm"}
-                  >
-                    <Space direction="vertical">
-                      <Radio value={"Fast Giao hàng tiết kiệm"}>
-                        <span style={{ color: "coral", fontWeight: "500" }}>
-                          Fast
-                        </span>{" "}
-                        <span>Giao hàng tiết kiệm</span>
-                      </Radio>
-                      {/*   <Radio value={"Go_JEK Giao hàng tiết kiệm"}><span style={{color:"coral", fontWeight:"500"}}>Go_JEK</span> <span>Giao hàng tiết kiệm</span></Radio>*/}
-                    </Space>
-                  </Radio.Group>
-                </WrapperListDelivery>
-              </div>
               <div
                 style={{
                   background: "#fff",
@@ -353,12 +333,6 @@ const PaymentPage = () => {
                         <img style={{ width: "20px" }} src={imagePay} />{" "}
                         <span>Thanh toán khi nhận hàng</span>
                       </Radio>
-                      <Radio value={"Thanh toán bằng ví MoMo"}>
-                        <span style={{ display: "flex" }}>
-                          <img style={{ width: "20px" }} src={imageMoMo} />{" "}
-                          <span>Thanh toán bằng ví MoMo</span>
-                        </span>
-                      </Radio>
                       <Radio value={"Thanh toán bằng ví Paypal"}>
                         <span style={{ display: "flex" }}>
                           <img style={{ width: "20px" }} src={imagePayment} />{" "}
@@ -371,41 +345,19 @@ const PaymentPage = () => {
               </div>
             </WrapperLeft>
             <WrapperRight>
-              <WrapperInfo style={{ marginBottom: "10px" }}>
-                <span>Địa chỉ:</span>
-                <span style={{ fontWeight: "600" }}>
-                  {" "}
-                  {`${user?.address} - ${user?.city}`}{" "}
-                  <span
-                    style={{ color: "blue", cursor: "pointer" }}
-                    onClick={handleChangeAddress}
-                  >
-                    {" "}
-                    Thay đổi
-                  </span>
-                </span>
-              </WrapperInfo>
-              <WrapperInfo>
+              <WrapperInfo1>
                 <span
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <span>Tạm Tính</span>
-                  <strong>{priceMemo?.toLocaleString()} vnd</strong>
+                  <span>Tổng đơn</span>
+                  <strong>{priceMemo?.toLocaleString()} VNĐ</strong>
                 </span>
                 <span>
                   <span
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <span>Giảm giá</span>
-                    <strong>{priceMemoDiscount?.toLocaleString()} vnd</strong>
-                  </span>
-                </span>
-                <span>
-                  <span
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <span>Thuế</span>
-                    <strong>0</strong>
+                    <strong>{priceMemoDiscount?.toLocaleString()} VNĐ</strong>
                   </span>
                 </span>
                 <span>
@@ -413,7 +365,7 @@ const PaymentPage = () => {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <span>Phí giao hàng</span>
-                    <strong>{priceMemoDelivery?.toLocaleString()} vnd</strong>
+                    <strong>{priceMemoDelivery?.toLocaleString()} VNĐ</strong>
                   </span>
                 </span>
                 <span>
@@ -428,17 +380,37 @@ const PaymentPage = () => {
                         width: "100%",
                       }}
                     >
-                      <span>Tổng tiền</span>
+                      <span>Thành tiền</span>
                       <p>
                         <strong style={{ color: "red", fontSize: "20px" }}>
-                          {priceMemoTotal?.toLocaleString()} vnd
+                          {priceMemoTotal?.toLocaleString()} VNĐ
                         </strong>
                       </p>
                     </div>
                   </span>
                 </span>
-              </WrapperInfo>
-              <div style={{ textAlign: "center", padding: "20px" }}>
+              </WrapperInfo1>
+              <WrapperInfo2>
+                <span style={{ fontWeight: "600", fontSize: "16px" }}>
+                  Địa chỉ:
+                </span>
+                <span style={{ fontWeight: "600" }}>
+                  {" "}
+                  {`${user?.address} - ${user?.city}`}{" "}
+                </span>
+                <span
+                  style={{ color: "blue", cursor: "pointer" }}
+                  onClick={handleChangeAddress}
+                >
+                  {" "}
+                  Thay đổi
+                </span>
+              </WrapperInfo2>
+            </WrapperRight>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div
+                style={{ textAlign: "center", padding: "20px", width: "320px" }}
+              >
                 {payment === "Thanh toán bằng ví Paypal" && sdkReady ? (
                   <PayPalButton
                     amount={Math.round(priceMemoTotal / 30000)}
@@ -455,14 +427,14 @@ const PaymentPage = () => {
                       background: "red",
                       color: "#fff",
                       height: "50px",
-                      width: "200px",
+                      width: "320px",
                       fontWeight: "700",
                     }}
                     onClick={() => handleAddOrder()}
                   />
                 )}
               </div>
-            </WrapperRight>
+            </div>
           </WrapperSection>
         </WrapperContent>
 

@@ -80,12 +80,13 @@ export const WrapperBtnBuyCart = styled.div`
 `;
 
 export const WrapperBtnAddCart = styled(ButtonComponent)`
-  background: rgb(255, 66, 78);
+  background: #89254b;
   border-radius: 4px;
   border: none;
   height: 48px;
   width: 220px;
   font-size: 15px;
+  font-weight: 600;
   @media (max-width: 768px) {
     width: auto;
   }

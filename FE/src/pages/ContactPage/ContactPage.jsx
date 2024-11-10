@@ -910,11 +910,11 @@ const ContactPage = () => {
             <img class="mainImg" src={banner} />
           </div>
           <div class="responsive-cell-block wk-desk-7 wk-ipadp-8 wk-tab-12 wk-mobile-12">
-            <p class="text-blk heading">Contact Me</p>
+            <p class="text-blk heading">Liên hệ chúng tôi</p>
             <form class="formTable" id="izml">
               <div class="firstRow">
                 <div class="fullNameArea">
-                  <p class="cardHead">Full Name</p>
+                  <p class="cardHead">Họ và tên</p>
                   <input
                     class="fullName"
                     id="fullName"
@@ -925,7 +925,7 @@ const ContactPage = () => {
                   />
                 </div>
                 <div class="emailArea">
-                  <p class="cardHead">Email Address</p>
+                  <p class="cardHead">Địa chỉ email</p>
                   <input
                     class="email"
                     id="email"
@@ -937,7 +937,7 @@ const ContactPage = () => {
                 </div>
               </div>
               <div class="messageArea">
-                <p class="cardHead">Phone</p>
+                <p class="cardHead">Số điện thoại</p>
                 <input
                   class="email"
                   id="email"
@@ -948,7 +948,7 @@ const ContactPage = () => {
                 />
               </div>
               <div class="messageArea">
-                <p class="cardHead">Message</p>
+                <p class="cardHead">Yêu cầu</p>
                 <textarea
                   class="message"
                   cols="30"
@@ -965,7 +965,7 @@ const ContactPage = () => {
                 href="#"
                 id="w-c-s-bgc_p-1-dm-id-4"
               >
-                Send Message
+                Gửi liên hệ
               </a>
             </form>
           </div>

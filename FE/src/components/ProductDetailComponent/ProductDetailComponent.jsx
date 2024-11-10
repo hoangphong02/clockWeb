@@ -509,14 +509,14 @@ const ProductDetailComponent = ({
               {stateProductDetails?.description}
             </div>
           </WrapperPriceProduct>
-          <WrapperAddress style={{ marginTop: "20px" }}>
+          {/* <WrapperAddress style={{ marginTop: "20px" }}>
             <span>Giao đến</span>
             <span className="address"> {user?.address}</span> -
             <span className="changeAddress" onClick={handleChangeAddress}>
               {" "}
               Đổi địa chỉ{" "}
             </span>
-          </WrapperAddress>
+          </WrapperAddress> */}
           <div>
             <WrapperTextQuality>Số lượng</WrapperTextQuality>
             <WrapperQualityProduct>
@@ -545,8 +545,8 @@ const ProductDetailComponent = ({
               size={20}
               textButton={
                 <>
-                  <ShoppingCartOutlined style={{ fontSize: "25px" }} /> Thêm vào
-                  giỏ hàng
+                  {/* <ShoppingCartOutlined style={{ fontSize: "25px" }} />  */}
+                  Thêm vào giỏ hàng
                 </>
               }
               styleTextButton={{
@@ -562,7 +562,8 @@ const ProductDetailComponent = ({
               size={20}
               textButton={
                 <>
-                  <ShoppingOutlined style={{ fontSize: "25px" }} /> Mua ngay
+                  {/* <ShoppingOutlined style={{ fontSize: "25px" }} />  */}
+                  Mua ngay
                 </>
               }
               styleTextButton={{
@@ -574,7 +575,7 @@ const ProductDetailComponent = ({
               }}
               onClick={handleBuyNow}
             ></WrapperBtnAddCart>
-            <WrapperBtnFollowProduct
+            {/* <WrapperBtnFollowProduct
               isFollowerProduct={isFollowerProduct}
               size={20}
               textButton={
@@ -598,7 +599,7 @@ const ProductDetailComponent = ({
                 gap: "5px",
               }}
               onClick={onHandleFollower}
-            ></WrapperBtnFollowProduct>
+            ></WrapperBtnFollowProduct> */}
           </WrapperBtnBuyCart>
           {/* <QRCodeComponent productId={idProduct}/> */}
         </Col>

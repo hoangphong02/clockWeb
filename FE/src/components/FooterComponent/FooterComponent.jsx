@@ -13,21 +13,22 @@ const FooterComponent = () => {
         <div className="container" style={{ height: "60vh" }}>
           <div className="row d-flex gap-6">
             <div className="col-md pr-md-5 mb-4 mb-md-0">
-              <h3>About Us</h3>
-              <p className="mb-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Laboriosam itaque unde facere repellendus, odio et iste
-                voluptatum aspernatur ratione mollitia tempora eligendi maxime
-                est, blanditiis accusamus. Incidunt, aut, quis!
-              </p>
+              <h3>Về chúng tôi</h3>
               <ul className="list-unstyled quick-info mb-4">
                 <li>
-                  <a href="#" className="d-flex align-items-center">
-                    <span className="icon mr-3 icon-phone"></span> +84 123 456
-                    789
-                  </a>
+                  Đồng hồ ngày nay đã trở thành một phụ kiện, một vật dụng không
+                  thể thiếu của cánh nam giới và cả nữ giới. Việc đeo đồng hồ
+                  không chỉ giúp quản lý thời gian mà còn thể hiện phong cách,
+                  cá tính cũng như đẳng cấp của người đeo đồng hồ. Vì thế hãy
+                  đến với chúng tôi. Watch nâng tầm thương hiệu.
                 </li>
 
+                <li>
+                  <a href="#" className="d-flex align-items-center">
+                    <span className="icon mr-3 icon-envelope"></span> +84 456
+                    789{" "}
+                  </a>
+                </li>
                 <li>
                   <a href="#" className="d-flex align-items-center">
                     <span className="icon mr-3 icon-envelope"></span> Khu II, Đ.

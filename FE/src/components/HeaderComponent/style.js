@@ -77,6 +77,7 @@ export const WrapperButtonDropdown = styled.div`
     .menu {
       display: block;
       transform: translate(-30px, 0px);
+      min-width: 12rem;
     }
   }
 `;
@@ -84,7 +85,7 @@ export const WrapperButtonDropdown = styled.div`
 export const WrapperMenuItem = styled.div`
   &:hover {
     color: rgb(189, 24, 24) !important;
-    // background: #fff;
+    // background: #000;
     border-radius: 10px;
   }
   cursor: pointer;

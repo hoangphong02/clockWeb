@@ -334,7 +334,7 @@ const HomePage = () => {
                 {/* <AnimatedImage>
                   <img src={ImageContact} />
                 </AnimatedImage> */}
-                <div
+                {/* <div
                   style={{
                     padding: "50px",
                     border: "0.6rem solid #621628",
@@ -457,7 +457,7 @@ const HomePage = () => {
                       <span className="button-text">Gửi yêu cầu</span>
                     </WrapperButtonComponent>
                   </div>
-                </div>
+                </div> */}
               </div>
             </ScrollAnimation>
           </div>

@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from "react-router";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {
   WrapperContent,
-  WrapperInfo,
+  WrapperInfo1,
+  WrapperInfo2,
   WrapperInputComponent,
   WrapperInputNumber,
   WrapperLeft,
@@ -477,11 +478,11 @@ const OrderPage = () => {
       }}
     >
       <WrapperContent>
-        <h3 style={{ margin: "0", fontSize: "15px", padding: "15px 0" }}>
-          <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
+        <h3 style={{ margin: "0", fontSize: "15px", padding: "10px 0" }}>
+          {/* <span style={{ cursor: "pointer" }} onClick={() => navigate("/")}>
             Trang chủ
           </span>{" "}
-          - Giỏ hàng
+          - Giỏ hàng */}
         </h3>
         <WrapperSection>
           <WrapperLeft>
@@ -552,6 +553,7 @@ const OrderPage = () => {
                             height: "80px",
                             paddingLeft: "5px",
                           }}
+                          alt=""
                           src={order?.image}
                         ></img>
                         <span
@@ -617,30 +619,24 @@ const OrderPage = () => {
             </div>
           </WrapperLeft>
           <WrapperRight>
-            <WrapperInfo style={{ marginBottom: "10px" }}>
-              <span>Địa chỉ:</span>
-              <span style={{ fontWeight: "600" }}>
-                {" "}
-                {`${user?.address} - ${user?.city}`}{" "}
-                <span
-                  style={{ color: "blue", cursor: "pointer" }}
-                  onClick={handleChangeAddress}
-                >
-                  {" "}
-                  Đổi địa chỉ
-                </span>
-              </span>
-            </WrapperInfo>
-            <WrapperInfo>
+            <WrapperInfo1>
               <span
-                style={{ display: "flex", justifyContent: "space-between" }}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontSize: "16px",
+                }}
               >
-                <span>Tạm Tính</span>
+                <span>Tổng đơn</span>
                 <strong>{priceMemo?.toLocaleString()} VND</strong>
               </span>
               <span>
                 <span
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "16px",
+                  }}
                 >
                   <span>Giảm giá</span>
                   <strong>{priceMemoDiscount?.toLocaleString()} VND</strong>
@@ -648,15 +644,11 @@ const OrderPage = () => {
               </span>
               <span>
                 <span
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span>Thuế</span>
-                  <strong>0 VND</strong>
-                </span>
-              </span>
-              <span>
-                <span
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "16px",
+                  }}
                 >
                   <span>Phí giao hàng</span>
                   <strong>{priceMemoDelivery?.toLocaleString()} VND</strong>
@@ -672,9 +664,10 @@ const OrderPage = () => {
                       display: "flex",
                       justifyContent: "space-between",
                       width: "100%",
+                      fontSize: "16px",
                     }}
                   >
-                    <span>Tổng tiền</span>
+                    <span>Thành tiền</span>
                     <p>
                       <strong style={{ color: "red", fontSize: "20px" }}>
                         {priceMemoTotal?.toLocaleString()} VND
@@ -683,21 +676,37 @@ const OrderPage = () => {
                   </div>
                 </span>
               </span>
-            </WrapperInfo>
-            <div style={{ textAlign: "center", padding: "20px" }}>
-              <ButtonComponent
-                textButton={"Thanh toán"}
-                style={{
-                  background: "red",
-                  color: "#fff",
-                  height: "50px",
-                  width: "200px",
-                  fontWeight: "700",
-                }}
-                onClick={() => addCart()}
-              />
-            </div>
+            </WrapperInfo1>
+            <WrapperInfo2>
+              <span style={{ fontWeight: "600", fontSize: "16px" }}>
+                Địa chỉ:
+              </span>
+              <span style={{ fontWeight: "600" }}>
+                {" "}
+                {`${user?.address} - ${user?.city}`}{" "}
+              </span>
+              <span
+                style={{ color: "blue", cursor: "pointer" }}
+                onClick={handleChangeAddress}
+              >
+                {" "}
+                Đổi địa chỉ
+              </span>
+            </WrapperInfo2>
           </WrapperRight>
+          <div style={{ textAlign: "center", padding: "20px" }}>
+            <ButtonComponent
+              textButton={"Thanh toán"}
+              style={{
+                background: "red",
+                color: "#fff",
+                height: "50px",
+                width: "320px",
+                fontWeight: "700",
+              }}
+              onClick={() => addCart()}
+            />
+          </div>
         </WrapperSection>
       </WrapperContent>
 
