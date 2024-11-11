@@ -4,8 +4,7 @@ import styled from "styled-components";
 export const WrapperStyleCard = styled(Card)`
   width: 378.667px;
   margin-right: 10px;
-  background: #f2e7d5;
-  border: 0.4rem solid #c98648;
+  border: 0.4rem solid #b9959e;
   height: auto;
   & img {
     height: 100%;

@@ -455,7 +455,7 @@ const AdminDashboard = () => {
           </div> */}
 
           {/* Bảng sản phẩm bán chạy bán chậm */}
-          <div
+          {/* <div
             style={{
               padding: "30px 0",
               fontSize: "17px",
@@ -480,7 +480,7 @@ const AdminDashboard = () => {
                 dataSource={dataTableSlowestSeller}
               />
             </div>
-          </div>
+          </div> */}
         </main>
       </div>
     </div>

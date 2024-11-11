@@ -72,7 +72,7 @@ export const WrapperButtonComponent = styled.button`
     margin: 0;
     width: 3rem;
     height: 3rem;
-    background: #c98648;
+    background: #77424f;
     border-radius: 1.625rem;
   }
   &.learn-more .circle .icon {
@@ -110,7 +110,7 @@ export const WrapperButtonComponent = styled.button`
     bottom: 0;
     padding: 0.75rem 0;
     margin: 0 0 0 1.85rem;
-    color: #e6c276;
+    color: #77424f;
     font-weight: 700;
     line-height: 1.6;
     text-align: center;

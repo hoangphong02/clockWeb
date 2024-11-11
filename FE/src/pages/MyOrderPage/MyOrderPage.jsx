@@ -23,13 +23,11 @@ const MyOrderPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [modal2Open, setModal2Open] = useState(false);
-  const [valueRating, setValueRating] = useState(0);
-  const [description, setDescription] = useState("");
   const [idDetailsOrder, setIdDetailsOrder] = useState("");
   const [idProduct, setIdProduct] = useState([]);
   const [idOrder, setIdOrder] = useState("");
-  const [isEvaluate, setIsEvaluate] = useState(false);
   const [evaluatedProducts, setEvaluatedProducts] = useState([]);
+  const [des, setDes] = useState([]);
 
   const fetchMyOrder = async () => {
     const res = await OrderService.getOrderByUserId(state?.id, state?.token);
@@ -44,7 +42,11 @@ const MyOrderPage = () => {
     const res = await OrderService.getDetailOrder(id, token);
     res?.data?.orderItems?.forEach((item) => {
       if (item.product) {
-        arrIdProduct.push({ product: item.product, name: item?.name });
+        arrIdProduct.push({
+          product: item.product,
+          name: item?.name,
+          image: item.image,
+        });
       }
     });
     setIdProduct(arrIdProduct);
@@ -101,10 +103,47 @@ const MyOrderPage = () => {
     );
   };
 
-  const onChange = (e) => {
-    setDescription(e.target.value);
+  const onChange = (e, key) => {
+    setDes((des) => {
+      const isExist = des[key] !== undefined;
+
+      if (isExist) {
+        // Update existing item by index/key
+        return des.map((item, index) =>
+          index === key ? { ...item, description: e.target.value } : item
+        );
+      } else {
+        // Add new item to the array
+        return [
+          ...des,
+          {
+            description: e.target.value,
+          },
+        ];
+      }
+    });
   };
 
+  const onChangeRate = (e, key) => {
+    setDes((des) => {
+      const isExist = des[key] !== undefined;
+
+      if (isExist) {
+        // Update existing item by index/key
+        return des.map((item, index) =>
+          index === key ? { ...item, rate: e } : item
+        );
+      } else {
+        // Add new item to the array
+        return [
+          ...des,
+          {
+            rate: e,
+          },
+        ];
+      }
+    });
+  };
   const mutationAddEvaluate = useMutationHook((data) => {
     const { token, ...rests } = data;
     const res = EvaluateService.createEvaluate({ ...rests }, token);
@@ -117,29 +156,31 @@ const MyOrderPage = () => {
     isSuccess: isSuccsess,
     isError: isError,
   } = mutationAddEvaluate;
+
   const handleAddEvaluate = (id) => {
     if (user?.access_token) {
       // eslint-disable-next-line no-unused-expressions
-      mutationAddEvaluate.mutate({
-        token: user?.access_token,
-        name: user?.name,
-        avatar: user?.avatar,
-        description: description,
-        rating: valueRating,
-        user: user?.id,
-        product: id,
-      });
+
+      if (des?.length) {
+        des.forEach((item, key) => {
+          mutationAddEvaluate.mutate({
+            token: user?.access_token,
+            name: user?.name,
+            avatar: user?.avatar,
+            description: item.description,
+            rating: item?.rate,
+            user: user?.id,
+            product: idProduct[key]?.product,
+          });
+        });
+      }
     }
-    setEvaluatedProducts([...evaluatedProducts, id]);
-    // setModal2Open(false)
+    setModal2Open(false);
     onUpdateOrder(idOrder);
   };
   useEffect(() => {
     if (dataAdd?.status === "OK") {
       message.success("Đánh giá thành công");
-      if (evaluatedProducts.length === idProduct.length) {
-        setModal2Open(false);
-      }
     } else {
       if (dataAdd?.status === "ERR") {
         message.err("Đánh giá thất bại");
@@ -148,19 +189,10 @@ const MyOrderPage = () => {
   }, [dataAdd]);
 
   const handleOnOK = () => {
-    // if(user?.access_token  ) {
-    //     // eslint-disable-next-line no-unused-expressions
-    //     mutationAddEvaluate.mutate(
-    //       { token: user?.access_token,
-    //         name:user?.name,
-    //         avatar:user?.avatar,
-    //         description:description,
-    //         rating:valueRating,
-    //         user: user?.id,
-    //         product: id
-    //       }
-    //     )
-    //   }
+    if (des?.length) {
+      des.forEach((item) => {});
+    }
+
     setModal2Open(false);
     // onUpdateOrder(idOrder)
   };
@@ -188,6 +220,9 @@ const MyOrderPage = () => {
     }
   }, [isErrorCancel, isSuccessCancel]);
 
+  console.log(des);
+  console.log(idProduct);
+
   return (
     //  <Loading isLoading={isLoading} >
     <div style={{ width: "100%", background: "rgb(239, 239, 239)" }}>
@@ -196,21 +231,36 @@ const MyOrderPage = () => {
           data?.map((order) => {
             return (
               <WrapperOrderItem>
-                <div
-                  style={{ borderBottom: "1px solid #ccc", padding: "15px 0" }}
-                >
-                  <span>Trạng thái</span>
-                  <div>
-                    <span style={{ color: "red" }}>Xác nhận đơn hàng: </span>
-                    {order?.isConfirm ? "Đã xác nhận" : "Chưa xác nhận"}
-                  </div>
-                  <div>
-                    <span style={{ color: "red" }}>Giao hàng: </span>
-                    {order?.isDelivered ? "Đã vận chuyển" : "Chưa vận chuyển"}
-                  </div>
-                  <div>
-                    <span style={{ color: "red" }}>Thanh toán: </span>
-                    {order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                <div style={{ padding: "12px 0" }}>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Trạng thái đơn hàng
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "12px",
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontWeight: "600" }}>
+                        Xác nhận đơn hàng:{" "}
+                      </span>
+                      {order?.isConfirm ? "Đã xác nhận" : "Chưa xác nhận"}
+                    </div>
+                    <div>
+                      <span style={{ fontWeight: "600" }}>Giao hàng: </span>
+                      {order?.isDelivered ? "Đã vận chuyển" : "Chưa vận chuyển"}
+                    </div>
+                    <div>
+                      <span style={{ fontWeight: "600" }}>Thanh toán: </span>
+                      {order?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                    </div>
                   </div>
                 </div>
 
@@ -260,8 +310,8 @@ const MyOrderPage = () => {
                             alignItems: "center",
                           }}
                         >
-                          <span style={{ color: "red" }}>
-                            Giá tiền: {item?.price?.toLocaleString()} VND
+                          <span style={{ color: "red", fontWeight: "600" }}>
+                            {item?.price?.toLocaleString()} VND
                           </span>
                         </div>
                       </div>
@@ -281,7 +331,6 @@ const MyOrderPage = () => {
                     display: "flex",
                     justifyContent: "end",
                     gap: "10px",
-                    borderTop: "1px solid #ccc",
                     padding: "15px",
                   }}
                 >
@@ -313,10 +362,12 @@ const MyOrderPage = () => {
                   title="Đánh giá sản phẩm"
                   centered
                   open={modal2Open}
-                  onOk={() => handleOnOK()}
+                  onOk={handleAddEvaluate}
                   onCancel={() => setModal2Open(false)}
+                  cancelText="Trở về"
+                  okText="Hoàn thành đánh giá"
                 >
-                  {idProduct.map((product) => {
+                  {idProduct.map((product, key) => {
                     const isEvaluated = evaluatedProducts.includes(
                       product.product
                     );
@@ -329,48 +380,31 @@ const MyOrderPage = () => {
                         class="card"
                         style={{ background: "none", border: "none" }}
                       >
-                        Đánh giá sản phẩm {product?.name}
+                        {product?.name}
                         <div class="row">
                           <div class="col-2">
                             <img
-                              src={user?.avatar}
+                              src={product?.image}
                               width="70"
                               class="rounded-circle mt-2"
+                              alt=""
                             />
                           </div>
                           <div class="col-10">
                             <div class="comment-box ml-2">
                               <div class="rating" style={{ padding: "10px 0" }}>
                                 <Rate
-                                  onChange={setValueRating}
-                                  value={valueRating}
+                                  onChange={(e) => onChangeRate(e, key)}
+                                  value={des[key]?.rate}
                                 />
                               </div>
                               <div class="comment-area">
                                 <textarea
                                   class="form-control"
-                                  placeholder="Your comment"
+                                  placeholder="Đánh giá của bạn về sản phẩm"
                                   rows="4"
-                                  value={description}
-                                  onChange={onChange}
-                                />
-                              </div>
-                              <div>
-                                <ButtonComponent
-                                  onClick={() =>
-                                    handleAddEvaluate(product?.product)
-                                  }
-                                  textButton={"Đánh giá"}
-                                  disabled={
-                                    valueRating > 0 && description !== ""
-                                      ? false
-                                      : true
-                                  }
-                                  style={{
-                                    margin: "20px 0",
-                                    background: "blue",
-                                    color: "#fff",
-                                  }}
+                                  value={des[key]?.description}
+                                  onChange={(e) => onChange(e, key)}
                                 />
                               </div>
                             </div>

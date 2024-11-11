@@ -2,29 +2,21 @@ import { useLocation, useNavigate } from "react-router";
 import {
   WrapperDetailOrder,
   WrapperDetails,
-  WrapperInfo,
   WrapperInfoDetails,
-  WrapperInputNumber,
-  WrapperLeft,
   WrapperListMethodOrder,
   WrapperListProductOrder,
   WrapperProductsOrder,
-  WrapperRight,
 } from "./style";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import * as OrderService from "../../services/OrderService";
-import StepComponent from "../../components/StepComponent/StepComponent";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../components/Loading/Loading";
-import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useMemo } from "react";
 import { HomeFilled, PhoneFilled } from "@ant-design/icons";
 
 const MyOrderPage = () => {
   //  const order = useSelector((state)=> state.order)
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const location = useLocation();
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -49,9 +41,9 @@ const MyOrderPage = () => {
     <Loading isLoading={isLoading}>
       <div style={{ width: "100%", background: "rgb(239, 239, 239)" }}>
         <WrapperDetailOrder>
-          <div style={{ fontWeight: "bold" }}>
+          <div style={{ fontWeight: "bold", padding: "12px 0" }}>
             <span
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", padding: "12px 0" }}
               onClick={() =>
                 navigate("/my-order", {
                   state: {
@@ -66,47 +58,37 @@ const MyOrderPage = () => {
             </span>{" "}
             - Chi tiết đơn hàng
           </div>
-          <WrapperListMethodOrder>
-            <WrapperDetails>
-              <span style={{ fontWeight: "bold" }}>Địa chỉ người nhận</span>
-              <WrapperInfoDetails>
-                <div>
-                  <span style={{ fontWeight: "bold" }}>
-                    {" "}
-                    {data?.shippingAddress?.fullName}
-                  </span>{" "}
-                </div>
-                <div>
-                  <HomeFilled />{" "}
-                  {`${data?.shippingAddress?.address}-${data?.shippingAddress?.city}`}
-                </div>
-                <div>
-                  <PhoneFilled /> {data?.shippingAddress?.phone}
-                </div>
-              </WrapperInfoDetails>
-            </WrapperDetails>
-            <WrapperDetails>
-              <span style={{ fontWeight: "bold" }}>Hình thức giao hàng</span>
-              <WrapperInfoDetails>
-                <div>Giao hàng tiết kiệm</div>
-                <div>
-                  <span>Phí giao hàng:</span>{" "}
-                  {data?.shippingPrice?.toLocaleString()}
-                </div>
-              </WrapperInfoDetails>
-            </WrapperDetails>
-            <WrapperDetails>
-              <span style={{ fontWeight: "bold" }}>Hình thức thanh toán</span>
-              <WrapperInfoDetails>
-                <div>{data?.paymentMethod}</div>
-                <div style={{ color: "#fa8c16" }}>
-                  {data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
-                </div>
-              </WrapperInfoDetails>
-            </WrapperDetails>
-          </WrapperListMethodOrder>
 
           <WrapperListProductOrder>
+            <div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gap: "8px",
+                }}
+              >
+                <span>
+                  <strong>Tên người nhận:</strong>{" "}
+                  {data?.shippingAddress?.fullName}
+                </span>
+                <span>
+                  <strong>Địa chỉ:</strong>{" "}
+                  {`${data?.shippingAddress?.address}-${data?.shippingAddress?.city}`}
+                </span>
+                <span>
+                  <strong>Số điện thoại: </strong>
+                  {data?.shippingAddress?.phone}
+                </span>
+                <span>
+                  <strong>Hình thức giao hàng: </strong> {data?.paymentMethod}
+                </span>
+                <span>
+                  <strong>Trạng thái:</strong>{" "}
+                  {data?.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                </span>
+              </div>
+            </div>
             <div
               style={{
                 display: "flex",
@@ -158,6 +140,7 @@ const MyOrderPage = () => {
                           height: "80px",
                           paddingLeft: "5px",
                         }}
+                        alt=""
                         src={item?.image}
                       ></img>
                       <span
@@ -182,7 +165,10 @@ const MyOrderPage = () => {
                       <span>{item?.price?.toLocaleString()} VND</span>
                       <span>{item?.amount}</span>
                       <span style={{ color: "red" }}>
-                        {(item?.price * item?.amount * item?.discount) / 100}{" "}
+                        {(
+                          (item?.price * item?.amount * item?.discount) /
+                          100
+                        ).toLocaleString()}{" "}
                         VND
                       </span>
                     </div>
@@ -191,7 +177,9 @@ const MyOrderPage = () => {
               })}
             </WrapperProductsOrder>
             <div>
-              <div>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
                 <div>
                   Tạm tính :{" "}
                   <span style={{ fontWeight: "bold" }}>
@@ -205,13 +193,13 @@ const MyOrderPage = () => {
                     {data?.shippingPrice?.toLocaleString()} VND
                   </span>{" "}
                 </div>
-              </div>
-              <div>
-                Tổng tiền :
-                <span style={{ fontWeight: "bold", color: "red" }}>
-                  {" "}
-                  {data?.totalPrice?.toLocaleString()} VND
-                </span>
+                <div>
+                  Tổng tiền :
+                  <span style={{ fontWeight: "bold", color: "red" }}>
+                    {" "}
+                    {data?.totalPrice?.toLocaleString()} VND
+                  </span>
+                </div>
               </div>
             </div>
             <div
@@ -219,7 +207,6 @@ const MyOrderPage = () => {
                 display: "flex",
                 justifyContent: "end",
                 gap: "10px",
-                borderTop: "1px solid #ccc",
                 padding: "15px",
               }}
             >

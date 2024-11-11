@@ -219,26 +219,30 @@ const ProductDetailPage = () => {
               </div>
               <div
                 style={{
-                  background: "#ccc",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                   padding: "15px",
                   borderRadius: "15px",
                   width: "689px",
                   overflow: "hidden",
                 }}
               >
-                <span style={{ fontWeight: "800" }}>{evaluate?.name}</span>{" "}
-                <span>{formatDateTime(evaluate.updatedAt)}</span>
-                <div>{evaluate?.description}</div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <span style={{ fontWeight: "600" }}>{evaluate?.name}</span>{" "}
+                  <span>{formatDateTime(evaluate.updatedAt)}</span>
+                </div>
                 <div>
                   <Rate
                     defaultValue={evaluate?.rating}
                     value={evaluate?.rating}
                   />
                 </div>
+                <div style={{ marginTop: "12px" }}>{evaluate?.description}</div>
                 <div style={{ display: "flex", float: "right" }}>
                   {user?.isAdmin ? (
                     <ButtonComponent
-                      textButton={"Xóa"}
+                      textButton={"Xóa đánh giá"}
                       onClick={() => handleDeleteEvaluate(evaluate?._id)}
                     />
                   ) : (

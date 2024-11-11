@@ -287,7 +287,7 @@ const AdminPost = () => {
       // sorter: (a, b) => a.content.length - b.content.length,
       ...getColumnSearchProps("content"),
     },
-     {
+    {
       title: "Loại bài đăng",
       dataIndex: "type",
       // sorter: (a, b) => a.content.length - b.content.length,
@@ -455,7 +455,7 @@ const AdminPost = () => {
       type: value,
     });
   };
-   const handleChangeSelectDetail = (value) => {
+  const handleChangeSelectDetail = (value) => {
     setStatePostDetails({
       ...statePostDetails,
       type: value,
@@ -469,10 +469,16 @@ const AdminPost = () => {
 
       <PieChartComponent data = {sliders?.data}/>
       </div> */}
-      <div style={{ marginTop: "10px" }}>
+      <div
+        style={{
+          marginTop: "40px",
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}
         <ButtonAddUser onClick={() => setIsModalOpen(true)}>
-          <PlusOutlined />
+          Thêm bài đăng
         </ButtonAddUser>
       </div>
       <div style={{ marginTop: "20px" }}>

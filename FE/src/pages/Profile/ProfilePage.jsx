@@ -113,9 +113,7 @@ function ProfilePage() {
 
   return (
     <div>
-      <div style={{ textAlign: "center", padding: "10px" }}>
-        <h3>Thông tin cá nhân</h3>
-      </div>
+      <div style={{ textAlign: "center", padding: "10px" }}></div>
 
       <WrapperAllProfile>
         <div className="sidenav">
@@ -123,8 +121,8 @@ function ProfilePage() {
             <img
               src={avatar}
               alt=""
-              width="200"
-              height="200"
+              width="80"
+              height="80"
               style={{ borderRadius: "50%" }}
             />
           </div>
@@ -147,10 +145,12 @@ function ProfilePage() {
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
+            cancelText="Trở về"
+            okText="Cập nhật"
           >
             <WrapperContentProfile>
               <WrapperInput>
-                <WrapperLabel htmlFor="name">Name</WrapperLabel>
+                <WrapperLabel htmlFor="name">Tên</WrapperLabel>
                 <WrapperInputForm
                   id="name"
                   value={name}
@@ -166,7 +166,7 @@ function ProfilePage() {
                 />
               </WrapperInput>
               <WrapperInput>
-                <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
+                <WrapperLabel htmlFor="phone">Số điện thoại</WrapperLabel>
                 <WrapperInputForm
                   id="phone"
                   value={phone}
@@ -174,7 +174,7 @@ function ProfilePage() {
                 />
               </WrapperInput>
               <WrapperInput>
-                <WrapperLabel htmlFor="address">Address</WrapperLabel>
+                <WrapperLabel htmlFor="address">Địa chỉ</WrapperLabel>
                 <WrapperInputForm
                   id="address"
                   value={address}
@@ -182,22 +182,30 @@ function ProfilePage() {
                 />
               </WrapperInput>
               <WrapperInput>
-                <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>
-                <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
-                  <Button icon={<UploadOutlined />}>Upload</Button>
-                </WrapperAvatar>
-                {avatar && (
-                  <img
-                    src={avatar}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                    alt="avatar"
-                  />
-                )}
+                <WrapperLabel htmlFor="avatar">Ảnh đại diện</WrapperLabel>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "16px",
+                    alignItems: "center",
+                  }}
+                >
+                  <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
+                    <Button icon={<UploadOutlined />}>Upload</Button>
+                  </WrapperAvatar>
+                  {avatar && (
+                    <img
+                      src={avatar}
+                      style={{
+                        height: "60px",
+                        width: "60px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                      alt="avatar"
+                    />
+                  )}
+                </div>
                 {/* <InputForm style={{width:'300px'}} id="avatar" value={avatar} onChange={handleOnchangeAvatar} /> */}
               </WrapperInput>
             </WrapperContentProfile>
@@ -205,13 +213,22 @@ function ProfilePage() {
         </div>
 
         <WrapperInfo>
-          <div style={{ background: "rgb(43 42 42)", borderRadius: "30px" }}>
-            <div style={{ padding: "10px 30px" }}>
-              <label htmlFor="" style={{ width: "70px" }}>
-                <img
-                  src={icon_username}
-                  style={{ width: "30px", height: "30px" }}
-                />
+          <div
+            style={{
+              borderRadius: "30px",
+              boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            }}
+          >
+            <div style={{ padding: "10px 30px", display: "flex" }}>
+              <label
+                htmlFor=""
+                style={{
+                  width: "max-content",
+                  minWidth: "160px",
+                  fontSize: "16px",
+                }}
+              >
+                Tên:
               </label>
               <input
                 type="text"
@@ -219,19 +236,23 @@ function ProfilePage() {
                 style={{
                   border: "none",
                   background: "none",
-                  fontSize: "20px",
-                  color: "#fff",
+                  fontSize: "16px",
+                  color: "#000",
                   width: "80%",
                 }}
                 readOnly
               />
             </div>
-            <div style={{ padding: "10px 0px 10px 30px" }}>
-              <label htmlFor="" style={{ width: "70px" }}>
-                <img
-                  src={icon_email}
-                  style={{ width: "30px", height: "30px" }}
-                />
+            <div style={{ padding: "10px 0px 10px 30px", display: "flex" }}>
+              <label
+                htmlFor=""
+                style={{
+                  width: "max-content",
+                  minWidth: "160px",
+                  fontSize: "16px",
+                }}
+              >
+                Email:
               </label>
               <input
                 type="text"
@@ -239,19 +260,23 @@ function ProfilePage() {
                 style={{
                   border: "none",
                   background: "none",
-                  fontSize: "20px",
-                  color: "#fff",
+                  fontSize: "16px",
+                  color: "#000",
                   width: "80%",
                 }}
                 readOnly
               />
             </div>
-            <div style={{ padding: "10px 30px" }}>
-              <label htmlFor="" style={{ width: "70px" }}>
-                <img
-                  src={icon_phone}
-                  style={{ width: "30px", height: "30px" }}
-                />
+            <div style={{ padding: "10px 30px", display: "flex" }}>
+              <label
+                htmlFor=""
+                style={{
+                  width: "max-content",
+                  minWidth: "160px",
+                  fontSize: "16px",
+                }}
+              >
+                Số điện thoại:
               </label>
               <input
                 type="text"
@@ -259,19 +284,23 @@ function ProfilePage() {
                 style={{
                   border: "none",
                   background: "none",
-                  fontSize: "20px",
-                  color: "#fff",
+                  fontSize: "16px",
+                  color: "#000",
                   width: "80%",
                 }}
                 readOnly
               />
             </div>
-            <div style={{ padding: "10px 30px" }}>
-              <label htmlFor="" style={{ width: "70px" }}>
-                <img
-                  src={icon_address}
-                  style={{ width: "30px", height: "30px" }}
-                />
+            <div style={{ padding: "10px 30px", display: "flex" }}>
+              <label
+                htmlFor=""
+                style={{
+                  width: "max-content",
+                  minWidth: "160px",
+                  fontSize: "16px",
+                }}
+              >
+                Địa chỉ:
               </label>
               <input
                 type="text"
@@ -279,8 +308,8 @@ function ProfilePage() {
                 style={{
                   border: "none",
                   background: "none",
-                  fontSize: "20px",
-                  color: "#fff",
+                  fontSize: "16px",
+                  color: "#000",
                   width: "80%",
                 }}
                 readOnly

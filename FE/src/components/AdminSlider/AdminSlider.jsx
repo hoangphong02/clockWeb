@@ -429,10 +429,15 @@ const AdminSlider = () => {
       <div style={{ width: "200px", height: "40px" }}>
         {/* <PieChartComponent data={sliders?.data} /> */}
       </div>
-      <div style={{ marginTop: "10px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}
         <ButtonAddUser onClick={() => setIsModalOpen(true)}>
-          <PlusOutlined />
+          Thêm hình ảnh
         </ButtonAddUser>
       </div>
       <div style={{ marginTop: "20px" }}>

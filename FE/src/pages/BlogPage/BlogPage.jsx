@@ -358,16 +358,23 @@ const BlogPage = () => {
                             marginBottom: "16px",
                           }}
                         >
-                          <span
+                          <div
                             style={{
-                              fontSize: "25px",
-                              fontWeight: "bold",
-                              fontFamily: "inherit",
+                              display: "flex",
+                              justifyContent: "space-between",
                             }}
                           >
-                            {post.title}
-                          </span>{" "}
-                          <em>{custumDay(post?.createdAt)}</em>
+                            <span
+                              style={{
+                                fontSize: "25px",
+                                fontWeight: "bold",
+                                fontFamily: "inherit",
+                              }}
+                            >
+                              {post.title}
+                            </span>{" "}
+                            <em>{custumDay(post?.createdAt)}</em>
+                          </div>
                         </div>
                         <div>{post?.content}</div>
                         {/* <div
@@ -530,7 +537,7 @@ const BlogPage = () => {
         footer={false}
         width={900}
       >
-        <div style={{ paddingBottom: "100px" }}>
+        <div style={{ paddingBottom: "100px", scrollbarWidth: "none" }}>
           {comments?.length > 0 &&
             comments?.map((comment) => {
               return (
@@ -560,15 +567,23 @@ const BlogPage = () => {
                       borderRadius: "15px",
                       width: "689px",
                       overflow: "hidden",
+                      flex: "1",
                     }}
                   >
-                    <span style={{ fontWeight: "800" }}>{comment?.name}</span>{" "}
-                    <span>{custumDay(comment?.createdAt)}</span>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ fontWeight: "600" }}>{comment?.name}</span>{" "}
+                      <span>{custumDay(comment?.createdAt)}</span>
+                    </div>
                     <div>{comment?.content} </div>
                     <div style={{ display: "flex", float: "right" }}>
                       {/* {user?.isAdmin ? <ButtonComponent textButton={"Xóa"} onClick={()=>handleDeleteEvaluate(evaluate?._id)}/>:("")} */}
                       <ButtonComponent
-                        textButton={"Xóa"}
+                        textButton={"Xóa bình luận"}
                         onClick={() => handleDeleteComment(comment?._id)}
                         style={{
                           display:
@@ -588,6 +603,7 @@ const BlogPage = () => {
           style={{
             margin: " 10px 0 ",
             display: "flex",
+            flex: "1",
             alignItems: "center",
             position: "absolute",
             bottom: "0",

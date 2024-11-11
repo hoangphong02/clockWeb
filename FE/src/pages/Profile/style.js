@@ -23,13 +23,12 @@ export const WrapperLabel = styled.label`
   color: #000;
   font-size: 12px;
   font-weight: 600;
-  width: 50px;
+  width: max-content;
 `;
 
 export const WrapperInput = styled.div`
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
 `;
 
 export const WrapperAvatar = styled(Upload)`
@@ -85,7 +84,9 @@ export const WrapperSidenav = styled.div`
 
 export const WrapperAllProfile = styled.div`
   display: flex;
-  gap: 100px;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   padding: 30px;
   justify-content: center;
   @media (max-width: 768px) {
@@ -101,7 +102,8 @@ export const WrapperInfo = styled.div`
 `;
 
 export const WrapperInputForm = styled(InputForm)`
-  width: 300px;
+  width: 80%;
+  border: 1px solid #cbcbcb;
   @media (max-width: 768px) {
     width: 40%;
   }

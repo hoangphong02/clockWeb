@@ -7,16 +7,15 @@ export const WrapperHeader = styled.h1`
 `;
 
 export const ButtonAddUser = styled.button`
-  border-color: #2d8ee1;
-  background: #2d8ee1;
+  background: #91616d;
   color: #fff;
-  font-size: 23px;
+  font-size: 14px;
   height: 45px;
-  padding: 4px 15px;
+  padding: 0px 15px;
+  border-radius: 32px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 6px;
   &:hover {
     background: #61a3dc;
     cursor: pointer;

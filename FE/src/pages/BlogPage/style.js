@@ -5,6 +5,7 @@ export const WrapperModal = styled(Modal)`
   & .ant-modal-body {
     overflow-y: scroll;
     height: 500px;
+    scrollbar-width: none;
   }
 `;
 
@@ -26,8 +27,11 @@ export const WrapperContentComment = styled.div`
   background: #f0f2f5;
   padding: 15px;
   border-radius: 15px;
-  width: 689px;
+  width: 800px;
   overflow: hidden;
+  display: flex;
+  gap: 12px;
+  flex: 1;
   @media (max-width: 768px) {
     width: 100%;
   }

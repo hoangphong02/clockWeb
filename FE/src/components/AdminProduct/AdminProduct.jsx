@@ -706,7 +706,7 @@ const AdminProduct = () => {
       <div
         style={{
           width: "200px",
-          height: "40px",
+          height: "20px",
           textAlign: "center",
           marginBottom: "30px",
         }}
@@ -716,10 +716,15 @@ const AdminProduct = () => {
           Số lượng sản phẩm
         </p> */}
       </div>
-      <div style={{ marginTop: "10px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
         {/* <Button style={{ height: '150px', width: '150px', borderRadius: '6px', borderStyle: 'dashed' }} onClick={() => setIsModalOpen(true)}><PlusOutlined style={{ fontSize: '60px' }} /></Button> */}
         <ButtonAddUser onClick={() => setIsModalOpen(true)}>
-          <PlusOutlined />
+          Thêm sản phẩm
         </ButtonAddUser>
       </div>
       <div style={{ marginTop: "20px" }}>
