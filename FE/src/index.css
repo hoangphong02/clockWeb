@@ -1131,3 +1131,9 @@ form {
     padding-left: 10px;
   }
 }
+
+.ant-menu-item-selected {
+  background-color: #89254b !important;
+  color: #fff !important;
+  border-radius: 8px;
+}

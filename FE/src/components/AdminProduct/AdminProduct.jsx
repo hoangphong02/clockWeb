@@ -3,6 +3,7 @@ import { ButtonAddUser, WrapperAvatar } from "./style";
 import {
   DeleteOutlined,
   EditOutlined,
+  FormOutlined,
   PlusOutlined,
   SearchOutlined,
   TagOutlined,
@@ -271,28 +272,29 @@ const AdminProduct = () => {
 
   const renderAction = (id) => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsProduct}
         />
+
         {discounts?.data?.length &&
         discounts?.data?.find((item) => item?.product === id) ? (
           <Badge
             count={discounts?.data?.find((item) => item?.product === id)?.value}
           >
             <TagOutlined
-              style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+              style={{ fontSize: "20px", cursor: "pointer" }}
               onClick={() => setIsOpenModalDiscount(true)}
             />
           </Badge>
         ) : (
           <TagOutlined
-            style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+            style={{ fontSize: "20px", cursor: "pointer" }}
             onClick={() => setIsOpenModalDiscount(true)}
           />
         )}
@@ -881,7 +883,7 @@ const AdminProduct = () => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Thêm
               </Button>
             </Form.Item>
           </Form>
@@ -1025,7 +1027,7 @@ const AdminProduct = () => {
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Apply
+                Cập nhật
               </Button>
             </Form.Item>
           </Form>

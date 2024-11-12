@@ -4,6 +4,7 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
+  FormOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
@@ -149,13 +150,13 @@ const AdminContact = () => {
 
   const renderAction = () => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsOrder}
         />
       </div>
@@ -295,13 +296,9 @@ const AdminContact = () => {
         ...contact,
         key: contact._id,
         isExplain: contact?.isExplain ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
+          <CheckCircleOutlined style={{ fontSize: "20px" }} />
         ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
+          <CloseCircleOutlined style={{ fontSize: "20px" }} />
         ),
         name: contact?.name,
         phone: contact?.phone,

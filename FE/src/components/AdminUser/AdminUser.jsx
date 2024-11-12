@@ -5,6 +5,7 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
+  FormOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
@@ -135,13 +136,13 @@ const AdminUser = () => {
   const { isLoading: isLoadingUser, data: users } = queryUser;
   const renderAction = () => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsUser}
         />
       </div>
@@ -253,23 +254,10 @@ const AdminUser = () => {
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Admin",
+      title: "Loại người dùng",
       dataIndex: "isAdmin",
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
-      onFilter: (value, record) => {
-        if (value === true) {
-          return record.isAdmin.type.render.name === "CheckCircleOutlined";
-        }
-        return record.isAdmin.type.render.name === "CloseCircleOutlined";
+      render: (value) => {
+        return <a>{value === true ? "Admin" : "Khách hàng"}</a>;
       },
     },
     {
@@ -284,15 +272,15 @@ const AdminUser = () => {
       return {
         ...user,
         key: user._id,
-        isAdmin: user.isAdmin ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
-        ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
-        ),
+        // isAdmin: user.isAdmin ? (
+        //   <CheckCircleOutlined
+        //     style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
+        //   />
+        // ) : (
+        //   <CloseCircleOutlined
+        //     style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
+        //   />
+        // ),
       };
     });
 
@@ -318,7 +306,7 @@ const AdminUser = () => {
     });
     form.resetFields();
   };
-
+  console.log(dataTable);
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === "OK") {
       message.success();

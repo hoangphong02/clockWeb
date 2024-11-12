@@ -4,6 +4,7 @@ import {
   CloseOutlined,
   DeleteOutlined,
   EditOutlined,
+  FormOutlined,
   PlusOutlined,
   SearchOutlined,
   UploadOutlined,
@@ -184,13 +185,13 @@ const AdminPost = () => {
   const { isLoading: isLoadingProducts, data: posts } = queryPost;
   const renderAction = () => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsProduct}
         />
       </div>

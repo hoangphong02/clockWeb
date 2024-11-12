@@ -6,6 +6,7 @@ import {
   EditOutlined,
   SearchOutlined,
   PrinterOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
 import { Button, Form, Radio, Space } from "antd";
@@ -222,13 +223,13 @@ const AdminOrder = () => {
   }, [orders]);
   const renderAction = () => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "2em", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "2em", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsOrder}
         />
         {/* <PrinterOutlined
@@ -323,13 +324,6 @@ const AdminOrder = () => {
   //columns and data truyền vào tablecomponent
   const columns = [
     {
-      title: "Mã đơn hàng",
-      dataIndex: "key",
-      // render: (text) => <a>{text}</a>,
-      // sorter: (a, b) => a.key.length - b.key.length,
-      ...getColumnSearchProps("key"),
-    },
-    {
       title: "Tên khách hàng",
       dataIndex: "userName",
       render: (text) => <a>{text}</a>,
@@ -353,16 +347,7 @@ const AdminOrder = () => {
       dataIndex: "isConfirm",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isConfirm"),
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
+
       onFilter: (value, record) => {
         if (value === true) {
           return record.isConfirm.type.render.name === "CheckCircleOutlined";
@@ -375,16 +360,6 @@ const AdminOrder = () => {
       dataIndex: "isReceived",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isReceived"),
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
       onFilter: (value, record) => {
         if (value === true) {
           return record.isReceived.type.render.name === "CheckCircleOutlined";
@@ -397,16 +372,7 @@ const AdminOrder = () => {
       dataIndex: "isPaid",
       // sorter: (a, b) => a.name - b.name,
       // ...getColumnSearchProps("isPaid"),
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
+
       onFilter: (value, record) => {
         if (value === true) {
           return record.isPaid.type.render.name === "CheckCircleOutlined";
@@ -419,16 +385,7 @@ const AdminOrder = () => {
       dataIndex: "isDelivered",
       // sorter: (a, b) => a.isDelivered.length - b.isDelivered.length,
       // ...getColumnSearchProps("isDelivered"),
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
+
       onFilter: (value, record) => {
         if (value === true) {
           return record.isDelivered.type.render.name === "CheckCircleOutlined";
@@ -461,43 +418,27 @@ const AdminOrder = () => {
         ...order,
         key: order._id,
         isPaid: order?.isPaid ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
+          <CheckCircleOutlined style={{ fontSize: "20px" }} />
         ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
+          <CloseCircleOutlined style={{ fontSize: "20px" }} />
         ),
         userName: order?.shippingAddress?.fullName,
         phone: order?.shippingAddress?.phone,
         address: order?.shippingAddress?.address,
         isConfirm: order?.isConfirm ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
+          <CheckCircleOutlined style={{ fontSize: "20px" }} />
         ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
+          <CloseCircleOutlined style={{ fontSize: "20px" }} />
         ),
         isReceived: order?.isReceived ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
+          <CheckCircleOutlined style={{ fontSize: "20px" }} />
         ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
+          <CloseCircleOutlined style={{ fontSize: "20px" }} />
         ),
         isDelivered: order?.isDelivered ? (
-          <CheckCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(70 255 74)" }}
-          />
+          <CheckCircleOutlined style={{ fontSize: "20px" }} />
         ) : (
-          <CloseCircleOutlined
-            style={{ fontSize: "25px", color: "rgb(255 ,11, 11)" }}
-          />
+          <CloseCircleOutlined style={{ fontSize: "20px" }} />
         ),
         totalPrice: `${(order?.totalPrice).toLocaleString()} VND`,
       };

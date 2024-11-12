@@ -11,7 +11,7 @@ export const WrapperContainerRight = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 300px;
+  // width: 300px;
   background: linear-gradient(136deg, rgb(240, 248, 255) -1%, rgb(174 3 3) 85%);
   border-radius: 0px 20px 20px 0px;
 `;

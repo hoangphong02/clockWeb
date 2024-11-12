@@ -3,6 +3,7 @@ import { ButtonAddUser, WrapperAvatar, WrapperHeader } from "./style";
 import {
   DeleteOutlined,
   EditOutlined,
+  FormOutlined,
   PlusOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
@@ -148,13 +149,13 @@ const AdminSlider = () => {
   const { isLoading: isLoadingProducts, data: sliders } = querySlider;
   const renderAction = () => {
     return (
-      <div>
+      <div className="d-flex gap-2">
         <DeleteOutlined
-          style={{ color: "red", fontSize: "30px", cursor: "pointer" }}
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={() => setIsModalOpenDelete(true)}
         />
-        <EditOutlined
-          style={{ color: "orange", fontSize: "30px", cursor: "pointer" }}
+        <FormOutlined
+          style={{ fontSize: "20px", cursor: "pointer" }}
           onClick={handleDetailsProduct}
         />
       </div>
