@@ -401,7 +401,7 @@ const AdminUser = () => {
       </div>
       <DrawerComponent
         title="Chi tiết người dùng"
-        isOpen={isOpenDrawer}
+        // isOpen={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
@@ -607,6 +607,207 @@ const AdminUser = () => {
       >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa người dùng này không?</div>
+        </Loading>
+      </ModalComponent>
+
+      <ModalComponent
+        title="Chi tiết người dùng"
+        open={isOpenDrawer}
+        onCancel={() => setIsOpenDrawer(false)}
+        footer={null}
+        width={1000}
+      >
+        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form
+            form={form}
+            name="basic"
+            labelCol={{
+              span: 4,
+            }}
+            wrapperCol={{
+              span: 20,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onUpdateUser}
+            autoComplete="on"
+          >
+            {/* <Form.Item
+              label="Id"
+              name="_id"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user id!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails._id}
+                onChange={handleOnchangeDetails}
+                name="_id"
+              />
+            </Form.Item> */}
+            <Form.Item
+              label="Tên"
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user name!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.name}
+                onChange={handleOnchangeDetails}
+                name="name"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Email"
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user email!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.email}
+                onChange={handleOnchangeDetails}
+                name="email"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Địa chỉ"
+              name="address"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user address!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.address}
+                onChange={handleOnchangeDetails}
+                name="address"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Số điện thoại"
+              name="phone"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input user address!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.phone}
+                onChange={handleOnchangeDetails}
+                name="phone"
+              />
+            </Form.Item>
+
+            {/* <Form.Item
+              label="CreateAt"
+              name="createdAt"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input product avatar!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.createdAt}
+                onChange={handleOnchangeDetails}
+                name="createdAt"
+              />
+            </Form.Item> */}
+
+            {/* <Form.Item
+              label="UpdatedAt"
+              name="updatedAt"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input product rating!",
+                },
+              ]}
+            >
+              <InputComponent
+                value={stateUserDetails.updatedAt}
+                onChange={handleOnchangeDetails}
+                name="UpdatedAt"
+              />
+            </Form.Item> */}
+
+            <Form.Item
+              label="Admin"
+              name="isAdmin"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input is Admin!",
+                },
+              ]}
+            >
+              <Radio.Group
+                onChange={handleOnchangeIsAdminDetails}
+                value={stateUserDetails?.isAdmin}
+              >
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+              {/* <InputComponent value = {stateUserDetails.isAdmin} onChange ={handleOnchangeDetails} name="isAdmin"/> */}
+            </Form.Item>
+            <Form.Item
+              label="Avatar "
+              name="avatar"
+              rules={[
+                { required: true, message: "Please input your count image!" },
+              ]}
+            >
+              <WrapperAvatar
+                onChange={handleOnchangeAvatarDetails}
+                maxCount={1}
+              >
+                <Button>Select File</Button>
+                {stateUserDetails?.avatar && (
+                  <img
+                    src={stateUserDetails?.avatar}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "10px",
+                    }}
+                    alt="avatar"
+                  />
+                )}
+              </WrapperAvatar>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 20,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Cập nhật
+              </Button>
+            </Form.Item>
+          </Form>
         </Loading>
       </ModalComponent>
     </div>

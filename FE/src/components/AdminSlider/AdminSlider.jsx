@@ -541,7 +541,7 @@ const AdminSlider = () => {
       </ModalComponent>
       <DrawerComponent
         title="Chi tiết hình ảnh"
-        isOpen={isOpenDrawer}
+        // isOpen={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
@@ -628,6 +628,76 @@ const AdminSlider = () => {
       >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa hình ảnh này không?</div>
+        </Loading>
+      </ModalComponent>
+
+      <ModalComponent
+        title="Chi tiết hình ảnh"
+        open={isOpenDrawer}
+        onCancel={() => setIsOpenDrawer(false)}
+        footer={null}
+      >
+        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form
+            name="basic"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            onFinish={onUpdateProduct}
+            autoComplete="on"
+            form={form}
+          >
+            <Form.Item
+              label="Loại hình ảnh"
+              name="type"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              {/* <InputComponent
+                value={stateProductDetails?.type}
+                onChange={handleOnchangeDetails}
+                name="type"
+              /> */}
+              <Select
+                name="type"
+                // defaultValue="lucy"
+                // style={{ width: 120 }}
+                value={stateProductDetails.type}
+                onChange={handleChangeSelectDetails}
+                options={renderOptions(typeProduct?.data?.data)}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Hình ảnh"
+              name="image"
+              rules={[
+                { required: true, message: "Please input your count image!" },
+              ]}
+            >
+              <WrapperAvatar
+                onChange={handleOnchangeAvatarDetails}
+                maxCount={1}
+              >
+                <Button>Select File</Button>
+                {stateProductDetails?.image && (
+                  <img
+                    src={stateProductDetails?.image}
+                    style={{
+                      height: "60px",
+                      width: "60px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      marginLeft: "10px",
+                    }}
+                    alt="avatar"
+                  />
+                )}
+              </WrapperAvatar>
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Cập nhật
+              </Button>
+            </Form.Item>
+          </Form>
         </Loading>
       </ModalComponent>
     </div>

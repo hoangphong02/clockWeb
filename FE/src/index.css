@@ -1137,3 +1137,6 @@ form {
   color: #fff !important;
   border-radius: 8px;
 }
+.ant-form-item-label{
+  text-align: left !important;
+}

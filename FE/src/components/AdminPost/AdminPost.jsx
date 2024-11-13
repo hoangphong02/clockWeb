@@ -624,7 +624,7 @@ const AdminPost = () => {
       </ModalComponent>
       <DrawerComponent
         title="Chi tiết bài đăng"
-        isOpen={isOpenDrawer}
+        // isOpen={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
@@ -776,6 +776,145 @@ const AdminPost = () => {
       >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa bài đăng này không?</div>
+        </Loading>
+      </ModalComponent>
+
+      <ModalComponent
+        forceRender
+        title="Chi tiết bài đăng"
+        open={isOpenDrawer}
+        onCancel={() => setIsOpenDrawer(false)}
+        footer={null}
+      >
+        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form
+            name="basic"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            onFinish={onUpdatePost}
+            autoComplete="on"
+            form={form}
+          >
+            <Form.Item
+              label="Tiêu đề"
+              name="title"
+              rules={[{ required: true, message: "Please input your title!" }]}
+            >
+              <InputComponent
+                value={statePostDetails?.title}
+                onChange={handleOnchangeDetails}
+                name="title"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Nội dung"
+              name="content"
+              rules={[
+                { required: true, message: "Please input your content!" },
+              ]}
+            >
+              <InputComponent
+                value={statePostDetails?.content}
+                onChange={handleOnchangeDetails}
+                name="content"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Loại bài đăng"
+              name="type"
+              rules={[{ required: true, message: "Please input your type!" }]}
+            >
+              <Select
+                name="type"
+                // defaultValue="lucy"
+                // style={{ width: 120 }}
+                value={statePostDetails.type}
+                onChange={handleChangeSelectDetail}
+                options={renderOptions(typeProduct?.data?.data)}
+              />
+            </Form.Item>
+            {statePostDetails.type === "add_type" && (
+              <Form.Item
+                label="New type"
+                name="newType"
+                rules={[{ required: true, message: "Please input your type!" }]}
+              >
+                <InputComponent
+                  value={statePostDetails.newType}
+                  onChange={handleOnchangeDetails}
+                  name="newType"
+                />
+              </Form.Item>
+            )}
+
+            <div
+              style={{
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+                gap: "20px",
+              }}
+            >
+              {imageUploadDetail.length > 0 &&
+                imageUploadDetail?.map((image) => {
+                  return (
+                    <div
+                      style={{
+                        height: "80px",
+                        width: "80px",
+                        position: "relative",
+                      }}
+                    >
+                      <img
+                        src={image?.urlImage}
+                        style={{ width: "70px", height: "70px" }}
+                      />
+                      <CloseOutlined
+                        onClick={() =>
+                          handleDeleteImageUploadDetail(image?.urlImage)
+                        }
+                        style={{
+                          top: "-6px",
+                          position: "absolute",
+                          right: "-7px",
+                          background: "#a5a4a3",
+                          borderRadius: " 30px",
+                          color: "#fff",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div
+              style={{
+                padding: "0",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+              }}
+            >
+              <p>Thêm hình ảnh: </p>
+              <Upload
+                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                listType="picture"
+                maxCount={6}
+                multiple
+                onChange={handleOnchangeAvatarDetails}
+              >
+                <Button icon={<UploadOutlined />}>Upload</Button>
+              </Upload>
+            </div>
+
+            <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Cập nhật
+              </Button>
+            </Form.Item>
+          </Form>
         </Loading>
       </ModalComponent>
     </div>

@@ -20,6 +20,7 @@ import ModalComponent from "../ModalComponent/ModalComponent";
 import * as ContactService from "../../services/ContactService";
 import PieChartComponent from "./PieChartComponent";
 import AdminHeader from "../AdminHeader/AdminHeader";
+import moment from "moment";
 
 // import PieChartComponent from './PieChartComponent'
 
@@ -390,7 +391,7 @@ const AdminContact = () => {
       </div>
       <DrawerComponent
         title="Chi tiết liên hệ"
-        isOpen={isOpenDrawer}
+        // isOpen={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
@@ -536,6 +537,92 @@ const AdminContact = () => {
       >
         <Loading isLoading={isLoadingDeleted}>
           <div>Bạn có chắc xóa liên hệ này không?</div>
+        </Loading>
+      </ModalComponent>
+
+      <ModalComponent
+        title="Chi tiết liên hệ"
+        open={isOpenDrawer}
+        onCancel={() => setIsOpenDrawer(false)}
+        footer={null}
+      >
+        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form
+            form={form}
+            name="basic"
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 18,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onUpdateContact}
+            autoComplete="on"
+          >
+            <Form.Item label="Tên người gửi" name="name">
+              {/* <InputComponent value = {stateOrdersDetails.name} onChange ={handleOnchangeDetails} name="name"/> */}
+              <span>{stateContactsDetails.name}</span>
+            </Form.Item>
+
+            <Form.Item label="Email" name="email">
+              {/* <InputComponent value = {stateOrdersDetails.address} onChange ={handleOnchangeDetails} name="address"/> */}
+              <span>{stateContactsDetails.email}</span>
+            </Form.Item>
+
+            <Form.Item label="Điện thoại" name="phone">
+              {/* <InputComponent value = {stateOrdersDetails.phone} onChange ={handleOnchangeDetails} name="phone"/> */}
+              <span>{stateContactsDetails.phone}</span>
+            </Form.Item>
+
+            <Form.Item label="Nội dung" name="message">
+              {/* <InputComponent value = {(stateOrdersDetails.totalPrice).toLocaleString()} onChange ={handleOnchangeDetails} name="totalPrice"/> */}
+              <span>{stateContactsDetails.message}</span>
+            </Form.Item>
+
+            <Form.Item label="Giải quyết" name="isExplain">
+              {/* <InputComponent
+                value={stateContactsDetails.isExplain}
+                onChange={handleOnchangeDetails}
+                name="isExplain"
+              /> */}
+              <Radio.Group onChange={onChange} value={valueIsExplain}>
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              label="Ngày gửi"
+              name="createdAt"
+              rules={[
+                {
+                  message: "Please input is Admin!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.createdAt} onChange ={handleOnchangeDetails} name="createdAt"/> */}
+              <span>
+                {" "}
+                {moment(stateContactsDetails?.createdAt).format(
+                  "hh:mm DD/MM/YYYY"
+                )}
+              </span>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 20,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Cập nhật
+              </Button>
+            </Form.Item>
+          </Form>
         </Loading>
       </ModalComponent>
     </div>

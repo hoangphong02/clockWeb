@@ -24,6 +24,7 @@ import AdminHeader from "../AdminHeader/AdminHeader";
 import ReactToPrintComponent from "../ReactToPrintComponent/ReactToPrintComponent";
 import { ButtonPrint } from "./style";
 import { useReactToPrint } from "react-to-print";
+import moment from "moment";
 
 const AdminOrder = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -614,7 +615,7 @@ const AdminOrder = () => {
       </div>
       <DrawerComponent
         title="Chi tiết đơn hàng"
-        isOpen={isOpenDrawer}
+        // isOpen={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
         width="90%"
       >
@@ -878,6 +879,192 @@ const AdminOrder = () => {
         onOk={handlePrintOneOrder}
       >
         <div>Bạn có chắc in đơn hàng này không?</div>
+      </ModalComponent>
+
+      <ModalComponent
+        title="Chi tiết đơn hàng"
+        open={isOpenDrawer}
+        onCancel={() => setIsOpenDrawer(false)}
+        footer={null}
+        width={600}
+      >
+        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
+          <Form
+            form={form}
+            name="basic"
+            labelCol={{
+              span: 6,
+            }}
+            wrapperCol={{
+              span: 18,
+            }}
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onUpdateOrder}
+            autoComplete="on"
+          >
+            <Form.Item
+              label="Mã đơn hàng"
+              name="_id"
+              rules={[
+                {
+                  message: "Please input user id!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails._id} onChange ={handleOnchangeDetails} name="_id"/> */}
+              <span>{stateOrdersDetails._id}</span>
+            </Form.Item>
+            <Form.Item
+              label="Tên khách hàng"
+              name="name"
+              rules={[
+                {
+                  message: "Please input user name!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.name} onChange ={handleOnchangeDetails} name="name"/> */}
+              <span>{stateOrdersDetails.name}</span>
+            </Form.Item>
+
+            <Form.Item label="Địa chỉ" name="address">
+              {/* <InputComponent value = {stateOrdersDetails.address} onChange ={handleOnchangeDetails} name="address"/> */}
+              <span>{stateOrdersDetails.address}</span>
+            </Form.Item>
+
+            <Form.Item label="Điện thoại" name="phone">
+              {/* <InputComponent value = {stateOrdersDetails.phone} onChange ={handleOnchangeDetails} name="phone"/> */}
+              <span>{stateOrdersDetails.phone}</span>
+            </Form.Item>
+
+            <Form.Item label="Sản phẩm">
+              {stateOrdersDetails?.orderItems.map((order) => {
+                return (
+                  <div>
+                    <img
+                      src={order?.image}
+                      style={{
+                        height: "60px",
+                        width: "60px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        marginLeft: "10px",
+                      }}
+                      alt="avatar"
+                    />
+
+                    <span>
+                      {""} Số lượng: <strong>{order?.amount}</strong>
+                    </span>
+                    <span>
+                      {" "}
+                      Giá sản phẩm:{" "}
+                      <strong>{(order?.price).toLocaleString()} VND</strong>
+                    </span>
+                  </div>
+                );
+              })}
+            </Form.Item>
+
+            <Form.Item label="Giá" name="totalPrice">
+              {/* <InputComponent value = {(stateOrdersDetails.totalPrice).toLocaleString()} onChange ={handleOnchangeDetails} name="totalPrice"/> */}
+              <span>{stateOrdersDetails.totalPrice.toLocaleString()} VND</span>
+            </Form.Item>
+
+            <Form.Item label="Xác nhận" name="isConfirm">
+              <Radio.Group
+                onChange={handleOnchangeIsConfirmDetails}
+                value={stateOrdersDetails?.isConfirm}
+              >
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+
+              {/* <InputComponent
+                value={stateOrdersDetails.isConfirm}
+                onChange={handleOnchangeDetails}
+                name="isConfirm"
+              /> */}
+            </Form.Item>
+
+            <Form.Item label="Thanh toán" name="isPaid">
+              <Radio.Group
+                onChange={handleOnchangeIsPaidDetails}
+                value={stateOrdersDetails?.isPaid}
+              >
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+              {/* <InputComponent
+                value={stateOrdersDetails.isPaid}
+                onChange={handleOnchangeDetails}
+                name="isPaid"
+              /> */}
+            </Form.Item>
+
+            <Form.Item label="Vận chuyển" name="isDelivered">
+              <Radio.Group
+                onChange={handleOnchangeIsDeliveryDetails}
+                value={stateOrdersDetails?.isDelivered}
+              >
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item label="Nhận hàng" name="isReceived">
+              <Radio.Group
+                onChange={handleOnchangeIsReceivedDetails}
+                value={stateOrdersDetails?.isReceived}
+              >
+                <Radio value={false}>False</Radio>
+                <Radio value={true}>True</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              label="Phương thức thanh toán"
+              name="paymentMethod"
+              rules={[
+                {
+                  message: "Please input is Admin!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.paymentMethod} onChange ={handleOnchangeDetails} name="paymentMethod"/> */}
+              <span>{stateOrdersDetails.paymentMethod}</span>
+            </Form.Item>
+            <Form.Item
+              label="Ngày tạo"
+              name="createdAt"
+              rules={[
+                {
+                  message: "Please input is Admin!",
+                },
+              ]}
+            >
+              {/* <InputComponent value = {stateOrdersDetails.createdAt} onChange ={handleOnchangeDetails} name="createdAt"/> */}
+              <span>
+                {moment(stateOrdersDetails?.createdAt).format(
+                  "hh:mm DD/MM/YYYY"
+                )}
+              </span>
+            </Form.Item>
+
+            <Form.Item
+              wrapperCol={{
+                offset: 20,
+                span: 16,
+              }}
+            >
+              <Button type="primary" htmlType="submit">
+                Cập nhật
+              </Button>
+            </Form.Item>
+          </Form>
+        </Loading>
       </ModalComponent>
     </div>
   );
