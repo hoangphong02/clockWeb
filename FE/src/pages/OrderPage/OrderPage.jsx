@@ -605,7 +605,7 @@ const OrderPage = () => {
                             }
                           />
                         </span>
-                        <span style={{ color: "red" }}>
+                        <span>
                           {(order?.amount * order?.price)?.toLocaleString()} VND
                         </span>
                         <DeleteOutlined
@@ -698,7 +698,7 @@ const OrderPage = () => {
             <ButtonComponent
               textButton={"Thanh toán"}
               style={{
-                background: "red",
+                background: "#773244",
                 color: "#fff",
                 height: "50px",
                 width: "320px",
@@ -715,6 +715,8 @@ const OrderPage = () => {
         open={isOpenModalUpdateInfo}
         onCancel={handleCancelUpdate}
         onOk={handleUpdateInfoUser}
+        cancelText="Trở về"
+        okText="Cập nhật"
       >
         {/* <Loading isLoading={}> */}
         <Form
@@ -783,7 +785,7 @@ const OrderPage = () => {
           </Form.Item>
 
           <Form.Item
-            label="Thành phố"
+            label="Tỉnh thành"
             name="city"
             rules={[
               {

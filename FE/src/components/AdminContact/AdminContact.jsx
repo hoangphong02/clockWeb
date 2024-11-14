@@ -8,7 +8,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Radio, Space } from "antd";
+import { Button, Form, Radio, Space, Switch } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { useMutationHook } from "../../hooks/useMutationHook";
@@ -361,7 +361,7 @@ const AdminContact = () => {
     );
   };
   const onChange = (e) => {
-    setValueIsExplain(e.target.value);
+    setValueIsExplain(e);
   };
 
   return (
@@ -588,10 +588,7 @@ const AdminContact = () => {
                 onChange={handleOnchangeDetails}
                 name="isExplain"
               /> */}
-              <Radio.Group onChange={onChange} value={valueIsExplain}>
-                <Radio value={false}>False</Radio>
-                <Radio value={true}>True</Radio>
-              </Radio.Group>
+              <Switch checked={valueIsExplain} onChange={onChange} />
             </Form.Item>
 
             <Form.Item

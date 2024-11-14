@@ -330,12 +330,12 @@ const PaymentPage = () => {
                   <Radio.Group onChange={onChangeRadioPayment} value={payment}>
                     <Space direction="vertical">
                       <Radio value={"Thanh toán khi nhận hàng"}>
-                        <img style={{ width: "20px" }} src={imagePay} />{" "}
+                        {/* <img style={{ width: "20px" }} src={imagePay} />{" "} */}
                         <span>Thanh toán khi nhận hàng</span>
                       </Radio>
                       <Radio value={"Thanh toán bằng ví Paypal"}>
                         <span style={{ display: "flex" }}>
-                          <img style={{ width: "20px" }} src={imagePayment} />{" "}
+                          {/* <img style={{ width: "20px" }} src={imagePayment} />{" "} */}
                           <span>Thanh toán bằng ví Paypal</span>
                         </span>
                       </Radio>
@@ -424,7 +424,7 @@ const PaymentPage = () => {
                   <ButtonComponent
                     textButton={"Đặt hàng"}
                     style={{
-                      background: "red",
+                      background: "#773244",
                       color: "#fff",
                       height: "50px",
                       width: "320px",
@@ -443,16 +443,18 @@ const PaymentPage = () => {
           open={isOpenModalUpdateInfo}
           onCancel={handleCancelUpdate}
           onOk={handleUpdateInfoUser}
+          cancelText="Trở lại"
+          okText="Cập nhật"
         >
           {/* <Loading isLoading={}> */}
           <Form
             form={form}
             name="basic"
             labelCol={{
-              span: 4,
+              span: 6,
             }}
             wrapperCol={{
-              span: 20,
+              span: 18,
             }}
             initialValues={{
               remember: true,
@@ -461,7 +463,7 @@ const PaymentPage = () => {
             autoComplete="on"
           >
             <Form.Item
-              label="Name"
+              label="Tên"
               name="name"
               rules={[
                 {
@@ -478,7 +480,7 @@ const PaymentPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="Address"
+              label="Địa chỉ"
               name="address"
               rules={[
                 {
@@ -494,7 +496,7 @@ const PaymentPage = () => {
               />
             </Form.Item>
             <Form.Item
-              label="Phone"
+              label="Số điện thoại"
               name="phone"
               rules={[
                 {
@@ -511,7 +513,7 @@ const PaymentPage = () => {
             </Form.Item>
 
             <Form.Item
-              label="City"
+              label="Tỉnh thành"
               name="city"
               rules={[
                 {

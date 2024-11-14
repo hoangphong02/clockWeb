@@ -9,7 +9,7 @@ import {
   FormOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Radio, Space } from "antd";
+import { Button, Form, Radio, Space, Switch } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { useMutationHook } from "../../hooks/useMutationHook";
@@ -512,7 +512,7 @@ const AdminOrder = () => {
     } else {
       setStateOrdersDetails({
         ...stateOrdersDetails,
-        isConfirm: e.target.value,
+        isConfirm: e,
       });
     }
   };
@@ -525,7 +525,7 @@ const AdminOrder = () => {
     } else {
       setStateOrdersDetails({
         ...stateOrdersDetails,
-        isPaid: e.target.value,
+        isPaid: e,
       });
     }
   };
@@ -538,12 +538,12 @@ const AdminOrder = () => {
     } else {
       setStateOrdersDetails({
         ...stateOrdersDetails,
-        isDelivered: e.target.value,
+        isDelivered: e,
       });
     }
   };
   const handleOnchangeIsReceivedDetails = (e) => {
-    if (e.target.value === true) {
+    if (e === true) {
       setStateOrdersDetails({
         ...stateOrdersDetails,
         isDelivered: true,
@@ -554,7 +554,7 @@ const AdminOrder = () => {
     } else {
       setStateOrdersDetails({
         ...stateOrdersDetails,
-        isReceived: e.target.value,
+        isReceived: e,
         isConfirm: confirm,
         isPaid: paid,
         isDelivered: delivery,
@@ -893,10 +893,10 @@ const AdminOrder = () => {
             form={form}
             name="basic"
             labelCol={{
-              span: 6,
+              span: 8,
             }}
             wrapperCol={{
-              span: 18,
+              span: 16,
             }}
             initialValues={{
               remember: true,
@@ -974,13 +974,10 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item label="Xác nhận" name="isConfirm">
-              <Radio.Group
+              <Switch
+                checked={stateOrdersDetails?.isConfirm}
                 onChange={handleOnchangeIsConfirmDetails}
-                value={stateOrdersDetails?.isConfirm}
-              >
-                <Radio value={false}>False</Radio>
-                <Radio value={true}>True</Radio>
-              </Radio.Group>
+              />
 
               {/* <InputComponent
                 value={stateOrdersDetails.isConfirm}
@@ -990,13 +987,18 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item label="Thanh toán" name="isPaid">
-              <Radio.Group
+              {/* <Radio.Group
                 onChange={handleOnchangeIsPaidDetails}
                 value={stateOrdersDetails?.isPaid}
               >
                 <Radio value={false}>False</Radio>
                 <Radio value={true}>True</Radio>
-              </Radio.Group>
+              </Radio.Group> */}
+
+              <Switch
+                checked={stateOrdersDetails?.isPaid}
+                onChange={handleOnchangeIsPaidDetails}
+              />
               {/* <InputComponent
                 value={stateOrdersDetails.isPaid}
                 onChange={handleOnchangeDetails}
@@ -1005,23 +1007,24 @@ const AdminOrder = () => {
             </Form.Item>
 
             <Form.Item label="Vận chuyển" name="isDelivered">
-              <Radio.Group
+              {/* <Radio.Group
                 onChange={handleOnchangeIsDeliveryDetails}
                 value={stateOrdersDetails?.isDelivered}
               >
                 <Radio value={false}>False</Radio>
                 <Radio value={true}>True</Radio>
-              </Radio.Group>
+              </Radio.Group> */}
+              <Switch
+                checked={stateOrdersDetails?.isDelivered}
+                onChange={handleOnchangeIsDeliveryDetails}
+              />
             </Form.Item>
 
             <Form.Item label="Nhận hàng" name="isReceived">
-              <Radio.Group
+              <Switch
+                checked={stateOrdersDetails?.isReceived}
                 onChange={handleOnchangeIsReceivedDetails}
-                value={stateOrdersDetails?.isReceived}
-              >
-                <Radio value={false}>False</Radio>
-                <Radio value={true}>True</Radio>
-              </Radio.Group>
+              />
             </Form.Item>
 
             <Form.Item

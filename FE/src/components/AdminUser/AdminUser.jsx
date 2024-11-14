@@ -9,7 +9,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Radio, Space } from "antd";
+import { Button, Form, Radio, Space, Switch } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64 } from "../../utils";
@@ -349,7 +349,7 @@ const AdminUser = () => {
   const handleOnchangeIsAdminDetails = (e) => {
     setStateUserDetails({
       ...stateUserDetails,
-      isAdmin: e.target.value,
+      isAdmin: e,
     });
   };
 
@@ -760,13 +760,10 @@ const AdminUser = () => {
                 },
               ]}
             >
-              <Radio.Group
+              <Switch
+                checked={stateUserDetails?.isAdmin}
                 onChange={handleOnchangeIsAdminDetails}
-                value={stateUserDetails?.isAdmin}
-              >
-                <Radio value={false}>False</Radio>
-                <Radio value={true}>True</Radio>
-              </Radio.Group>
+              />
               {/* <InputComponent value = {stateUserDetails.isAdmin} onChange ={handleOnchangeDetails} name="isAdmin"/> */}
             </Form.Item>
             <Form.Item
