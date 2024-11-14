@@ -239,19 +239,19 @@ const AdminUser = () => {
       title: "email",
       dataIndex: "email",
       // sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps("email"),
+      // ...getColumnSearchProps("email"),
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
       // sorter: (a, b) => a.name.length - b.name.length,
-      ...getColumnSearchProps("address"),
+      // ...getColumnSearchProps("address"),
     },
     {
       title: "Số điện thoại",
       dataIndex: "phone",
       // sorter: (a, b) => a.name - b.name,
-      ...getColumnSearchProps("phone"),
+      // ...getColumnSearchProps("phone"),
     },
     {
       title: "Loại người dùng",

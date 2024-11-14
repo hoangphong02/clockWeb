@@ -329,19 +329,19 @@ const AdminOrder = () => {
       dataIndex: "userName",
       render: (text) => <a>{text}</a>,
       // sorter: (a, b) => a.userName.length - b.userName.length,
-      ...getColumnSearchProps("userName"),
+      // ...getColumnSearchProps("userName"),
     },
     {
       title: "Điện thoại",
       dataIndex: "phone",
       // sorter: (a, b) => a.phone.length - b.phone.length,
-      ...getColumnSearchProps("phone"),
+      // ...getColumnSearchProps("phone"),
     },
     {
       title: "Địa chỉ",
       dataIndex: "address",
       // sorter: (a, b) => a.address.length - b.address.length,
-      ...getColumnSearchProps("address"),
+      // ...getColumnSearchProps("address"),
     },
     {
       title: "Đã xác nhận",
@@ -404,7 +404,7 @@ const AdminOrder = () => {
       title: "Giá",
       dataIndex: "totalPrice",
       // sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
-      ...getColumnSearchProps("totalPrice"),
+      // ...getColumnSearchProps("totalPrice"),
     },
     {
       title: "Hành động",

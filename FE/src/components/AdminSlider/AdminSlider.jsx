@@ -257,7 +257,7 @@ const AdminSlider = () => {
       title: "Loại",
       dataIndex: "type",
       // sorter: (a, b) => a.type.length - b.type.length,
-      ...getColumnSearchProps("type"),
+      // ...getColumnSearchProps("type"),
     },
     {
       title: "Hành động",

@@ -286,13 +286,13 @@ const AdminPost = () => {
       title: "Nội dung",
       dataIndex: "content",
       // sorter: (a, b) => a.content.length - b.content.length,
-      ...getColumnSearchProps("content"),
+      // ...getColumnSearchProps("content"),
     },
     {
       title: "Loại bài đăng",
       dataIndex: "type",
       // sorter: (a, b) => a.content.length - b.content.length,
-      ...getColumnSearchProps("type"),
+      // ...getColumnSearchProps("type"),
     },
     {
       title: "Hành động",

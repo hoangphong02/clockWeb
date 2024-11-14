@@ -254,35 +254,35 @@ const AdminContact = () => {
       title: "Điện thoại",
       dataIndex: "phone",
       // sorter: (a, b) => a.phone.length - b.phone.length,
-      ...getColumnSearchProps("phone"),
+      // ...getColumnSearchProps("phone"),
     },
     {
       title: "Nội dung",
       dataIndex: "message",
       // sorter: (a, b) => a.message.length - b.message.length,
-      ...getColumnSearchProps("message"),
+      // ...getColumnSearchProps("message"),
     },
     {
       title: "Đã giải quyết",
       dataIndex: "isExplain",
       // sorter: (a, b) => a.isExplain - b.isExplain,
       // ...getColumnSearchProps("isExplain"),
-      filters: [
-        {
-          text: "True",
-          value: true,
-        },
-        {
-          text: "False",
-          value: false,
-        },
-      ],
-      onFilter: (value, record) => {
-        if (value === true) {
-          return record.isExplain.type.render.name === "CheckCircleOutlined";
-        }
-        return record.isExplain.type.render.name === "CloseCircleOutlined";
-      },
+      // filters: [
+      //   {
+      //     text: "True",
+      //     value: true,
+      //   },
+      //   {
+      //     text: "False",
+      //     value: false,
+      //   },
+      // ],
+      // onFilter: (value, record) => {
+      //   if (value === true) {
+      //     return record.isExplain.type.render.name === "CheckCircleOutlined";
+      //   }
+      //   return record.isExplain.type.render.name === "CloseCircleOutlined";
+      // },
     },
     {
       title: "Hành động",

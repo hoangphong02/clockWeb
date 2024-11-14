@@ -402,49 +402,49 @@ const AdminProduct = () => {
       title: "Giá",
       dataIndex: "price",
       // sorter: (a, b) => a.price - b.price,
-      filters: [
-        {
-          text: ">= 50.000",
-          value: ">=",
-        },
-        {
-          text: "<= 50.000",
-          value: "<=",
-        },
-      ],
-      onFilter: (value, record) => {
-        if (value === ">=") {
-          return record.price >= 50000;
-        }
-        return record.price <= 50000;
-      },
+      // filters: [
+      //   {
+      //     text: ">= 50.000",
+      //     value: ">=",
+      //   },
+      //   {
+      //     text: "<= 50.000",
+      //     value: "<=",
+      //   },
+      // ],
+      // onFilter: (value, record) => {
+      //   if (value === ">=") {
+      //     return record.price >= 50000;
+      //   }
+      //   return record.price <= 50000;
+      // },
     },
     {
       title: "Tồn kho",
       dataIndex: "countInStock",
       // sorter: (a, b) => a.rating - b.rating,
-      filters: [
-        {
-          text: ">= 50",
-          value: ">=",
-        },
-        {
-          text: "<= 50",
-          value: "<=",
-        },
-      ],
-      onFilter: (value, record) => {
-        if (value === ">=") {
-          return Number(record.rating) >= 3;
-        }
-        return Number(record.rating) <= 3;
-      },
+      // filters: [
+      //   {
+      //     text: ">= 50",
+      //     value: ">=",
+      //   },
+      //   {
+      //     text: "<= 50",
+      //     value: "<=",
+      //   },
+      // ],
+      // onFilter: (value, record) => {
+      //   if (value === ">=") {
+      //     return Number(record.rating) >= 3;
+      //   }
+      //   return Number(record.rating) <= 3;
+      // },
     },
     {
       title: "Loại",
       dataIndex: "type",
       // sorter: (a, b) => a.type.length - b.type.length,
-      ...getColumnSearchProps("type"),
+      // ...getColumnSearchProps("type"),
     },
     {
       title: "Hành động",
