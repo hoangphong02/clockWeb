@@ -10,7 +10,7 @@ import {
 } from "@ant-design/icons";
 import moment from "moment";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Select, Space, Badge } from "antd";
+import { Button, Form, Select, Space, Badge, Input } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64, renderOptions } from "../../utils";
@@ -35,7 +35,9 @@ const AdminProduct = () => {
   const [valueDiscount, setValueDiscount] = useState(0);
   const [dateStart, setDateStart] = useState(new Date());
   const [dateEnd, setDateEnd] = useState(new Date());
+  const [dataTable, setDataTable] = useState([]);
   const user = useSelector((state) => state?.user);
+  const [urlImage, setUrlImage] = useState();
   const searchInput = useRef(null);
   const inittial = () => ({
     name: "",
@@ -144,6 +146,7 @@ const AdminProduct = () => {
         discount: res?.data?.discount,
         followers: res?.data?.followers,
       });
+      setUrlImage(res?.data?.image)
     }
     setIsLoadingUpdate(false);
   };
@@ -156,6 +159,7 @@ const AdminProduct = () => {
         image: res?.data?.image,
         followers: res?.data?.followers,
       });
+      setUrlImage(res?.data?.image)
     }
   };
 
@@ -452,11 +456,16 @@ const AdminProduct = () => {
       render: (text, record) => renderAction(record?._id),
     },
   ];
-  const dataTable =
-    products?.data?.length &&
-    products?.data?.map((product) => {
-      return { ...product, key: product._id };
-    });
+  
+    useEffect(() => {
+      if(products?.data?.length ){
+      const data =  products?.data?.map((product) => {
+          return { ...product, key: product._id };
+        });
+        setDataTable(data)
+      }
+
+    }, [products])
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -509,6 +518,41 @@ const AdminProduct = () => {
     }
   }, [isSuccessUpdated]);
 
+  const uploadToCloudinary = async (file, uploadPreset, uploadUrl) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        // Trả về URL của ảnh đã upload
+        return data.secure_url;
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+  const handleImageUpload = async (file) => {
+    const uploadPreset = "clockWeb"; 
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload"; 
+
+    const imageUrl = await uploadToCloudinary(file, uploadPreset, uploadUrl);
+
+    if (imageUrl) {
+      setUrlImage(imageUrl);
+    }
+  };
+
   const handleCancelDelete = () => {
     setIsModalOpenDelete(false);
   };
@@ -550,7 +594,8 @@ const AdminProduct = () => {
       price: stateProduct.price,
       description: stateProduct.description,
       rating: 5,
-      image: stateProduct.image,
+      // image: stateProduct.image,
+      image: urlImage,
       type:
         stateProduct.type === "add_type"
           ? stateProduct.newType
@@ -632,6 +677,13 @@ const AdminProduct = () => {
     }
   }, [isErrorUpdateDiscount]);
 
+  useEffect(() => {
+    if(!isModalOpen && !isOpenDrawer){
+      setUrlImage()
+    }
+
+  }, [isModalOpen, isOpenDrawer])
+
   const handleOnchange = (e) => {
     setStateProduct({
       ...stateProduct,
@@ -669,7 +721,7 @@ const AdminProduct = () => {
   };
   const onUpdateProduct = () => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateProductDetails },
+      { id: rowSelected, token: user?.access_token, ...stateProductDetails, image: urlImage },
       {
         onSettled: () => {
           queryProduct.refetch();
@@ -858,7 +910,7 @@ const AdminProduct = () => {
                 name="discount"
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Hình ảnh"
               name="image"
               rules={[
@@ -881,7 +933,39 @@ const AdminProduct = () => {
                   />
                 )}
               </WrapperAvatar>
-            </Form.Item>
+            </Form.Item> */}
+            <Form.Item
+              label="Hình ảnh"
+            ></Form.Item>
+            <Input
+                      type="file"
+                      id="exampleCustomFileBrowser1"
+                      name="image"
+                      onChange={(e) => handleImageUpload(e.target.files[0])}
+                    />
+
+                    {urlImage && (
+                      <div
+                        className="image-preview"
+                        style={{
+                          marginTop: "40px",
+                        }}
+                      >
+                        <img
+                          src={urlImage}
+                          alt=""
+                          style={{ height: "100px", width: "auto" }}
+                        />
+                        <div
+                          className="image-preview-remove"
+                          onClick={() => {
+                            setUrlImage("");
+                          }}
+                        >
+                          x
+                        </div>
+                      </div>
+                    )}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Thêm
@@ -1155,7 +1239,7 @@ const AdminProduct = () => {
                 name="discount"
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Hình ảnh"
               name="image"
               rules={[
@@ -1181,7 +1265,40 @@ const AdminProduct = () => {
                   />
                 )}
               </WrapperAvatar>
-            </Form.Item>
+            </Form.Item> */}
+
+            <Form.Item
+              label="Hình ảnh"
+            ></Form.Item>
+            <Input
+                      type="file"
+                      id="exampleCustomFileBrowser1"
+                      name="image"
+                      onChange={(e) => handleImageUpload(e.target.files[0])}
+                    />
+
+                    {urlImage && (
+                      <div
+                        className="image-preview"
+                        style={{
+                          marginTop: "40px",
+                        }}
+                      >
+                        <img
+                          src={urlImage}
+                          alt=""
+                          style={{ height: "100px", width: "auto" }}
+                        />
+                        <div
+                          className="image-preview-remove"
+                          onClick={() => {
+                            setUrlImage("");
+                          }}
+                        >
+                          x
+                        </div>
+                      </div>
+                    )}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Cập nhật

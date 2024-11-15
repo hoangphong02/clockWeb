@@ -615,7 +615,7 @@ const AdminPost = () => {
             </div>
 
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="button" onClick={onFinish}>
                 Submit
               </Button>
             </Form.Item>

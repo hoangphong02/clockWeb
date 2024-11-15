@@ -862,7 +862,7 @@ const AdminOrder = () => {
       </DrawerComponent>
 
       <ModalComponent
-        title="Xóa người dùng"
+        title="Xóa đơn hàng"
         open={isModalOpenDelete}
         onCancel={handleCancelDelete}
         onOk={() => handleCancelOrder(rowSelected)}

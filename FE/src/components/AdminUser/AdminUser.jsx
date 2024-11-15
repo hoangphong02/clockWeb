@@ -9,7 +9,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import TableComponent from "../TableComponent/TableComponent";
-import { Button, Form, Radio, Space, Switch } from "antd";
+import { Button, Form, Input, Radio, Space, Switch } from "antd";
 import * as message from "../../components/Message/Message";
 import InputComponent from "../InputComponent/InputComponent";
 import { getBase64 } from "../../utils";
@@ -30,6 +30,7 @@ const AdminUser = () => {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
   const user = useSelector((state) => state?.user);
+  const [urlImage, setUrlImage] = useState();
   const searchInput = useRef(null);
 
   const [stateUserDetails, setStateUserDetails] = useState({
@@ -81,6 +82,7 @@ const AdminUser = () => {
         updatedAt: res?.data?.updatedAt,
         isAdmin: res?.data?.isAdmin,
       });
+      setUrlImage(res?.data?.avatar);
     }
     setIsLoadingUpdate(false);
   };
@@ -306,7 +308,6 @@ const AdminUser = () => {
     });
     form.resetFields();
   };
-  console.log(dataTable);
   useEffect(() => {
     if (isSuccessUpdated && dataUpdated?.status === "OK") {
       message.success();
@@ -363,9 +364,50 @@ const AdminUser = () => {
       avatar: file.preview,
     });
   };
+
+  const uploadToCloudinary = async (file, uploadPreset, uploadUrl) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        // Trả về URL của ảnh đã upload
+        return data.secure_url;
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+  const handleImageUpload = async (file) => {
+    const uploadPreset = "clockWeb"; 
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload"; 
+
+    const imageUrl = await uploadToCloudinary(file, uploadPreset, uploadUrl);
+
+    if (imageUrl) {
+      setUrlImage(imageUrl);
+    }
+  };
   const onUpdateUser = () => {
+    const payload = {
+      id: rowSelected, token: user?.access_token, ...stateUserDetails
+    }
+    if(urlImage){
+      payload.avatar = urlImage;
+    }
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateUserDetails },
+      payload,
       {
         onSettled: () => {
           queryUser.refetch();
@@ -766,34 +808,43 @@ const AdminUser = () => {
               />
               {/* <InputComponent value = {stateUserDetails.isAdmin} onChange ={handleOnchangeDetails} name="isAdmin"/> */}
             </Form.Item>
+
+
             <Form.Item
               label="Avatar "
               name="avatar"
-              rules={[
-                { required: true, message: "Please input your count image!" },
-              ]}
+             
             >
-              <WrapperAvatar
-                onChange={handleOnchangeAvatarDetails}
-                maxCount={1}
-              >
-                <Button>Select File</Button>
-                {stateUserDetails?.avatar && (
-                  <img
-                    src={stateUserDetails?.avatar}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      marginLeft: "10px",
-                    }}
-                    alt="avatar"
-                  />
-                )}
-              </WrapperAvatar>
-            </Form.Item>
+              <Input
+                      type="file"
+                      id="exampleCustomFileBrowser1"
+                      name="image"
+                      onChange={(e) => handleImageUpload(e.target.files[0])}
+                    />
 
+                    {urlImage && (
+                      <div
+                        className="image-preview"
+                        style={{
+                          marginTop: "40px",
+                        }}
+                      >
+                        <img
+                          src={urlImage}
+                          alt=""
+                          style={{ height: "100px", width: "auto" }}
+                        />
+                        <div
+                          className="image-preview-remove"
+                          onClick={() => {
+                            setUrlImage("");
+                          }}
+                        >
+                          x
+                        </div>
+                      </div>
+                    )}
+            </Form.Item>
             <Form.Item
               wrapperCol={{
                 offset: 20,

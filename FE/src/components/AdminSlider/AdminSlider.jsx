@@ -29,6 +29,7 @@ const AdminSlider = () => {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
+  const [urlImage, setUrlImage] = useState();
   const user = useSelector((state) => state?.user);
   const searchInput = useRef(null);
   const [stateProduct, setStateProduct] = useState({
@@ -86,6 +87,7 @@ const AdminSlider = () => {
         image: res?.data?.image,
         type: res?.data?.type,
       });
+      setUrlImage(res?.data?.image);
     }
     setIsLoadingUpdate(false);
   };
@@ -275,6 +277,13 @@ const AdminSlider = () => {
         type: slider.type,
       };
     });
+  
+    useEffect(() => {
+      if(!isModalOpen && !isOpenDrawer){
+        setUrlImage()
+      }
+
+    }, [isModalOpen, isOpenDrawer])
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -346,6 +355,41 @@ const AdminSlider = () => {
     form.resetFields();
   };
 
+  const uploadToCloudinary = async (file, uploadPreset, uploadUrl) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        // Trả về URL của ảnh đã upload
+        return data.secure_url;
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+  const handleImageUpload = async (file) => {
+    const uploadPreset = "clockWeb"; 
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload"; 
+
+    const imageUrl = await uploadToCloudinary(file, uploadPreset, uploadUrl);
+
+    if (imageUrl) {
+      setUrlImage(imageUrl);
+    }
+  };
+
   const onFinish = () => {
     mutation.mutate(
       {
@@ -354,7 +398,9 @@ const AdminSlider = () => {
           stateProduct.type === "add_type"
             ? stateProduct.newType
             : stateProduct.type,
-        image: stateProduct?.image,
+        // image: stateProduct?.image,
+        image: urlImage,
+
       },
       {
         onSettled: () => {
@@ -401,7 +447,7 @@ const AdminSlider = () => {
   };
   const onUpdateProduct = () => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateProductDetails },
+      { id: rowSelected, token: user?.access_token, ...stateProductDetails, image: urlImage },
       {
         onSettled: () => {
           querySlider.refetch();
@@ -507,14 +553,14 @@ const AdminSlider = () => {
               </Form.Item>
             )}
 
-            <Form.Item
+            {/* <Form.Item
               label="Image"
               name="image"
               rules={[
                 { required: true, message: "Please input your count image!" },
               ]}
             >
-              <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
+              <WrapperAvatar onChange={handleImageUpload} maxCount={1}>
                 <Button>Select File</Button>
                 {stateProduct?.image && (
                   <img
@@ -530,10 +576,40 @@ const AdminSlider = () => {
                   />
                 )}
               </WrapperAvatar>
-            </Form.Item>
+            </Form.Item> */}
+
+            <Input
+                      type="file"
+                      id="exampleCustomFileBrowser1"
+                      name="image"
+                      onChange={(e) => handleImageUpload(e.target.files[0])}
+                    />
+
+                    {urlImage && (
+                      <div
+                        className="image-preview"
+                        style={{
+                          marginTop: "40px",
+                        }}
+                      >
+                        <img
+                          src={urlImage}
+                          alt=""
+                          style={{ height: "100px", width: "auto" }}
+                        />
+                        <div
+                          className="image-preview-remove"
+                          onClick={() => {
+                            setUrlImage("");
+                          }}
+                        >
+                          x
+                        </div>
+                      </div>
+                    )}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                Thêm
               </Button>
             </Form.Item>
           </Form>
@@ -593,7 +669,7 @@ const AdminSlider = () => {
               ]}
             >
               <WrapperAvatar
-                onChange={handleOnchangeAvatarDetails}
+                onChange={handleImageUpload}
                 maxCount={1}
               >
                 <Button>Select File</Button>
@@ -665,7 +741,7 @@ const AdminSlider = () => {
                 options={renderOptions(typeProduct?.data?.data)}
               />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Hình ảnh"
               name="image"
               rules={[
@@ -691,7 +767,37 @@ const AdminSlider = () => {
                   />
                 )}
               </WrapperAvatar>
-            </Form.Item>
+            </Form.Item> */}
+
+            <Input
+                      type="file"
+                      id="exampleCustomFileBrowser1"
+                      name="image"
+                      onChange={(e) => handleImageUpload(e.target.files[0])}
+                    />
+
+                    {urlImage && (
+                      <div
+                        className="image-preview"
+                        style={{
+                          marginTop: "40px",
+                        }}
+                      >
+                        <img
+                          src={urlImage}
+                          alt=""
+                          style={{ height: "100px", width: "auto" }}
+                        />
+                        <div
+                          className="image-preview-remove"
+                          onClick={() => {
+                            setUrlImage("");
+                          }}
+                        >
+                          x
+                        </div>
+                      </div>
+                    )}
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Cập nhật
