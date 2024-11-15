@@ -405,26 +405,66 @@ const AdminPost = () => {
     });
   };
 
-  const handleOnchangeAvatar = async ({ fileList }) => {
+  const handleOnchangeAvatar = async (fileList) => {
+    const uploadPreset = "clockWeb";
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload";
+
     const images = [];
     for (const file of fileList) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      try {
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.secure_url) {
+          images.push({ urlImage: data.secure_url });
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
       }
-      images.push({ urlImage: file.preview });
     }
+
     setImageUpload(images);
   };
 
-  const handleOnchangeAvatarDetails = async ({ fileList }) => {
+  const handleOnchangeAvatarDetails = async (fileList) => {
+    const uploadPreset = "clockWeb";
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload";
+
     const images = [];
-    for (const file of fileList) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
+    for (const file of Array.from(fileList)) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      try {
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (data.secure_url) {
+          images.push({ urlImage: data.secure_url });
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
       }
-      images.push({ urlImage: file.preview });
     }
-    setImageUploadDetail(images);
+
+    setImageUploadDetail([...imageUploadDetail, ...images]);
+  };
+
+  const handleRemoveImage = (url) => {
+    setImageUpload((imageUpload) =>
+      imageUpload?.filter((item) => item.urlImage !== url)
+    );
   };
   const onUpdatePost = () => {
     mutationUpdate.mutate(
@@ -462,6 +502,14 @@ const AdminPost = () => {
       type: value,
     });
   };
+
+  useEffect(() => {
+    if (!isModalOpen && !isOpenDrawer) {
+      setImageUpload([]);
+    }
+  }, [isOpenDrawer, isModalOpen]);
+
+  console.log(imageUploadDetail);
   return (
     <div>
       <AdminHeader textHeader={"Quản lý bài đăng"} />
@@ -564,210 +612,53 @@ const AdminPost = () => {
               </Form.Item>
             )}
 
-            <div
-              style={{
-                textAlign: "center",
-                display: "flex",
-                justifyContent: "center",
-                gap: "20px",
-              }}
-            ></div>
-
-            <div style={{ padding: "0 50px" }}>
-              <p>Thêm hình ảnh</p>
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                maxCount={6}
+            <Form.Item label="Thêm hình ảnh">
+              <Input
+                type="file"
+                id="exampleCustomFileBrowser1"
+                name="image"
                 multiple
-                onChange={handleOnchangeAvatar}
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-
-              {/* <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
-                <Button>Select File</Button>
-                {statePost?.imageUL && (
-                  <img
-                    src={statePost?.imageUL}
-                    style={{
-                      height: "60px",
-                      width: "60px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      marginLeft: "10px",
-                    }}
-                    alt="avatar"
-                  />
-                )}
-              </WrapperAvatar> */}
-              {/* <Button
-                style={{
-                  margin: "20px 0",
-                  background: "#1677ff",
-                  color: "#fff",
-                }}
-                disabled={statePost?.imageUL ? false : true}
-                onClick={handleIncreaseImage}
-              >
-                Upload
-              </Button> */}
-            </div>
-
-            <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
-              <Button type="button" onClick={onFinish}>
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </Loading>
-      </ModalComponent>
-      <DrawerComponent
-        title="Chi tiết bài đăng"
-        // isOpen={isOpenDrawer}
-        onClose={() => setIsOpenDrawer(false)}
-        width="90%"
-      >
-        <Loading isLoading={isLoadingUpdate || isLoadingUpdated}>
-          <Form
-            name="basic"
-            labelCol={{ span: 2 }}
-            wrapperCol={{ span: 22 }}
-            onFinish={onUpdatePost}
-            autoComplete="on"
-            form={form}
-          >
-            <Form.Item
-              label="Mã bài đăng"
-              name="_id"
-              rules={[{ required: true, message: "Please input your name!" }]}
-            >
-              {/* <InputComponent value={statePostDetails?._id} onChange={handleOnchangeDetails} name="_id" /> */}
-              <span>{statePostDetails?._id}</span>
-            </Form.Item>
-
-            <Form.Item
-              label="Tiêu đề"
-              name="title"
-              rules={[{ required: true, message: "Please input your title!" }]}
-            >
-              <InputComponent
-                value={statePostDetails?.title}
-                onChange={handleOnchangeDetails}
-                name="title"
+                onChange={(e) => handleOnchangeAvatar(e.target.files)}
               />
             </Form.Item>
-            <Form.Item
-              label="Nội dung"
-              name="content"
-              rules={[
-                { required: true, message: "Please input your content!" },
-              ]}
-            >
-              <InputComponent
-                value={statePostDetails?.content}
-                onChange={handleOnchangeDetails}
-                name="content"
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Loại bài đăng"
-              name="type"
-              rules={[{ required: true, message: "Please input your type!" }]}
-            >
-              <Select
-                name="type"
-                // defaultValue="lucy"
-                // style={{ width: 120 }}
-                value={statePostDetails.type}
-                onChange={handleChangeSelectDetail}
-                options={renderOptions(typeProduct?.data?.data)}
-              />
-            </Form.Item>
-            {statePostDetails.type === "add_type" && (
-              <Form.Item
-                label="New type"
-                name="newType"
-                rules={[{ required: true, message: "Please input your type!" }]}
-              >
-                <InputComponent
-                  value={statePostDetails.newType}
-                  onChange={handleOnchangeDetails}
-                  name="newType"
-                />
-              </Form.Item>
-            )}
-
-            <div
-              style={{
-                textAlign: "center",
-                display: "flex",
-                justifyContent: "center",
-                gap: "20px",
-              }}
-            >
-              {imageUploadDetail.length > 0 &&
-                imageUploadDetail?.map((image) => {
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {!!imageUpload?.length &&
+                imageUpload.map((item, index) => {
                   return (
                     <div
+                      className="image-preview"
                       style={{
-                        height: "80px",
-                        width: "80px",
-                        position: "relative",
+                        marginTop: "40px",
                       }}
                     >
                       <img
-                        src={image?.urlImage}
-                        style={{ width: "70px", height: "70px" }}
+                        src={item.urlImage}
+                        alt=""
+                        style={{ height: "100px", width: "auto" }}
                       />
-                      <CloseOutlined
-                        onClick={() =>
-                          handleDeleteImageUploadDetail(image?.urlImage)
-                        }
-                        style={{
-                          top: "-6px",
-                          position: "absolute",
-                          right: "-7px",
-                          background: "#a5a4a3",
-                          borderRadius: " 30px",
-                          color: "#fff",
-                          cursor: "pointer",
-                        }}
-                      />
+                      <div
+                        className="image-preview-remove"
+                        onClick={() => handleRemoveImage(item.urlImage)}
+                      >
+                        x
+                      </div>
                     </div>
                   );
                 })}
             </div>
 
-            <div
-              style={{
-                padding: "0",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <p>Thêm hình ảnh: </p>
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                maxCount={6}
-                multiple
-                onChange={handleOnchangeAvatarDetails}
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </div>
-
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Apply
+              <Button
+                type="button"
+                onClick={onFinish}
+                style={{ background: "blue", color: "#fff" }}
+              >
+                Thêm
               </Button>
             </Form.Item>
           </Form>
         </Loading>
-      </DrawerComponent>
+      </ModalComponent>
       <ModalComponent
         title="Xóa bài đăng"
         open={isModalOpenDelete}
@@ -848,67 +739,41 @@ const AdminPost = () => {
               </Form.Item>
             )}
 
-            <div
-              style={{
-                textAlign: "center",
-                display: "flex",
-                justifyContent: "center",
-                gap: "20px",
-              }}
-            >
-              {imageUploadDetail.length > 0 &&
-                imageUploadDetail?.map((image) => {
+            <Form.Item label="Thêm hình ảnh">
+              <Input
+                type="file"
+                id="exampleCustomFileBrowser2"
+                multiple
+                onChange={(e) => handleOnchangeAvatarDetails(e.target.files)}
+              />
+            </Form.Item>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              {!!imageUploadDetail?.length &&
+                imageUploadDetail.map((item, index) => {
                   return (
                     <div
+                      className="image-preview"
                       style={{
-                        height: "80px",
-                        width: "80px",
-                        position: "relative",
+                        marginTop: "40px",
                       }}
                     >
                       <img
-                        src={image?.urlImage}
-                        style={{ width: "70px", height: "70px" }}
+                        src={item.urlImage}
+                        alt=""
+                        style={{ height: "100px", width: "auto" }}
                       />
-                      <CloseOutlined
+                      <div
+                        className="image-preview-remove"
                         onClick={() =>
-                          handleDeleteImageUploadDetail(image?.urlImage)
+                          handleDeleteImageUploadDetail(item.urlImage)
                         }
-                        style={{
-                          top: "-6px",
-                          position: "absolute",
-                          right: "-7px",
-                          background: "#a5a4a3",
-                          borderRadius: " 30px",
-                          color: "#fff",
-                          cursor: "pointer",
-                        }}
-                      />
+                      >
+                        x
+                      </div>
                     </div>
                   );
                 })}
             </div>
-
-            <div
-              style={{
-                padding: "0",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
-            >
-              <p>Thêm hình ảnh: </p>
-              <Upload
-                action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                listType="picture"
-                maxCount={6}
-                multiple
-                onChange={handleOnchangeAvatarDetails}
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </div>
-
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Cập nhật

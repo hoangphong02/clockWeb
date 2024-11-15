@@ -15,7 +15,7 @@ import { useMutationHook } from "../../hooks/useMutationHook";
 import Loading from "../../components/Loading/Loading";
 import * as message from "../../components/Message/Message";
 import { updateUser } from "../../redux/slides/userSlide";
-import { Button, Modal, Upload } from "antd";
+import { Button, Input, Modal, Upload } from "antd";
 import { EditOutlined, UploadOutlined } from "@ant-design/icons";
 import { getBase64 } from "../../utils";
 import icon_username from "../../assets/images/icon-username.png";
@@ -30,7 +30,7 @@ function ProfilePage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [urlImage, setUrlImage] = useState();
 
   const mutation = useMutationHook((data) => {
     const { id, access_token, ...rests } = data;
@@ -43,7 +43,7 @@ function ProfilePage() {
     setEmail(user?.email);
     setPhone(user?.phone);
     setAddress(user?.address);
-    setAvatar(user?.avatar);
+    setUrlImage(user?.avatar);
   }, [user]);
 
   const handleGetDetailsUser = async (id, token) => {
@@ -75,7 +75,7 @@ function ProfilePage() {
       name,
       phone,
       address,
-      avatar,
+      avatar: urlImage,
       access_token: user?.access_token,
     });
   };
@@ -88,7 +88,7 @@ function ProfilePage() {
     setEmail(user?.email);
     setAddress(user?.address);
     setPhone(user?.phone);
-    setAvatar(user?.avatar);
+    setUrlImage(user?.avatar);
     setIsModalOpen(false);
   };
   const handleOnchangeName = (value) => {
@@ -103,12 +103,40 @@ function ProfilePage() {
   const handleOnchangeAddress = (value) => {
     setAddress(value);
   };
-  const handleOnchangeAvatar = async ({ fileList }) => {
-    const file = fileList[0];
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+
+  const uploadToCloudinary = async (file, uploadPreset, uploadUrl) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        // Trả về URL của ảnh đã upload
+        return data.secure_url;
+      } else {
+        throw new Error("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
     }
-    setAvatar(file.preview);
+  };
+  const handleImageUpload = async (file) => {
+    const uploadPreset = "clockWeb";
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload";
+
+    const imageUrl = await uploadToCloudinary(file, uploadPreset, uploadUrl);
+
+    if (imageUrl) {
+      setUrlImage(imageUrl);
+    }
   };
 
   return (
@@ -119,7 +147,7 @@ function ProfilePage() {
         <div className="sidenav">
           <div className="profile" style={{ textAlign: "center" }}>
             <img
-              src={avatar}
+              src={urlImage}
               alt=""
               width="80"
               height="80"
@@ -183,29 +211,36 @@ function ProfilePage() {
               </WrapperInput>
               <WrapperInput>
                 <WrapperLabel htmlFor="avatar">Ảnh đại diện</WrapperLabel>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "16px",
-                    alignItems: "center",
-                  }}
-                >
-                  <WrapperAvatar onChange={handleOnchangeAvatar} maxCount={1}>
-                    <Button icon={<UploadOutlined />}>Upload</Button>
-                  </WrapperAvatar>
-                  {avatar && (
+
+                <Input
+                  style={{ maxWidth: "430px" }}
+                  type="file"
+                  id="exampleCustomFileBrowser1"
+                  name="image"
+                  onChange={(e) => handleImageUpload(e.target.files[0])}
+                />
+                {urlImage && (
+                  <div
+                    className="image-preview"
+                    style={{
+                      marginTop: "40px",
+                    }}
+                  >
                     <img
-                      src={avatar}
-                      style={{
-                        height: "60px",
-                        width: "60px",
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                      alt="avatar"
+                      src={urlImage}
+                      alt=""
+                      style={{ height: "100px", width: "auto" }}
                     />
-                  )}
-                </div>
+                    <div
+                      className="image-preview-remove"
+                      onClick={() => {
+                        setUrlImage("");
+                      }}
+                    >
+                      x
+                    </div>
+                  </div>
+                )}
                 {/* <InputForm style={{width:'300px'}} id="avatar" value={avatar} onChange={handleOnchangeAvatar} /> */}
               </WrapperInput>
             </WrapperContentProfile>

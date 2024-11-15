@@ -277,13 +277,12 @@ const AdminSlider = () => {
         type: slider.type,
       };
     });
-  
-    useEffect(() => {
-      if(!isModalOpen && !isOpenDrawer){
-        setUrlImage()
-      }
 
-    }, [isModalOpen, isOpenDrawer])
+  useEffect(() => {
+    if (!isModalOpen && !isOpenDrawer) {
+      setUrlImage();
+    }
+  }, [isModalOpen, isOpenDrawer]);
 
   useEffect(() => {
     if (isSuccess && data?.status === "OK") {
@@ -380,8 +379,8 @@ const AdminSlider = () => {
     }
   };
   const handleImageUpload = async (file) => {
-    const uploadPreset = "clockWeb"; 
-    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload"; 
+    const uploadPreset = "clockWeb";
+    const uploadUrl = "https://api.cloudinary.com/v1_1/dhfbsejrh/image/upload";
 
     const imageUrl = await uploadToCloudinary(file, uploadPreset, uploadUrl);
 
@@ -400,7 +399,6 @@ const AdminSlider = () => {
             : stateProduct.type,
         // image: stateProduct?.image,
         image: urlImage,
-
       },
       {
         onSettled: () => {
@@ -447,7 +445,12 @@ const AdminSlider = () => {
   };
   const onUpdateProduct = () => {
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...stateProductDetails, image: urlImage },
+      {
+        id: rowSelected,
+        token: user?.access_token,
+        ...stateProductDetails,
+        image: urlImage,
+      },
       {
         onSettled: () => {
           querySlider.refetch();
@@ -526,7 +529,7 @@ const AdminSlider = () => {
             </Form.Item> */}
 
             <Form.Item
-              label="Type"
+              label="Loại hình ảnh"
               name="type"
               rules={[{ required: true, message: "Please input your type!" }]}
             >
@@ -578,35 +581,37 @@ const AdminSlider = () => {
               </WrapperAvatar>
             </Form.Item> */}
 
-            <Input
-                      type="file"
-                      id="exampleCustomFileBrowser1"
-                      name="image"
-                      onChange={(e) => handleImageUpload(e.target.files[0])}
-                    />
+            <Form.Item label="Hình ảnh">
+              <Input
+                type="file"
+                id="exampleCustomFileBrowser1"
+                name="image"
+                onChange={(e) => handleImageUpload(e.target.files[0])}
+              />
 
-                    {urlImage && (
-                      <div
-                        className="image-preview"
-                        style={{
-                          marginTop: "40px",
-                        }}
-                      >
-                        <img
-                          src={urlImage}
-                          alt=""
-                          style={{ height: "100px", width: "auto" }}
-                        />
-                        <div
-                          className="image-preview-remove"
-                          onClick={() => {
-                            setUrlImage("");
-                          }}
-                        >
-                          x
-                        </div>
-                      </div>
-                    )}
+              {urlImage && (
+                <div
+                  className="image-preview"
+                  style={{
+                    marginTop: "40px",
+                  }}
+                >
+                  <img
+                    src={urlImage}
+                    alt=""
+                    style={{ height: "100px", width: "auto" }}
+                  />
+                  <div
+                    className="image-preview-remove"
+                    onClick={() => {
+                      setUrlImage("");
+                    }}
+                  >
+                    x
+                  </div>
+                </div>
+              )}
+            </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Thêm
@@ -668,10 +673,7 @@ const AdminSlider = () => {
                 { required: true, message: "Please input your count image!" },
               ]}
             >
-              <WrapperAvatar
-                onChange={handleImageUpload}
-                maxCount={1}
-              >
+              <WrapperAvatar onChange={handleImageUpload} maxCount={1}>
                 <Button>Select File</Button>
                 {stateProductDetails?.image && (
                   <img
@@ -768,36 +770,37 @@ const AdminSlider = () => {
                 )}
               </WrapperAvatar>
             </Form.Item> */}
+            <Form.Item label="Hình ảnh">
+              <Input
+                type="file"
+                id="exampleCustomFileBrowser1"
+                name="image"
+                onChange={(e) => handleImageUpload(e.target.files[0])}
+              />
 
-            <Input
-                      type="file"
-                      id="exampleCustomFileBrowser1"
-                      name="image"
-                      onChange={(e) => handleImageUpload(e.target.files[0])}
-                    />
-
-                    {urlImage && (
-                      <div
-                        className="image-preview"
-                        style={{
-                          marginTop: "40px",
-                        }}
-                      >
-                        <img
-                          src={urlImage}
-                          alt=""
-                          style={{ height: "100px", width: "auto" }}
-                        />
-                        <div
-                          className="image-preview-remove"
-                          onClick={() => {
-                            setUrlImage("");
-                          }}
-                        >
-                          x
-                        </div>
-                      </div>
-                    )}
+              {urlImage && (
+                <div
+                  className="image-preview"
+                  style={{
+                    marginTop: "40px",
+                  }}
+                >
+                  <img
+                    src={urlImage}
+                    alt=""
+                    style={{ height: "100px", width: "auto" }}
+                  />
+                  <div
+                    className="image-preview-remove"
+                    onClick={() => {
+                      setUrlImage("");
+                    }}
+                  >
+                    x
+                  </div>
+                </div>
+              )}
+            </Form.Item>
             <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
               <Button type="primary" htmlType="submit">
                 Cập nhật
